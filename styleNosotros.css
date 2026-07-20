@@ -1,0 +1,479 @@
+body {
+  font-family: "Outfit", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.main-content {
+  flex: 1;
+  background-color: #f3f3f3;
+}
+
+/* Estilos para la barra superior */
+.arriba {
+  width: 100%;
+  height: 40px;
+  background: #0d3393;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.arriba a {
+  display: flex;
+  margin-right: 10px;
+  margin-left: calc((100% - 1225px) / 2);
+}
+
+.arriba img {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  margin-left: 0;
+}
+
+.arriba p {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+/* Estilos para main */
+.nosotros-container {
+  width: 1225px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.cards-container {
+  display: flex;
+  gap: 0px;
+  margin-bottom: 40px;
+}
+
+.column {
+  flex: 1;
+}
+
+.column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+/* Estilos actualizados para las tarjetas */
+.card {
+  position: relative;
+  height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-large {
+  height: 420px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-front {
+  z-index: 2;
+}
+
+.card-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.card-back {
+  background-color: #0d3393;
+  color: white;
+  transform: rotateY(180deg);
+}
+.card-back .valores-content {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.valores-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.valores-list li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  color: white;
+  font-size: 16px;
+}
+
+.valores-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: white;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.card-title1 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  background-color: transparent;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: "Outfit", sans-serif;
+  min-width: 120px;
+  height: 40px;
+  line-height: 1;
+  text-align: center;
+}
+
+.back-content1 {
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 300;
+  text-align: justify;
+  text-align-last: left;
+}
+.back-content {
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: justify;
+  text-align-last: left;
+}
+/* Estilos para stats */
+.stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+  padding: 25px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #0d3393;
+  height: 184px;
+  width: 298px;
+}
+
+.stat-icon {
+  margin-bottom: 10px;
+}
+
+.stat-icon img {
+  width: 55%; /* Ajusta según el tamaño que necesites */
+  height: 55%; /* Ajusta según el tamaño que necesites */
+  object-fit: contain;
+}
+.stat-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0d3393;
+  margin-top: 24px;
+}
+
+
+@media (max-width: 1700px) {
+  .nosotros-container {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 1300px) {
+  .nosotros-container {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .cards-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .column,
+  .column-right {
+    width: 100%;
+  }
+
+  .card {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+
+  .stats {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .stat-item {
+    width: calc(50% - 20px);
+  }
+
+  .arriba a {
+    margin-left: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .stats {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-item {
+    flex: 1 1 calc(50% - 20px);
+    max-width: 300px;
+  }
+}
+@media (min-width: 751px) {
+  /* Ocultar el texto corto y mostrar el texto largo en pantallas grandes */
+  .card-back .back-content1.texto-corto {
+    display: none;
+  }
+  
+  .card-back .back-content1.texto-largo {
+    display: block;
+  }
+}
+@media (max-width: 750px) {
+  .card-back .back-content1.texto-largo {
+    display: none;
+  }
+  
+  .card-back .back-content1.texto-corto {
+    display: block;
+  }
+  .nosotros-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .cards-container {
+    flex-direction: column;
+  }
+
+  .column,
+  .column-right {
+    width: 100%;
+  }
+
+  .card {
+    width: 100% !important;
+    height: 200px !important;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  /* Estilos para el contenido de las tarjetas */
+  .card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+
+  .card-title,
+  .card-title1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+  }
+
+  .card-back {
+    padding: 15px;
+    background-color: #0d3393;
+  }
+
+  .back-content,
+  .back-content1 {
+    font-size: 16px;
+    line-height: 1.4;
+    color: white;
+    margin: 0;
+    text-align: justify;
+  }
+
+  /* Estilos para la sección de estadísticas */
+  .stats {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 13px;
+    padding: 15px;
+    margin-top: -40px;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  /* Cada ítem de estadística */
+  .stat-item {
+    flex: 1;
+    background: white;
+    border: 1px solid #0d3393;
+    border-radius: 8px;
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 85px;
+    max-width: 145px;
+    height: 115px;
+  }
+
+  /* Contenedor del ícono */
+  .stat-icon {
+    width: 95px;
+    height: 95px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stat-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Título de la estadística */
+  .stat-title {
+    color: #0d3393;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* Ajuste específico para los números */
+  .stat-title strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+}
+
+/* Optimizaciones para dispositivos táctiles */
+@media (hover: none) {
+  .card-inner {
+    transition: transform 0.5s ease;
+  }
+
+  .card.flipped .card-inner {
+    transform: rotateY(180deg);
+  }
+}
+/* Mejoras adicionales para la experiencia del usuario */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+@media (hover: none) or (pointer: coarse) {
+  .card-content::after {
+    content: "Toca para más info";
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,695 @@
+.arriba {
+  width: 100%;
+  height: 40px;
+  background: #0d3393;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.arriba a:first-child {
+  margin-left: calc((100% - 1225px) / 2);
+}
+
+.arriba a {
+  display: flex;
+  margin-right: 5px;
+  color: white;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  text-decoration: none;
+}
+
+.arriba img {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.arriba p {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+
+.regres {
+  transition: opacity 0.3s ease;
+}
+
+.regres:hover {
+  opacity: 0.7;
+}
+
+.lin-tex {
+  cursor: default;
+}
+
+.main-content {
+  background-color: #f3f3f3;
+}
+
+.conte-resinas {
+  max-width: 1280px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.lista-resinas {
+  width: 100%;
+}
+
+.item-resina {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+
+  background-color: #d8d9dc;
+  border-radius: 5px;
+}
+
+.item-resina:nth-child(odd) {
+  background-color: #0d3393;
+}
+
+.item-resina:nth-child(odd) .nombre-resina {
+  color: white;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+}
+
+.bullet {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background-color: #0d3393;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.item-resina:nth-child(odd) .bullet {
+  background-color: white;
+}
+
+.nombre-resina {
+  font-family: "Outfit", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #0d3393;
+}
+.btn-ver-detalles {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 20px;
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 100px;
+  transition: all 0.3s ease;
+}
+
+.item-resina:nth-child(even) .btn-ver-detalles {
+  background-color: transparent;
+  color: #0d3393;
+  border: 1px solid #0d3393;
+}
+
+.item-resina:nth-child(even) .btn-ver-detalles:hover,
+.item-resina:nth-child(even) .btn-ver-detalles:active {
+  background-color: #0d3393;
+  color: white;
+}
+
+/* Para items con fondo azul (impares) */
+.item-resina:nth-child(odd) .btn-ver-detalles {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+.item-resina:nth-child(odd) .btn-ver-detalles:hover,
+.item-resina:nth-child(odd) .btn-ver-detalles:active {
+  background-color: white;
+  color: #0d3393;
+}
+
+.btn-ver-detalles:hover {
+  background-color: #0d3393;
+  color: white;
+}
+
+.item-resina:nth-child(odd) .btn-ver-detalles {
+  border-color: white;
+}
+
+/* Bases */
+.lnbase {
+  margin-left: calc((100% - 1225px) / 2);
+  margin-top: 30px;
+}
+
+.lnbase h2 {
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d3393;
+  margin: 0;
+  padding-top: 0px;
+}
+
+.lnar article {
+  padding: 0;
+  padding-top: 10px;
+  font-family: "Outfit", sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  color: #333333;
+  max-width: 544px;
+  line-height: normal;
+  padding-block-end: 15px;
+  text-align: justify;
+  text-align-last: left;
+}
+
+/* Tarjetas de productos */
+.cards-pintura {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  padding: 30px;
+  width: 100%;
+  max-width: 1400px;
+  box-sizing: border-box;
+}
+
+.cards-row,
+.cards-row-second {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 18px;
+  width: 100%;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+
+.cards-row-second {
+  width: 100%;
+  padding-left: calc((100% - (230px * 5 + 72px)) / 2);
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 5px 8px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 230px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.card-header {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.card-header p {
+  padding: 16px 0;
+  position: absolute;
+  top: 1px;
+  left: 10px;
+  right: 10px;
+  color: white;
+  font-family: "Outfit", sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.card-header .img-estilo {
+  width: 100%;
+  height: 107px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.card .img-contenido {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin: 0 0 36px 0;
+  transition: transform 0.3s ease;
+}
+
+.ver-mas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 170px;
+  padding: 10px 0;
+  background-color: white;
+  border-radius: 80px;
+  color: #0d3393;
+  border: 1px solid #0d3393;
+  cursor: pointer;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  height: 30px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.ver-mas:hover {
+  background-color: #0a2876;
+  color: white;
+}
+
+.lnco {
+  display: flex;
+  align-items: center;
+  margin-left: calc((100% - 1225px) / 2);
+  margin-block-end: 50px;
+}
+
+.lnco h3 {
+  font-family: "Outfit", sans-serif;
+  font-size: 12pt;
+  font-weight: 400;
+  margin: 0; /* Elimina cualquier margen extra */
+  margin-right: 15px; /* Espacio entre el h3 y las imágenes */
+}
+
+.redes {
+  display: flex; /* Hace que los elementos dentro de .redes estén en fila */
+  gap: 10px; /* Añade espacio entre las imágenes */
+}
+.redes a img {
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease; /* Agrega una transición suave */
+}
+
+.redes a img:hover {
+  transform: scale(1.2); /* Hace zoom al 120% del tamaño original */
+}
+
+/* Media queries ajustados */
+@media screen and (max-width: 1700px) {
+  .cards-pintura {
+    max-width: 1300px;
+  }
+
+  .cards-row-second {
+    padding-left: calc((100% - (230px * 5 + 72px)) / 2);
+  }
+}
+
+@media screen and (max-width: 1350px) {
+  .cards-pintura {
+    max-width: 1100px;
+  }
+
+  .cards-row-second {
+    padding-left: calc((100% - (230px * 4 + 54px)) / 2);
+  }
+}
+@media screen and (max-width: 1300px) {
+  .arriba a:first-child {
+    margin-left: 20px;
+  }
+  .lnbase {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .lnar article {
+    max-width: 100%;
+  }
+
+  .lnco {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .cards-pintura {
+    max-width: 800px;
+    padding: 20px;
+  }
+  .cards-row,
+  .cards-row-second {
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .cards-row-second {
+    padding-left: 0;
+  }
+
+  .card {
+    width: 220px;
+    height: 380px;
+  }
+
+  .card-header {
+    margin-bottom: 25px;
+  }
+
+  .card .img-contenido {
+    width: 140px;
+    height: 140px;
+    margin: 0 0 30px 0;
+  }
+
+  .ver-mas {
+    width: 160px;
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .card {
+    width: calc(50% - 10px);
+    height: 380px;
+    max-width: 280px;
+  }
+
+  .card-header {
+    margin-bottom: 25px;
+    height: auto;
+    min-height: 90px; /* Asegura un espacio mínimo para el header */
+  }
+
+  .card-header .img-estilo {
+    height: 130px; /* Reduce la altura de la imagen de fondo */
+    width: 100%;
+  }
+
+  .card-header p {
+    font-size: 16px;
+    margin: 10px;
+  }
+
+  .card .img-contenido {
+    width: 130px;
+    height: 130px;
+    margin: 0 0 25px 0;
+  }
+
+  .ver-mas {
+    width: 150px;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .lnbase {
+    margin: 20px 30px;
+  }
+
+  .lnco {
+    margin: 30px;
+    justify-content: center;
+  }
+}
+.mobile-version {
+  display: none !important;
+}
+
+.desktop-version {
+  display: flex;
+}
+@media screen and (max-width: 768px) {
+  .arriba {
+    height: auto;
+    min-height: 40px;
+    padding: 8px 10px;
+  }
+  
+  .arriba a, .arriba p {
+    font-size: 14px;
+  }
+  
+  .arriba img {
+    height: 16px;
+    width: 16px;
+  }
+  
+  /* Contenedor de resinas */
+  .conte-resinas {
+    margin: 15px auto;
+    padding: 0 15px;
+  }
+  
+  .lista-resinas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .item-resina {
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .item-left {
+    padding: 12px 15px;
+    flex: 1;
+  }
+  
+  .bullet {
+    width: 8px;
+    height: 8px;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  
+  .nombre-resina {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  
+  .btn-ver-detalles {
+    border-radius: 0;
+    height: 100%;
+    padding: 12px 15px;
+    font-size: 12px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  
+  /* Sección de compartir */
+  .lnco {
+    flex-direction: column;
+    align-items: center;
+    margin: 30px 15px;
+    gap: 10px;
+  }
+  
+  .lnco h3 {
+    margin: 0;
+    text-align: center;
+  }
+  
+  .redes {
+    justify-content: center;
+  }
+}
+/* En móvil, invertir la visibilidad */
+@media screen and (max-width: 750px) {
+  .desktop-version {
+      display: none !important;
+  }
+  
+  .mobile-version {
+      display: block !important;
+  }
+  
+  .mobile-cards-container {
+      padding: 15px;
+  }
+  
+  .mobile-cards-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+  }
+  
+  .mobile-cards-row .card {
+      width: calc(50% - 7.5px);
+      margin: 0;
+  }
+  
+}
+
+
+@media screen and (max-width: 480px) {
+  .conte-resinas {
+    margin: 10px auto;
+    padding: 0 10px;
+  }
+  
+  .lista-resinas {
+    gap: 8px;
+  }
+  
+  .item-resina {
+    border-radius: 6px;
+  }
+  
+  .item-left {
+    padding: 10px 12px;
+  }
+  
+  .bullet {
+    width: 7px;
+    height: 7px;
+    margin-right: 8px;
+  }
+  
+  .nombre-resina {
+    font-size: 13px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+  }
+  
+  .btn-ver-detalles {
+    padding: 10px;
+    font-size: 11px;
+    min-width: 90px;
+  }
+  
+  /* Mejoras específicas para emular el diseño de la imagen de referencia */
+  /* Estilo más consistente para los botones "VER DETALLES" */
+  .item-resina:nth-child(even) .btn-ver-detalles,
+  .item-resina:nth-child(odd) .btn-ver-detalles {
+    border-radius: 20px;
+    margin-right: 10px;
+    height: auto;
+    padding: 6px 10px;
+    font-weight: 600;
+  }
+  
+  /* Ajustes para las filas con fondo azul */
+  .item-resina:nth-child(odd) {
+    background-color: #0d3393;
+  }
+  
+  .item-resina:nth-child(odd) .nombre-resina {
+    color: white;
+  }
+  
+  .item-resina:nth-child(odd) .bullet {
+    background-color: white;
+  }
+  
+  /* Ajustes para las filas con fondo gris */
+  .item-resina:nth-child(even) {
+    background-color: #d8d9dc;
+  }
+  
+  .item-resina:nth-child(even) .nombre-resina {
+    color: #0d3393;
+  }
+  
+  .item-resina:nth-child(even) .bullet {
+    background-color: #0d3393;
+  }
+  .cards-pintura {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .cards-row,
+  .cards-row-second {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin: 0;
+  }
+
+  .card {
+    width: calc(50% - 7.5px);
+    height: 150px;
+    margin: 0;
+    max-width: none;
+  }
+
+  .card-header {
+    height: 100px;
+    margin-bottom: 10px;
+  }
+
+  .card-header .img-estilo {
+    height: 95px;
+    width: 100%;
+  }
+
+  .card-header p {
+    font-size: 14px;
+    padding: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    margin: -10px 0 0 0;
+    line-height: 1.2;
+  }
+
+  .card .img-contenido {
+    width: 125px;
+    height: 125px;
+    margin: 10px 0;
+  }
+
+  .ver-mas {
+    width: 110px;
+    height: 28px;
+    font-size: 12px;
+    margin: auto auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

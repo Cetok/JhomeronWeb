@@ -1,0 +1,981 @@
+.arriba {
+  background-color: #0d3393;
+  width: 100%;
+  padding: 15px 0;
+  min-height: 150px;
+  position: relative;
+}
+.main-content {
+  background-color: #f3f3f3;
+}
+.arb {
+  display: flex;
+  flex-direction: column;
+  margin-left: calc((100% - 1225px) / 2);
+  color: white;
+  font-family: "Outfit", sans-serif;
+}
+
+.arb .nav-links {
+  display: flex;
+  align-items: center;
+}
+.arb a,
+.arb span {
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.arb span {
+  font-weight: 500;
+}
+
+.arb a {
+  font-weight: 300;
+}
+
+.arb img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+/* Contenido principal */
+.arb2 {
+  margin-top: 20px; /* Espacio entre la navegación y el título */
+}
+
+.arb2 h2 {
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #f3f3f3;
+  margin-bottom: 20px;
+}
+
+.arbtn {
+  display: flex;
+  gap: 10px;
+}
+
+.arb2 .btn1,
+.arb2 .btn2 {
+  height: 30px;
+  width: 110px;
+  font-size: 20px;
+  background-color: #0d3393;
+  color: #f3f3f3;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: "Outfit", sans-serif;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Estilos actualizados para el botón de filtrado en móvil */
+.mobile-filter-btn {
+  display: none;
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 0 15px;
+}
+
+#mobileFilterBtn {
+  width: 100%;
+  padding: 8px 15px;
+  background-color: white;
+  color: #0D3393;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mobile-filter-menu {
+  display: none;
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 5px;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.mobile-filter-menu.show {
+  display: block;
+}
+
+.filter-item {
+  padding: 12px 15px;
+  color: #0D3393;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.filter-item:last-child {
+  border-bottom: none;
+}
+
+.filter-item:hover {
+  background-color: #f5f5f5;
+}
+
+.filter-item.active {
+  background-color: #e6e6e6;
+  font-weight: 600;
+}
+
+.conte-resinas {
+  max-width: 1280px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.lista-resinas {
+  width: 100%;
+}
+
+.item-resina {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+
+  background-color: #d8d9dc;
+  border-radius: 5px;
+}
+
+.item-resina:nth-child(odd) {
+  background-color: #0d3393;
+}
+
+.item-resina:nth-child(odd) .nombre-resina {
+  color: white;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+}
+
+.bullet {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background-color: #0d3393;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.item-resina:nth-child(odd) .bullet {
+  background-color: white;
+}
+
+.nombre-resina {
+  font-family: "Outfit", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #0d3393;
+}
+.btn-ver-detalles {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 20px;
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 100px;
+  transition: all 0.3s ease;
+}
+
+.item-resina:nth-child(even) .btn-ver-detalles {
+  background-color: transparent;
+  color: #0d3393;
+  border: 1px solid #0d3393;
+}
+
+.item-resina:nth-child(even) .btn-ver-detalles:hover,
+.item-resina:nth-child(even) .btn-ver-detalles:active {
+  background-color: #0d3393;
+  color: white;
+}
+
+/* Para items con fondo azul (impares) */
+.item-resina:nth-child(odd) .btn-ver-detalles {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+.item-resina:nth-child(odd) .btn-ver-detalles:hover,
+.item-resina:nth-child(odd) .btn-ver-detalles:active {
+  background-color: white;
+  color: #0d3393;
+}
+
+.btn-ver-detalles:hover {
+  background-color: #0d3393;
+  color: white;
+}
+
+.item-resina:nth-child(odd) .btn-ver-detalles {
+  border-color: white;
+}
+.btn1.active {
+  background-color: #0d3393;
+  color: white;
+}
+
+/* Estilo adicional para mejorar la transición */
+.item-resina {
+  transition: display 0.3s ease;
+}
+
+.btn1 {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Bases */
+.lnbase {
+  margin-left: calc((100% - 1225px) / 2);
+  margin-top: 30px;
+}
+
+
+
+/* NEW */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 230px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 100;
+  border-radius: 5px;
+  padding: 10px 0;
+  margin-top: 32px; /* Aumentado para que aparezca debajo del botón */
+  left: 0; /* Alinear con el borde izquierdo del botón */
+  right: auto; /* Eliminar alineación derecha */
+  top: 0; /* Posicionar desde la parte superior del botón */
+}
+
+/* Asegurar que el contenedor del dropdown sea relativo para posicionar correctamente */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Muestra el contenido desplegable cuando tiene la clase "show" */
+.dropdown-content.show {
+  display: block;
+}
+
+/* Estilos para cada ítem dentro del desplegable */
+.dropdown-item {
+  color: #0D3393;
+  padding: 8px 16px;
+  text-decoration: none;
+  display: block;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Efecto hover para los ítems */
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilos para los checkboxes */
+.dropdown-item input[type="checkbox"] {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Estilos para añadir el ícono de flecha en los botones desplegables */
+.btn1 i, .btn2 i {
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+/* Estilo específico para cuando el botón está activo */
+.btn1.active, .btn2.active, 
+.btn1:active, .btn2:active,
+.btn1.selected, .btn2.selected {
+  background-color: #fff !important;
+  color: #0D3393 !important;
+}
+.arbtn {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  gap: 10px;
+  align-items: center;
+}
+.arb2 .btn1#btnAnticorrosivo{
+  width: 150px; /* Ancho aumentado para estos botones específicos */
+}
+.arb2 .btn1#btnRetardador{
+  width: 250px; /* Ancho aumentado para estos botones específicos */
+}
+.arb2 .btn1#btnLosaDeportiva{
+  width: 150px; /* Ancho aumentado para estos botones específicos */
+}
+.arb2 .btn1#btnAcabadoAlquidico {
+  width: 200px; /* Ancho aumentado para estos botones específicos */
+}
+.arb2 .btn1#btnAcabadoCaucho {
+  width: 240px; /* Ancho aumentado para estos botones específicos */
+}
+.arb2 .btn1#btnPreparacion,
+.arb2 .btn1#btnPolyurethane {
+  width: 150px; /* Ancho aumentado para estos botones específicos */
+}
+.arb2 .btn1#btnImprimante,
+.arb2 .btn1#btnPastaMural {
+  width: 150px; /* Ancho aumentado para estos botones específicos */
+}
+.arb2 .btn1#btnLatex,
+.arb2 .btn1#btnEsmalte {
+  width: 180px; /* Ancho aumentado para estos botones específicos */
+}
+/* Asegurarse que las flechas desplegables estén bien alineadas */
+.dropdown-container {
+  display: inline-flex;
+}
+
+/* Ajustar el botón Preparación dentro del dropdown container */
+.dropdown-container:has(#btnPreparacion) {
+  width: 150px; /* Mismo ancho que el botón */
+}
+/* END */
+
+/* Bases */
+.lnbase {
+  margin-left: calc((100% - 1225px) / 2);
+  margin-top: 30px;
+  align-items: flex-start;
+}
+.lnbase h2 {
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d3393;
+  margin: 0; /* Elimina cualquier margen extra */
+  padding-top: 0px; /* Ajusta la separación superior según sea necesario */
+}
+.lnar article {
+  padding: 0;
+  padding-top: 10px;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #333333;
+  max-width: 544px;
+  line-height: normal;
+  padding-block-end: 5px;
+  text-align: justify;
+  text-align-last: left;
+}
+/* Tarjetas de productos */
+.cards-pintura {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  padding: 30px;
+  width: 100%;
+  max-width: 1400px;
+  box-sizing: border-box;
+}
+
+.cards-row,
+.cards-row-second {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 18px; /* Primera valor es para el espacio vertical, segundo para horizontal */
+  width: 100%;
+  margin-bottom: 30px; /* Espacio entre filas de cards */
+  justify-content: center; /* Centra las tarjetas horizontalmente */
+}
+.cards-row-second {
+  width: 100%;
+  padding-left: calc(
+    (100% - (230px * 5 + 72px)) / 2
+  ); /* Centra el contenedor pero inicia desde la izquierda */
+  justify-content: flex-start; /* Alinea las tarjetas desde la izquierda */
+  box-sizing: border-box;
+}
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 5px 8px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 230px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.card-header {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 30px;
+  text-align: center; /* Centra el texto del header */
+}
+.card-header::before {
+  content: none;
+}
+
+.card-header p {
+  padding: 16px 0;
+  position: absolute;
+  top: 1px;
+  left: 10px;
+  right: 10px;
+  color: white;
+  font-family: "Outfit", sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  line-height: 1.2;
+}
+.card-header .img-estilo {
+  width: 100%;
+  height: 107px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+  transition: transform 0.3s ease;
+  display: block; /* Asegura que la imagen se trate como un elemento de bloque */
+}
+
+.card .img-contenido {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin: 0 0 36px 0; /* 0 arriba, 0 derecha, 36px abajo, 0 izquierda */
+  transition: transform 0.3s ease;
+}
+
+.ver-mas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 170px;
+  padding: 10px 0;
+  background-color: white;
+  border-radius: 80px;
+  color: #0d3393;
+  border: 1px solid #0d3393;
+  cursor: pointer;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  height: 30px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin: 0 auto; /* Eliminado el margen vertical del botón */
+  margin-bottom: 20px; /* Mantenemos solo el margen inferior */
+}
+.ver-mas:hover {
+  background-color: #0a2876;
+  color: white;
+}
+
+.lnco {
+  display: flex;
+  align-items: center;
+  margin-left: calc((100% - 1225px) / 2);
+  margin-block-end: 50px;
+}
+
+.lnco h3 {
+  font-family: "Outfit", sans-serif;
+  font-size: 12pt;
+  font-weight: 400;
+  margin: 0; /* Elimina cualquier margen extra */
+  margin-right: 15px; /* Espacio entre el h3 y las imágenes */
+}
+
+.redes {
+  display: flex; /* Hace que los elementos dentro de .redes estén en fila */
+  gap: 10px; /* Añade espacio entre las imágenes */
+}
+.redes a img {
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease; /* Agrega una transición suave */
+}
+
+.redes a img:hover {
+  transform: scale(1.2); /* Hace zoom al 120% del tamaño original */
+}
+
+/* Media queries ajustados */
+@media screen and (max-width: 1700px) {
+  .cards-pintura {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    padding: 30px;
+    width: 100%;
+    max-width: 1400px;
+    box-sizing: border-box;
+  }
+
+  .cards-row,
+  .cards-row-second {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 18px;
+    width: 100%;
+    margin-bottom: 30px;
+    justify-content: center;
+  }
+
+  .cards-row-second {
+    width: 100%;
+    padding-left: calc((100% - (230px * 5 + 72px)) / 2);
+    justify-content: flex-start;
+    box-sizing: border-box;
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 5px 8px 12px rgba(0, 0, 0, 0.1);
+    width: 230px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    position: relative;
+  }
+}
+
+@media screen and (max-width: 1350px) {
+  .cards-pintura {
+    max-width: 1100px;
+  }
+
+  .cards-row-second {
+    padding-left: calc((100% - (230px * 4 + 54px)) / 2);
+  }
+}
+@media screen and (max-width: 1300px) {
+  .arb {
+    margin-left: 20px;
+  }
+
+  .arb2 h2 {
+    font-size: 20px;
+    margin-left: 0;
+  }
+
+  .arbtn {
+    margin-left: 0;
+  }
+  .lnbase {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .lnar article {
+    max-width: 100%;
+  }
+  .lnco {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .cards-pintura {
+    max-width: 800px;
+    padding: 20px;
+  }
+  .cards-row,
+  .cards-row-second {
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .cards-row-second {
+    padding-left: 0;
+  }
+
+  .card {
+    width: 220px;
+    height: 380px;
+  }
+
+  .card-header {
+    margin-bottom: 25px;
+  }
+
+  .card .img-contenido {
+    width: 140px;
+    height: 140px;
+    margin: 0 0 30px 0;
+  }
+
+  .ver-mas {
+    width: 160px;
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .card {
+    width: calc(50% - 10px);
+    height: 380px;
+    max-width: 280px;
+  }
+
+  .card-header {
+    margin-bottom: 25px;
+    height: auto;
+    min-height: 90px; /* Asegura un espacio mínimo para el header */
+  }
+
+  .card-header .img-estilo {
+    height: 130px; /* Reduce la altura de la imagen de fondo */
+    width: 100%;
+  }
+
+  .card-header p {
+    font-size: 16px;
+    margin: 10px;
+  }
+
+  .card .img-contenido {
+    width: 130px;
+    height: 130px;
+    margin: 0 0 25px 0;
+  }
+
+  .ver-mas {
+    width: 150px;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  .lnco {
+    margin: 30px;
+    justify-content: center;
+  }
+}
+.mobile-version {
+  display: none !important;
+}
+
+.desktop-version {
+  display: flex !important;
+}
+/* En móvil, invertir la visibilidad */
+@media screen and (max-width: 750px) {
+  .desktop-version {
+      display: none !important;
+  }
+  
+  .mobile-version {
+      display: block !important;
+  }
+  
+  .mobile-cards-container {
+      padding: 15px;
+  }
+  
+  .mobile-cards-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* Asegura que las cards se envuelvan correctamente */
+  }
+  
+  .mobile-cards-row .card {
+    width: calc(50% - 7.5px);
+    height: auto; /* Altura automática basada en el contenido */
+    min-height: 350px; /* Altura mínima para asegurar que quepa todo */
+    margin: 0;
+  }
+  .arbtn {
+    display: none !important;
+  }
+  
+  .mobile-filter-btn {
+    display: block;
+  }
+  
+  .arb2 h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .arb {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  .arbtn {
+    display: none !important;
+  }
+  
+  .mobile-filter-btn {
+    display: block;
+  }
+  
+  .arb2 h2 {
+    margin-bottom: 10px;
+  }
+  .conte-resinas {
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+  
+  .item-resina {
+    padding: 10px 15px;
+  }
+  
+  .nombre-resina {
+    font-size: 16px;
+  }
+  
+  .btn-ver-detalles {
+    padding: 4px 15px;
+    font-size: 12px;
+  }
+  .conte-resinas {
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+  
+  .lista-resinas {
+    gap: 8px;
+  }
+  
+  .item-resina {
+    padding: 0;
+    border-radius: 8px;
+  }
+  
+  .item-left {
+    padding: 12px 15px;
+  }
+  
+  .bullet {
+    margin-right: 10px;
+  }
+  
+  .nombre-resina {
+    font-size: 15px;
+    line-height: 1.3;
+  }
+  .btn-ver-detalles {
+    background-color: transparent !important;
+    color: white;
+    border: 1px solid white !important;
+    border-radius: 20px !important;
+    padding: 6px 15px !important;
+    margin: 0 10px;
+    height: auto;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: auto;
+    white-space: nowrap;
+  }
+  
+  .item-resina:nth-child(even) .btn-ver-detalles {
+    color: #0d3393 !important;
+    border: 1px solid #0d3393 !important;
+  }
+  
+  .item-resina:nth-child(odd) .btn-ver-detalles {
+    color: white !important;
+    border: 1px solid white !important;
+  }
+  
+  .item-resina:nth-child(odd) .btn-ver-detalles:hover {
+    background-color: white !important;
+    color: #0d3393 !important;
+  }
+  
+  .item-resina:nth-child(even) .btn-ver-detalles:hover {
+    background-color: #0d3393 !important;
+    color: white !important;
+  }
+  
+}
+
+@media screen and (max-width: 480px) {
+  .conte-resinas {
+    margin: 15px auto;
+    padding: 0 15px;
+  }
+  
+  .lista-resinas {
+    gap: 10px;
+  }
+  
+  .item-resina {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 0;
+  }
+  
+  .item-left {
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .bullet {
+    width: 7px;
+    height: 7px;
+    margin-right: 8px;
+  }
+  
+  .nombre-resina {
+    font-size: 13px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+  }
+  
+  /* Estilo específico para el botón VER DETALLES, como en la imagen */
+  .btn-ver-detalles {
+    background-color: transparent !important;
+    color: white;
+    border: 1px solid white !important;
+    border-radius: 20px !important;
+    padding: 6px 15px !important;
+    margin: 0 10px;
+    height: auto;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: auto;
+    white-space: nowrap;
+  }
+  
+  .item-resina:nth-child(even) .btn-ver-detalles {
+    color: #0d3393 !important;
+    border: 1px solid #0d3393 !important;
+  }
+  
+  .item-resina:nth-child(odd) .btn-ver-detalles {
+    color: white !important;
+    border: 1px solid white !important;
+  }
+  
+  .item-resina:nth-child(odd) .btn-ver-detalles:hover {
+    background-color: white !important;
+    color: #0d3393 !important;
+  }
+  
+  .item-resina:nth-child(even) .btn-ver-detalles:hover {
+    background-color: #0d3393 !important;
+    color: white !important;
+  }
+  
+  .arb2 h2 {
+    font-size: 18px;
+  }
+  .cards-pintura {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .cards-row,
+  .cards-row-second {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin: 0;
+  }
+
+  .card {
+    width: calc(50% - 7.5px);
+    height: 150px;
+    margin: 0;
+    max-width: none;
+  }
+
+  .card-header {
+    height: 100px;
+    margin-bottom: 10px;
+  }
+
+  .card-header .img-estilo {
+    height: 95px;
+    width: 100%;
+  }
+
+  .card-header p {
+    font-size: 14px;
+    padding: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    margin: -10px 0 0 0;
+    line-height: 1.2;
+  }
+
+  .card .img-contenido {
+    width: 125px;
+    height: 125px;
+    margin: 10px 0;
+  }
+
+  .ver-mas {
+    width: 110px;
+    height: 28px;
+    font-size: 12px;
+    margin: auto auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

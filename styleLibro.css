@@ -1,0 +1,348 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  background-color: #f3f3f3;
+}
+
+/* Nuevos estilos proporcionados */
+.arriba {
+  width: 100%;
+  height: 40px;
+  background: #0d3393;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+.arriba a {
+  display: flex;
+  margin-right: 10px;
+  margin-left: calc((100% - 1225px)/2);
+}
+
+.arriba img {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  margin-left: 0;
+}
+
+.arriba p {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+/* Form container styles */
+.form-reclamaciones {
+  max-width: 75%;
+  background: #f3f3f3;
+  box-shadow: none;
+  margin-left: 220px;
+  padding: 20px;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+}
+
+.form-reclamaciones h1 {
+  color: #0d3393;
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.form-reclamaciones h2 {
+  color: #0d3393;
+  font-size: 22px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #0d3393;
+  padding-bottom: 5px;
+}
+
+.reclamaciones-group {
+  margin-bottom: 15px;
+}
+
+.form-reclamaciones label {
+  display: block;
+  margin-bottom: 5px;
+  color: #0d3393;
+  font-size: 16px;
+}
+
+.form-reclamaciones input[type="text"],
+.form-reclamaciones input[type="date"],
+.form-reclamaciones input[type="email"],
+.form-reclamaciones input[type="tel"],
+.form-reclamaciones textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14pt;
+  font-family: "Outfit", sans-serif;
+  font-weight: 400;
+}
+
+.reclamaciones-fecha {
+  width: 230px !important; /* Ajusta este valor según necesites */
+}
+.reclamaciones-fecha[readonly] {
+  background-color: #f8f8f8 !important;
+  cursor: default !important;
+  color: #333;
+  border: 1px solid #ccc;
+}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="text"].reclamaciones-fecha::-webkit-calendar-picker-indicator {
+  display: none;
+}
+.reclamaciones-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.reclamaciones-column {
+  width: 48%;
+}
+
+.reclamaciones-full-width {
+  width: 100%;
+}
+
+.reclamaciones-radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.reclamaciones-radio-group label {
+  display: flex;
+  align-items: center;
+  color: black;
+  font-size: 13pt;
+}
+
+.reclamaciones-radio-group input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #0d3393;
+  border-radius: 3px;
+  margin-right: 8px;
+  position: relative;
+  top: -1px;
+  cursor: pointer;
+}
+
+.reclamaciones-radio-group input[type="radio"]:checked {
+  background-color: #0d3393;
+}
+
+.reclamaciones-radio-group input[type="radio"]:checked::after {
+  content: "\2714";
+  font-size: 14px;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.reclamaciones-submit-btn {
+  background-color: #0d3393;
+  color: white;
+  border: none;
+  padding: 10px 60px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16pt;
+  display: block;
+  margin: 20px auto 0;
+  font-family: "Outfit", sans-serif;
+  font-weight: bold;
+  margin-block-end: 30px;
+  transform: 0.3s;
+  margin-top: 40px;
+}
+.reclamaciones-submit-btn:hover {
+  background-color: #ef0606;
+}
+
+.reclamaciones-footnote {
+  font-size: 13pt;
+  color: #666;
+  margin-top: 10px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 300;
+}
+
+.reclamaciones-footnote strong {
+  font-weight: bold;
+}
+/* Responsive adjustments */
+@media (max-width: 1500px) {
+  .form-reclamaciones {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 1300px) {
+  .arriba a {
+    transform: translateX(200px);
+  }
+  .arriba p {
+    transform: translateX(200px);
+  }
+  .form-reclamaciones {
+    max-width: 85%;
+  }
+
+  .reclamaciones-column {
+    width: 47%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .form-reclamaciones {
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .form-reclamaciones h1 {
+    font-size: 26px;
+  }
+
+  .form-reclamaciones h2 {
+    font-size: 18pt;
+  }
+}
+@media (max-width: 950px) {
+  .arriba a {
+    transform: translateX(280px);
+  }
+  .arriba p {
+    transform: translateX(280px);
+  }
+}
+@media (max-width: 750px) {
+  .arriba a {
+    transform: translateX(300px);
+  }
+  .arriba p {
+    transform: translateX(300px);
+  }
+  .form-reclamaciones {
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+  }
+
+  .reclamaciones-column {
+    width: 100%;
+  }
+
+  .reclamaciones-row {
+    flex-direction: column;
+  }
+
+  .reclamaciones-radio-group {
+    flex-wrap: wrap;
+  }
+
+  .form-reclamaciones label,
+  .form-reclamaciones input[type="text"],
+  .form-reclamaciones input[type="email"],
+  .form-reclamaciones input[type="tel"],
+  .form-reclamaciones textarea {
+    font-size: 13pt;
+  }
+
+  .reclamaciones-fecha {
+    width: 100% !important;
+  }
+}
+@media (max-width: 680px) {
+  .arriba a {
+    transform: translateX(330px);
+  }
+  .arriba p {
+    transform: translateX(330px);
+  }
+}
+@media (max-width: 600px) {
+  .arriba a {
+    transform: translateX(365px);
+  }
+  .arriba p {
+    transform: translateX(365px);
+  }
+}
+@media (max-width: 530px) {
+  .arriba a {
+    transform: translateX(395px);
+  }
+  .arriba p {
+    transform: translateX(395px);
+  }
+}
+@media (max-width: 480px) {
+  .arriba a {
+    transform: translateX(400px);
+  }
+  .arriba p {
+    transform: translateX(400px);
+  }
+  .form-reclamaciones h1 {
+    font-size: 22px;
+  }
+
+  .form-reclamaciones h2 {
+    font-size: 16pt;
+  }
+
+  .reclamaciones-submit-btn {
+    font-size: 14pt;
+    padding: 8px 40px;
+  }
+}
+@media (max-width: 440px) {
+  .arriba a {
+    transform: translateX(430px);
+  }
+  .arriba p {
+    transform: translateX(430px);
+  }
+}
+@media (max-width: 400px) {
+  .arriba a {
+    transform: translateX(450px);
+  }
+  .arriba p {
+    transform: translateX(450px);
+  }
+}
+@media (max-width: 360px) {
+  .arriba a {
+    transform: translateX(480px);
+  }
+  .arriba p {
+    transform: translateX(480px);
+  }
+}
+

@@ -1,0 +1,384 @@
+.main-content {
+  flex: 1;
+  background-color: #f3f3f3;
+  font-family: "Outfit", sans-serif;
+}
+.breadcrumb {
+  background: #0d3393;
+  color: white;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  min-height: 40px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.breadcrumb a:first-child {
+  margin-left: calc((100% - 1225px) / 2);
+}
+
+.breadcrumb a {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: white;
+  text-decoration: none;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+.breadcrumb img {
+  width: 20px;
+  height: 20px;
+  margin-left: 0;
+}
+
+.breadcrumb p {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Ajuste específico para el span que contiene el nombre */
+.breadcrumb p span {
+  margin-left: 5px; /* Añade espacio después del > */
+}
+
+.breadcrumb a:hover {
+  opacity: 0.8;
+}
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+/* Contenedor principal */
+.zone {
+  width: 100%;
+  max-width: 1226px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+.zone h1 {
+  color: #333;
+  font-weight: 500;
+  font-size: 36px;
+  text-align: center;
+  line-height: 1.5;
+  margin: 20px 0;
+  transform: none;
+  width: 100%;
+}
+
+h2 {
+  background-color: #0d3393;
+  color: #fff;
+  padding: 10px;
+  margin: 20px 0;
+}
+.cont-img {
+  width: 1020px;
+  height: 620px;
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-block-end: 20px;
+}
+
+.cont-img img {
+  max-width: 100%; /* Asegura que la imagen no se desborde */
+  width: 1020px;
+  height: 620px;
+  object-fit: contain; /* Ajusta cómo se muestra la imagen */
+}
+.contex p {
+  width: 100%;
+  max-width: 950px;
+  margin: 15px auto;
+  font-family: "Outfit", sans-serif;
+  text-align: left;
+  line-height: 1.5;
+  font-size: 20px;
+  font-weight: 300;
+  box-sizing: border-box;
+  padding: 0 20px;
+  transform: translateX(0px);
+}
+/* Product Cards */
+.products-row {
+  display: flex;
+  justify-content: center; /* Centra las tarjetas horizontalmente */
+  gap: 20px; /* Espaciado entre las tarjetas */
+  padding: 20px;
+  flex-wrap: wrap; /* Permite que las tarjetas se ajusten en pantallas más pequeñas */
+}
+
+.product-card {
+  width: 230px; /* Ajusta el ancho de las tarjetas */
+  height: 250px; /* Ajusta la altura de las tarjetas */
+  border-radius: 10px; /* Bordes redondeados */
+  background-color: #0d3393; /* Fondo azul */
+  display: flex;
+  flex-direction: column; /* Ordena el contenido verticalmente */
+  align-items: center;
+  justify-content: space-between; /* Distribuye el contenido */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+  overflow: visible;
+  padding: 20px 10px; /* Espaciado interno */
+  text-align: center;
+}
+
+.product-card img {
+  width: 150px; /* Ajusta el tamaño de la imagen */
+  height: 150px; /* Hace las imágenes cuadradas */
+  object-fit: contain; /* Asegura que la imagen no se deforme */
+  margin-bottom: 0px; /* Espaciado con el botón */
+  transform: translateY(25px);
+}
+
+.product-card button {
+  background-color: #ffffff; /* Fondo blanco para el botón */
+  color: #0d3393; /* Texto azul para el botón */
+  border: none;
+  font-family: "Outfit", sans-serif;
+  width: 120px;
+  height: 40px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  transform: translateY(40px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Transición suave */
+}
+
+.product-card button:hover {
+  background-color: #f3f3f3; /* Cambio de color en hover */
+  color: #0d3393; /* Asegura que el texto siga siendo azul */
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center; /* Centra los botones */
+  gap: 10px; /* Espaciado entre los botones */
+  margin-top: 20px;
+}
+
+.pagination-buttons button {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; /* Hace los botones circulares */
+  border: 2px solid #0d3393; /* Borde azul */
+  background-color: white; /* Fondo blanco por defecto */
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.pagination-buttons button.active {
+  background-color: #0d3393; /* Fondo azul cuando el botón está activo */
+  border-color: #0d3393; /* Borde azul cuando el botón está activo */
+}
+
+.pagination-buttons button:hover {
+  background-color: #f3f3f3; /* Efecto hover para botones no activos */
+}
+
+.pagination-buttons button:focus {
+  outline: none; /* Quita el borde de enfoque */
+}
+
+.share-section {
+  display: flex;
+  align-items: left;
+  margin: 30px auto;
+  justify-content: left;
+  max-width: 950px;
+  padding: 0 20px;
+}
+
+.share-section h3 {
+  font-family: "Outfit", sans-serif;
+  margin-right: 10px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.share-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.share-icons img {
+  width: 33px;
+  height: 33px;
+  transition: transform 0.3s ease; /* Agrega una transición suave */
+}
+
+.share-icons img:hover {
+  transform: scale(1.2); /* Hace zoom al 120% del tamaño original */
+}
+/* Articles Section */
+.articles-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: nowrap; /* Evita que se envuelvan */
+  padding: 20px;
+  margin-block-end: 20px;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.article-card {
+  flex: 1; /* Hace que cada card tome 1/3 del espacio */
+  min-width: 300px; /* Ancho mínimo */
+  height: 272px;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.article-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%);
+}
+
+.article-card p {
+  position: absolute;
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  top: 50%; /* Centra verticalmente el texto */
+  left: 50%; /* Centra horizontalmente el texto */
+  transform: translate(-50%, -50%); /* Corrige el desplazamiento */
+  text-align: center; /* Asegura que el texto multilinea esté centrado */
+  margin: 0;
+  width: 90%; /* Asegura que el texto no se desborde del contenedor */
+}
+
+.article-card:hover {
+  transform: scale(1.1);
+}
+/* Media query para pantallas pequeñas (menor a 1300px) */
+@media (max-width: 1300px) {
+  .main-content {
+    padding: 0 20px; /* Añadido para que el contenido no toque los bordes en pantallas más pequeñas */
+  }
+
+  .breadcrumb a:first-child {
+    margin-left: 0; /* Elimina el margen en pantallas más pequeñas */
+  }
+
+  .zone {
+    width: 100%; /* Hace que la zona sea de 100% en pantallas pequeñas */
+    height: auto; /* Ajusta la altura */
+  }
+
+  h1 {
+    font-size: 35px; /* Ajusta el tamaño de la fuente */
+    text-align: center; /* Centra el texto en pantallas más pequeñas */
+    transform: translateX(0); /* Elimina el desplazamiento */
+    width: 100%; /* Ajusta el ancho */
+    margin: 20px auto; /* Centra el título */
+  }
+
+  .cont-img {
+    width: 100%; /* Hace que el contenedor sea 100% */
+    height: auto; /* Ajusta la altura automáticamente */
+  }
+
+  .cont-img img {
+    width: 100%; /* Asegura que la imagen ocupe el 100% del contenedor */
+    height: auto; /* Ajusta la altura automáticamente */
+  }
+
+  .contex p {
+    width: 100%; /* Hace que el texto ocupe todo el ancho */
+    transform: translateX(0); /* Elimina el desplazamiento */
+    font-size: 14px; /* Ajusta el tamaño de la fuente */
+    line-height: 1.6; /* Aumenta el interlineado para mayor legibilidad */
+  }
+
+  .products-row {
+    flex-direction: column; /* Cambia la disposición a columna en pantallas más pequeñas */
+    align-items: center; /* Centra las tarjetas */
+    gap: 20px; /* Ajusta el espacio entre las tarjetas */
+  }
+
+  .product-card {
+    width: 90%; /* Ajusta el ancho a un 90% en pantallas más pequeñas */
+    height: auto; /* Ajusta la altura automáticamente */
+  }
+
+  .product-card button {
+    width: 100%; /* Hace que el botón ocupe todo el ancho */
+  }
+
+  .pagination-buttons {
+    flex-direction: column; /* Coloca los botones de paginación en columna */
+    gap: 5px; /* Ajusta el espacio entre los botones */
+  }
+
+  .share-section {
+    transform: translateX(0); /* Elimina el desplazamiento */
+    margin-left: 0; /* Elimina el margen izquierdo */
+    margin-top: 20px; /* Añade espacio en la parte superior */
+    justify-content: center; /* Centra los elementos dentro */
+  }
+
+  .share-section h3 {
+    font-size: 16px; /* Ajusta el tamaño de la fuente */
+    margin-right: 10px; /* Ajusta el margen */
+  }
+
+  .share-icons img {
+    width: 30px; /* Ajusta el tamaño de los íconos */
+    height: 30px; /* Ajusta la altura */
+  }
+
+  .articles-row {
+    flex-direction: column; /* Cambia la disposición a columna */
+    align-items: center; /* Centra las tarjetas de los artículos */
+    gap: 20px; /* Ajusta el espacio entre las tarjetas */
+  }
+
+  .article-card {
+    width: 90%; /* Ajusta el ancho de la tarjeta a un 90% */
+    height: auto; /* Ajusta la altura automáticamente */
+  }
+
+  .article-card img {
+    height: 200px; /* Ajusta la altura de la imagen */
+  }
+}
+/* Truncar breadcrumb en móvil */
+@media (max-width: 750px) {
+    #product-name {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    #product-name {
+        max-width: 150px;
+    }
+}

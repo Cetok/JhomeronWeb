@@ -1,0 +1,1484 @@
+body {
+  font-family: "Outfit", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.main-content {
+  flex: 1;
+  background-color: #f3f3f3;
+}
+
+body:has(.asesoria-overlay:not(.hidden)) .visu-wasap {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.flecha-indicadora {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid #ef0606;
+  /* Color rojo para la flecha */
+  position: absolute;
+  top: 1px;
+  /* Ajustar según sea necesario para que esté debajo del nombre */
+  left: 48%;
+  transform: translateX(-50%) translateY(-10px) scale(0.8);
+  /* Centrado horizontal y efecto inicial */
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 2;
+}
+
+/* Ajuste para la posición del contenedor de producto */
+.contenedor-producto {
+  position: relative;
+  /* Asegurar que la flecha se posicione correctamente */
+}
+
+/* Ajuste para que la flecha quede bien posicionada en el contenedor Mate */
+.dual-container .contenedor-producto .flecha-indicadora {
+  top: 1px;
+  left: 107px;
+}
+
+/* Estilos para la barra superior */
+.arriba {
+  width: 100%;
+  height: 40px;
+  background: #0d3393;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.arriba a {
+  display: flex;
+  margin-right: 10px;
+  margin-left: calc((100% - 1225px) / 2);
+}
+
+.arriba img {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  margin-left: 0;
+}
+
+.arriba p {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+
+/* Contenedor principal */
+.visualizador {
+  width: 100%;
+  max-width: 1500px;
+  margin: 30px auto 0;
+  padding: 0 20px;
+  display: flex;
+  min-height: calc(100vh - 40px);
+  background-color: #f3f3f3;
+  box-sizing: border-box;
+}
+
+.menu-lateral {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: #f3f3f3;
+  padding: 20px 0;
+  margin-left: calc((100% - 1225px) / 2);
+  /* Mismo cálculo que .arriba a */
+}
+
+.opcion-menu {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  height: 40px;
+  width: 198px;
+}
+
+.opcion-menu img {
+  width: 42px;
+  height: 30px;
+  margin-right: 12px;
+  transition: filter 0.3s ease;
+}
+
+/* Estado normal - texto azul */
+.opcion-menu span {
+  color: #0d3393;
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  transition: color 0.3s ease;
+}
+
+/* Estado activo - fondo rojo, texto e icono blancos */
+.opcion-menu.activo {
+  background-color: #0d3393;
+}
+
+.opcion-menu.activo span {
+  color: white;
+}
+
+.opcion-menu.activo img {
+  filter: brightness(0) invert(1);
+}
+
+/* Estado hover para elementos no activos */
+.opcion-menu:hover:not(.activo) {
+  background-color: #e4e4e4;
+}
+
+.area-principal {
+  flex: 1;
+  padding: 20px;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Ajuste de las imágenes de habitación */
+.visualizador-habitacion {
+  width: 100%;
+  max-width: 900px;
+  height: 500px;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#imagen-habitacion {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+/* Botón de cerrar */
+.cerrar-colores {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid #ef0606;
+  color: #ef0606;
+  /* X en color blanco */
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  /* Hacer el botón circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cerrar-colores:hover {
+  transform: translateY(-50%) scale(1.1);
+  transition: all 0.2s ease;
+}
+
+/* Ajuste de la sección de productos */
+.tipos-pintura {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Ajuste de los contenedores de producto */
+.tipo-pintura {
+  flex: 1;
+  min-width: 0;
+}
+
+.tipo-pintura h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #0d3393;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.mate-tit {
+  transform: translateX(-130px);
+}
+
+.contenedor-producto {
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 230px;
+  /* Altura fija para todos los contenedores */
+  justify-content: space-between;
+}
+
+/* Ajustes para las imágenes */
+.contenedor-producto img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+/* Ajustes para Mate */
+.dual-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  transform: translateX(-130px);
+}
+
+.dual-container .contenedor-producto {
+  width: 220px;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 230px;
+  justify-content: space-between;
+}
+
+/* Estilo específico para el contenedor de Mate */
+.tipo-pintura:nth-child(2) .contenedor-producto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  /* Cambiado de 450px a 100% */
+  max-width: 500px;
+  /* Añadido max-width para control */
+}
+
+/* Contenedor específico para las imágenes de Mate */
+.imagenes-mate {
+  display: flex;
+  gap: 15px;
+  /* Reducido de 20px a 15px */
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 100%;
+  /* Asegurar que use todo el ancho disponible */
+  padding: 0 10px;
+  /* Añadir padding para evitar que las imágenes toquen los bordes */
+}
+
+.imagenes-mate img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+/* Estilo base para los botones */
+.btn-ver-colores {
+  background-color: white;
+  color: #0d3393;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  font-family: "Outfit", sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: auto;
+  margin-block-end: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Estilo cuando el botón está activo */
+.btn-ver-colores.activo {
+  background-color: #0d3393;
+  color: white;
+  box-shadow: none;
+}
+
+/* Hover solo para botones no activos */
+.btn-ver-colores:not(.activo):hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* empieza colores */
+.barra-colores {
+  position: absolute;
+  top: 30px;
+  left: 16px;
+  right: 16px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 8px 20px;
+  border-radius: 8px;
+  display: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.barra-colores.visible {
+  display: block;
+}
+
+.colores-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.color-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  /* Cambio a cuadrado */
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+  position: relative;
+  /* Para el tooltip */
+}
+
+/* Tooltip para los colores */
+.color-option::after {
+  content: attr(data-color-name);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background-color: white;
+  color: #0d3393;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 1000;
+  margin-bottom: 5px;
+  font-size: 10pt;
+  font-weight: 400;
+}
+
+/* Flecha del tooltip */
+.color-option::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #0d3393 transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 1000;
+  margin-bottom: -5px;
+}
+
+/* Mostrar tooltip en hover */
+.color-option:hover::after,
+.color-option:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+/* termina */
+.visu-wasap {
+  position: absolute;
+  right: 35px;
+  bottom: 35px;
+  z-index: 1000;
+  background-color: #25d366;
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  animation: pulse 2s infinite;
+  line-height: 0;
+}
+
+.visualizador-habitacion {
+  position: relative;
+  /* Aseguramos que el contenedor sea relativo */
+}
+
+body:has(.cotiza-overlay:not(.hidden)) .visu-wasap {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.visu-wasap i {
+  font-size: 22pt;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+.visu-wasap::after {
+  content: "¡Clic para cotizar el producto!";
+  position: absolute;
+  bottom: calc(100% + 13px);
+  /* Aumentado de 8px a 15px para subirlo más */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  color: black;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: "Outfit", sans-serif;
+  font-weight: 200;
+  margin-left: -70px;
+  margin-bottom: 5px;
+  /* Añadido margen inferior para separarlo más de la flecha */
+}
+
+.visu-wasap::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 5px);
+  /* Ajustado para que la flecha esté un poco más abajo del tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 1000;
+}
+
+/* Mostrar tooltip y flecha al hover */
+.visu-wasap:hover::before,
+.visu-wasap:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Animación de pulsación */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+@media screen and (max-width: 1500px) {
+  .visualizador-habitacion {
+    height: 450px;
+  }
+
+  .tipos-pintura {
+    max-width: 1000px;
+  }
+}
+
+@media screen and (max-width: 1299px) {
+
+  .arriba img {
+    margin-left: 60px;
+  }
+
+  .dual-container .contenedor-producto .flecha-indicadora {
+    left: 100px;
+    /* Ajustar para el contenedor Mate */
+  }
+
+  .menu-lateral .opcion-menu {
+    justify-content: center;
+    transform: translateX(50px);
+  }
+
+  .visualizador-habitacion {
+    width: 80%;
+    height: 350px;
+    margin-top: 0;
+  }
+
+  .contenedor-producto img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .color-grid {
+    grid-template-columns: repeat(12, minmax(20px, 1fr)) !important;
+    gap: 15px !important;
+    padding: 0 30px !important;
+    width: calc(100% - 60px) !important;
+    max-width: 450px !important;
+    margin: 0 auto !important;
+  }
+
+  .carousel-container {
+    padding: 0 30px !important;
+  }
+
+  .carousel-arrow {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 16px !important;
+  }
+
+  .carousel-arrow.left-arrow {
+    left: 5px !important;
+  }
+
+  .carousel-arrow.right-arrow {
+    right: 5px !important;
+  }
+
+  .barra-colores {
+    padding: 8px 30px !important;
+  }
+
+  .color-option {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+}
+
+@media screen and (max-width: 1220px) {
+  .arriba img {
+    margin-left: 60px;
+  }
+
+  .visualizador {
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .visu-wasap {
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .visu-wasap::after {
+    font-size: 9pt;
+    padding: 8px 10px;
+  }
+
+  .menu-lateral {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .menu-lateral .opcion-menu {
+    justify-content: center;
+  }
+
+  .visualizador-habitacion {
+    width: 90%;
+    height: 350px;
+    margin-top: 0;
+  }
+
+  .tipos-pintura {
+    width: 90%;
+    gap: 10px;
+  }
+
+  .tipo-pintura:nth-child(2) .contenedor-producto {
+    width: 100%;
+  }
+
+  .imagenes-mate {
+    gap: 10px;
+  }
+
+  .contenedor-producto img {
+    width: 80px;
+    height: 80px;
+  }
+
+
+}
+
+@media screen and (min-width: 791px) and (max-width: 1220px) {
+
+  /* Mantener el layout de dos columnas como en desktop */
+  .visualizador {
+    display: flex;
+    flex-direction: row;
+    /* Mantener en fila, no columna */
+    padding: 0 20px;
+    margin: 30px auto 0;
+  }
+
+  .dual-container .contenedor-producto .flecha-indicadora {
+    left: 73px !important;
+    /* Ajustar para el contenedor Mate */
+  }
+
+  .color-grid {
+    grid-template-columns: repeat(12, minmax(20px, 1fr)) !important;
+    gap: 10px !important;
+    padding: 0 0px !important;
+    width: calc(100% - 60px) !important;
+    max-width: 450px !important;
+    margin: 0 auto !important;
+  }
+
+  .carousel-container {
+    padding: 0 30px !important;
+  }
+
+  /* Ajustar menú lateral para tablets */
+  .menu-lateral {
+    width: 180px;
+    /* Ligeramente más estrecho que desktop */
+    flex-shrink: 0;
+    padding: 20px 0;
+    margin-left: 20px;
+    /* Simplificar el margen */
+    display: block;
+    /* Mantener como bloque, no flex */
+  }
+
+  .menu-lateral .opcion-menu {
+    justify-content: center;
+    transform: translateX(-20px);
+  }
+
+  /* Ajustar opciones del menú */
+  .opcion-menu {
+    display: flex;
+    flex-direction: row;
+    /* Mantener ícono y texto en línea */
+    align-items: center;
+    padding: 10px 15px;
+    width: 100%;
+    height: 40px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+
+  .opcion-menu img {
+    width: 35px;
+    height: 28px;
+    margin-right: 10px;
+  }
+
+  .opcion-menu span {
+    font-size: 18px;
+    /* Tamaño intermedio */
+    color: #0d3393;
+    display: block;
+    /* Asegurar que se muestre el texto */
+  }
+
+  /* Área principal ajustada */
+  .area-principal {
+    flex: 1;
+    padding: 20px;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Visualizador de habitación optimizado para tablets */
+  .visualizador-habitacion {
+    width: 100%;
+    max-width: 700px;
+    /* Más pequeño que desktop pero más grande que móvil */
+    height: 400px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Ajustar la sección de productos */
+  .tipos-pintura {
+    width: 100%;
+    max-width: 700px;
+    margin: 30px auto 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  /* Mantener productos en línea */
+  .tipo-pintura {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .tipo-pintura h3 {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* Ajustar contenedores de producto */
+  .contenedor-producto {
+    height: 200px;
+    /* Altura fija pero más pequeña */
+    padding: 15px;
+  }
+
+  .contenedor-producto img {
+    width: 75px;
+    height: 75px;
+  }
+
+  /* Ajustar el contenedor dual para Mate */
+  .dual-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    transform: translateX(-80px);
+    /* Menos desplazamiento que desktop */
+  }
+
+  .dual-container .contenedor-producto {
+    width: 190px;
+    height: 200px;
+  }
+
+  .mate-tit {
+    transform: translateX(-80px);
+  }
+
+  /* Ajustar la barra de colores */
+  .barra-colores {
+    left: 12px;
+    right: 12px;
+    padding: 8px 15px;
+  }
+
+  /* WhatsApp button */
+  .visu-wasap {
+    right: 25px;
+    bottom: 25px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .visu-wasap i {
+    font-size: 20pt;
+  }
+
+  /* Ajustar navegación superior */
+  .arriba a {
+    margin-left: 50px;
+  }
+
+  /* Ajustar flechas indicadoras */
+  .flecha-indicadora {
+    top: 1px;
+    left: 48%;
+  }
+
+  /* Ajustar botones */
+  .btn-ver-colores {
+    font-size: 11px;
+    padding: 7px 8px;
+    margin-top: auto;
+    margin-bottom: 20px;
+  }
+
+  /* Asegurar que el tooltip funcione bien en tablets */
+  .color-option::after {
+    font-size: 13px;
+  }
+
+}
+
+@media screen and (max-width: 980px) {
+  .dual-container .contenedor-producto .flecha-indicadora {
+    left: 67px !important;
+    /* Ajustar para el contenedor Mate */
+  }
+}
+
+@media screen and (max-width: 920px) {
+  .dual-container .contenedor-producto .flecha-indicadora {
+    left: 60px !important;
+    /* Ajustar para el contenedor Mate */
+  }
+}
+
+@media screen and (max-width: 900px) {
+
+  .visu-wasap {
+    right: 15px;
+    bottom: 15px;
+    width: 35px;
+    height: 35px;
+  }
+
+  .visu-wasap i {
+    font-size: 18pt;
+  }
+
+  .tipo-pintura {
+    width: 90%;
+  }
+
+  .contenedor-producto {
+    height: auto;
+    padding: 15px;
+  }
+
+  .btn-ver-colores {
+    margin-top: 15px;
+    margin-bottom: 0;
+  }
+
+  .visualizador-habitacion {
+    height: 300px;
+  }
+
+  .color-option {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media screen and (max-width: 860px) {
+  .color-grid {
+    grid-template-columns: repeat(8, minmax(20px, 1fr)) !important;
+    gap: 10px !important;
+    padding: 0 0px !important;
+    width: calc(100% - 10px) !important;
+    max-width: 450px !important;
+    margin: 0 auto !important;
+  }
+
+  .visualizador-habitacion {
+    width: 100%;
+    max-width: 750px;
+    /* Más pequeño que desktop pero más grande que móvil */
+    height: 300px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .dual-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    transform: translateX(-30px);
+    /* Menos desplazamiento que desktop */
+  }
+
+  .mate-tit {
+    transform: translateX(-30px);
+  }
+}
+
+/* Ajustes específicos para el tooltip en móviles */
+@media screen and (max-width: 790px) {
+  .arriba a {
+    transform: translateX(340px);
+  }
+
+  .arriba p {
+    transform: translateX(340px);
+  }
+
+  .visualizador {
+    padding: 0;
+    margin: 0;
+    padding-top: 0;
+  }
+
+  .menu-lateral {
+    width: 100%;
+    margin: 0;
+    padding: 8px 5px;
+    display: flex;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    background-color: #f3f3f3;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 10px;
+    /* Hacer el scrollbar invisible */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE y Edge */
+    scroll-behavior: smooth;
+  }
+
+  /* Ocultar scrollbar para Chrome, Safari y Opera */
+  .menu-lateral::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* Asegurar que los círculos sean visibles y mantengan su forma */
+  .opcion-menu {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 5px;
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Estado activo para los círculos */
+  .opcion-menu.activo {
+    background-color: #0d3393;
+    border-color: #0d3393;
+    box-shadow: 0 2px 6px rgba(13, 51, 147, 0.3);
+  }
+
+  /* Ajustar tamaño de íconos */
+  .opcion-menu img {
+    width: 28px;
+    height: 28px;
+    margin: 0 0 5px 0;
+    transition: all 0.3s ease;
+  }
+
+  /* Invertir color de ícono cuando está activo */
+  .opcion-menu.activo img {
+    filter: brightness(0) invert(1);
+  }
+
+  /* Ajustar texto en círculos */
+  .opcion-menu span {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    margin: 0;
+    color: #0d3393;
+    transition: color 0.3s ease;
+  }
+
+  /* Texto en blanco cuando está activo */
+  .opcion-menu.activo span {
+    color: white;
+  }
+
+  .area-principal {
+    padding: 0;
+  }
+
+  .visualizador-habitacion {
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    /* Mantiene proporción 16:9 */
+    margin: 0;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    background-color: #f3f3f3;
+  }
+
+  #imagen-habitacion {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 0;
+  }
+
+  .tipos-pintura {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    margin: 20px 0 0 0;
+    padding: 0 20px;
+  }
+
+  .tipo-pintura h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+
+  .mate-tit {
+    transform: none;
+    text-align: left;
+    margin-left: 20px;
+  }
+
+  .visu-wasap i {
+    font-size: 18pt;
+  }
+
+  .tipo-pintura {
+    width: 90%;
+  }
+
+  .dual-container {
+    transform: none;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 0 10px;
+  }
+
+  .dual-container .contenedor-producto {
+    width: calc(50% - 10px);
+    height: auto;
+    padding: 15px;
+  }
+
+  .contenedor-producto {
+    height: auto;
+    padding: 15px;
+  }
+
+  .contenedor-producto img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .visualizador-habitacion {
+    height: 300px;
+  }
+
+  .color-option {
+    width: 30px;
+    height: 30px;
+  }
+
+  .btn-ver-colores {
+    margin: 10px 0 0 0;
+    padding: 8px 25px;
+    font-size: 12px;
+    margin-top: 15px;
+    margin-bottom: 0;
+  }
+
+  /* Color bar adjustments */
+  .barra-colores {
+    display: none !important;
+  }
+
+  .barra-colores-mobile {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .barra-colores-mobile .carousel-mobile::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* WhatsApp button adjustments */
+  .visu-wasap {
+    display: none !important;
+    right: 15px;
+    bottom: 15px;
+    width: 35px;
+    height: 35px;
+  }
+
+  .dual-container .contenedor-producto .flecha-indicadora {
+    left: 46% !important;
+    /* Center the arrow in each container */
+    transform: translateX(-50%) translateY(-10px) scale(0.8);
+  }
+
+  /* Apply specific positioning for each container in dual layout */
+  .dual-container .contenedor-producto:first-child .flecha-indicadora {
+    top: 1px;
+  }
+
+  .dual-container .contenedor-producto:last-child .flecha-indicadora {
+    top: 1px;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .arriba a {
+    transform: translateX(230px);
+  }
+
+  .arriba p {
+    transform: translateX(230px);
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .arriba a {
+    transform: translateX(340px);
+  }
+
+  .arriba p {
+    transform: translateX(340px);
+  }
+
+  .visualizador {
+    padding: 10px;
+  }
+
+  .visu-wasap {
+    right: 10px;
+    bottom: 10px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .visu-wasap i {
+    font-size: 16pt;
+  }
+
+  .visu-wasap::after {
+    font-size: 8pt;
+    padding: 6px 8px;
+    bottom: calc(100% + 10px);
+  }
+
+  .visu-wasap::before {
+    border-width: 6px;
+    bottom: calc(100% + 4px);
+  }
+
+  .visualizador-habitacion {
+    height: 250px;
+  }
+
+  .opcion-menu span {
+    font-size: 14pt;
+  }
+
+  .tipo-pintura h3 {
+    font-size: 16pt;
+  }
+
+  .btn-ver-colores {
+    font-size: 11pt;
+    padding: 6px 16px;
+  }
+
+  .imagenes-mate {
+    flex-wrap: wrap;
+  }
+
+  .imagenes-mate img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .color-option {
+    width: 25px;
+    height: 25px;
+  }
+
+  .cerrar-colores {
+    width: 18px;
+    height: 18px;
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  /* Fix navigation and arriba section */
+  .arriba a {
+    transform: translateX(0);
+    margin-left: -30px;
+  }
+
+  .arriba p {
+    transform: translateX(0);
+    font-size: 14px;
+  }
+
+  .menu-lateral {
+    width: 100%;
+    padding: 8px 5px;
+    display: flex;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    background-color: #f3f3f3;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 10px;
+    margin: 0;
+    transform: translateX(-50px);
+  }
+
+  /* Asegurar que los círculos sean visibles y mantengan su forma */
+  .opcion-menu {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 5px;
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Estado activo para los círculos */
+  .opcion-menu.activo {
+    background-color: #0d3393;
+    border-color: #0d3393;
+    box-shadow: 0 2px 6px rgba(13, 51, 147, 0.3);
+  }
+
+  /* Ajustar tamaño de íconos */
+  .opcion-menu img {
+    width: 28px;
+    height: 28px;
+    margin: 0 0 5px 0;
+    transition: all 0.3s ease;
+  }
+
+  /* Invertir color de ícono cuando está activo */
+  .opcion-menu.activo img {
+    filter: brightness(0) invert(1);
+  }
+
+  /* Ajustar texto en círculos */
+  .opcion-menu span {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    margin: 0;
+    color: #0d3393;
+    transition: color 0.3s ease;
+  }
+
+  /* Texto en blanco cuando está activo */
+  .opcion-menu.activo span {
+    color: white;
+  }
+
+  /* Hacer que el scrollbar sea invisible pero funcional */
+  .menu-lateral::-webkit-scrollbar {
+    height: 3px;
+    background: transparent;
+  }
+
+  .menu-lateral::-webkit-scrollbar-thumb {
+    background: rgba(13, 51, 147, 0.2);
+    border-radius: 3px;
+  }
+
+  /* Contenedor principal del carrusel móvil */
+  .barra-colores-mobile {
+    width: 100%;
+    background: white;
+    padding: 15px 0;
+    margin-top: 15px;
+    border: 1px solid #0d3393;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Contenedor del carrusel */
+  .carousel-container-mobile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 35px;
+    background: white;
+    margin: 0 10px;
+  }
+
+  .carousel-button-mobile:active {
+    transform: translateY(-50%) scale(0.95);
+    box-shadow: 0 1px 3px rgba(13, 51, 147, 0.3);
+  }
+
+  .carousel-button-mobile.left {
+    left: 3px;
+  }
+
+  .carousel-button-mobile.right {
+    right: 3px;
+  }
+
+  /* Grid de colores optimizado para pantallas pequeñas */
+  .color-grid-mobile {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Cambiar de 4 a 3 columnas */
+    gap: 12px;
+    width: 100%;
+    max-width: 240px;
+    margin: 0 auto;
+  }
+
+  /* Opciones de color mejoradas */
+  .color-option-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 4px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .color-option-mobile:active {
+    transform: scale(0.95);
+    background-color: rgba(13, 51, 147, 0.05);
+  }
+
+  /* Imágenes de color */
+  .color-option-mobile img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+  }
+
+  .color-option-mobile:active img {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Nombres de colores */
+  .color-name-mobile {
+    font-size: 12px;
+    color: #0d3393;
+    text-align: center;
+    margin-top: 2px;
+    font-weight: 500;
+    line-height: 1.2;
+    max-width: 60px;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+}
+
+@media screen and (max-width: 360px) {
+
+   .carousel-container-mobile {
+    padding: 8px 30px;
+    margin: 0 5px;
+  }
+  
+  .carousel-button-mobile {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+  
+  .carousel-button-mobile.left {
+    left: 2px;
+  }
+  
+  .carousel-button-mobile.right {
+    right: 2px;
+  }
+  
+  .color-grid-mobile {
+    max-width: 250px;
+    gap: 8px; /* Reducido de 10px a 8px */
+  }
+  
+  /* Hacer los colores más pequeños */
+  .color-option-mobile img {
+    width: 42px !important; 
+    height: 42px !important; 
+  }
+  
+  .color-name-mobile {
+    font-size: 12px !important;
+    max-width: 70px !important;
+  }
+  
+  .dual-container .contenedor-producto {
+    width: calc(50% - 10px);
+    height: auto;
+    padding: 5px;
+  }
+
+  .dual-container .contenedor-producto .flecha-indicadora {
+    left: 40% !important;
+  }
+
+  .dual-container .contenedor-producto:first-child .flecha-indicadora {
+    top: -6px;
+  }
+
+  .dual-container .contenedor-producto:last-child .flecha-indicadora {
+    top: -6px;
+  }
+}

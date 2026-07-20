@@ -1,0 +1,839 @@
+.main-content {
+  flex: 1;
+  background-color: #f3f3f3;
+}
+
+/* Nuevos estilos proporcionados */
+.arriba {
+  width: 100%;
+  height: 40px;
+  background: #0d3393;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+.arriba a {
+  display: flex;
+  margin-right: 10px;
+  margin-left: calc((100% - 1225px) / 2);
+}
+
+.arriba img {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  margin-left: 0;
+}
+
+.arriba p {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 250px 250px;
+  margin-bottom: 20px;
+  width: 1225px; /* Cambiar de max-width: 1650px a width: 1225px */
+  margin-left: calc((100% - 1225px) / 2); /* Cambiar de margin-left: 120px */
+  margin-top: 10px;
+}
+
+.blog-item {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  cursor: pointer;
+}
+
+/* Elimina el overlay oscuro existente */
+.blog-item::before {
+  content: none;
+}
+.blog-item.corto {
+  margin-top: 150px;
+  height: 300px;
+}
+
+.blog-item .button-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  transition: background-color 0.3s ease;
+}
+
+.blog-item .button-text {
+  padding: 2px 5px;
+  color: white;
+  font-family: "Outfit", sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  max-width: 90%;
+}
+
+.blog-item:hover .button-text {
+  background-color: #0d3393; /* Azul sólido */
+  color: white;
+}
+.blog-item.large .button-text {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.blog-item.corto .button-text {
+  font-size: 20px;
+  font-weight: 800;
+  
+}
+
+.blog-item.large {
+  grid-column: span 3;
+  height: 400px;
+}
+
+.blog-item:nth-child(3),
+.blog-item:nth-child(4),
+.blog-item:nth-child(5) {
+  grid-row: 2;
+  grid-column: span 2;
+}
+
+.zone-banner {
+  background-color: #0d3393;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  margin-block-end: 20px;
+  margin-top: 220px;
+}
+
+.automotive-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding: 20px;
+  width: 1225px; /* Cambiar de max-width: 1650px */
+  margin-left: calc((100% - 1225px) / 2); /* Agregar este margen */
+}
+
+.grid-item {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.grid-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.grid-item img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.grid-item:hover img {
+  transform: scale(1.05);
+}
+.grid-item .overlay {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+}
+
+.grid-item .overlay p {
+  font-family: "Outfit", sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #333;
+  margin: 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Estilos para los primeros tres elementos */
+.grid-item:nth-child(-n + 3) img {
+  height: 70%; /* Aumenta la altura de la imagen */
+}
+
+.grid-item:nth-child(-n + 3) .overlay {
+  height: 30%; /* Ajusta la altura del overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilos para los últimos tres elementos */
+.grid-item:nth-child(n + 4) {
+  position: relative;
+  height: auto;
+}
+
+.grid-item:nth-child(n + 4)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.grid-item:nth-child(n + 4) img {
+  height: 100%;
+}
+
+.grid-item:nth-child(n + 4) .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.grid-item:nth-child(n + 4) .overlay p {
+  color: white;
+}
+.zone-banner-2 {
+  background-color: #0d3393;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-family: "Outfit", sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  margin-block-end: 20px;
+  margin-top: 20px;
+}
+
+.grid-item:nth-child(n + 4) .overlay p {
+  color: white;
+}
+.decorative-zone {
+  width: 1225px; /* Cambiar de max-width: 1650px */
+  margin-left: calc((100% - 1225px) / 2); /* Agregar este margen */
+  padding: 20px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 450px; /* Aumentamos significativamente la altura */
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-image {
+  height: 300px; /* Aumentamos la altura de la imagen */
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+.card-content {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 20px; /* Aumentamos ligeramente el tamaño de la fuente */
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.page-button {
+  width: 40px; /* Aumentamos ligeramente el tamaño de los botones */
+  height: 40px;
+  margin: 0 5px;
+  border: 1px solid #0d3393;
+  background-color: white;
+  color: #0d3393;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.page-button.active {
+  background-color: #0d3393;
+  color: white;
+  border-color: #0d3393;
+}
+/* Inspirate */
+.inspirate-section {
+  max-width: 1200px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.image-container {
+  position: relative;
+  width: 1000px;
+  height: 450px;
+  overflow: hidden;
+  border-radius: 15px;
+  margin-left: 100px;
+}
+
+.inspirate-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.background-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7);
+}
+.overlay-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  width: 100%;
+}
+
+h2 {
+  font-family: "Outfit", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.line-decorativa {
+  background-color: white;
+  color: #cc6600;
+  padding: 5px 20px;
+  width: 300px;
+  height: 40px;
+  border-radius: 25px;
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.inspirate-link:hover .line-decorativa {
+  background-color: #cc6600;
+  color: white;
+}
+.line-decorativa:hover {
+  background-color: #cc6600;
+  color: white;
+}
+
+.linea-decorativa-btn {
+  background-color: #cc6600;
+  color: white;
+  border: none;
+  width: 390px;
+  height: 70px;
+  padding: 8px 20px;
+  border-radius: 45px;
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 20px;
+  animation: pulse 1.5s infinite;
+}
+.isnp-txt {
+  font-size: 20px;
+  font-weight: 600;
+}
+.text-content {
+  display: none;
+}
+.card-text {
+  display: none;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 #cc6600;
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 140, 0, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 140, 0, 0);
+  }
+}
+
+@media (min-width: 751px) and (max-width: 1300px) {
+  .arriba a {
+    transform: translateX(300px);
+  }
+  .arriba p {
+    transform: translateX(300px);
+  }
+  .blog-grid,
+  .image-container,
+  .automotive-grid,
+  .decorative-zone {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+  }
+  .linea-decorativa-btn {
+    width: 90%;
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 750px) {
+  /* Reset de contenedor principal */
+  .arriba a {
+    transform: translateX(400px);
+  }
+  .arriba p {
+    transform: translateX(400px);
+  }
+
+  /* Grid principal del blog */
+  .blog-grid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+  }
+
+  .blog-item {
+    width: 100%;
+    height: 180px !important;
+    margin: 0;
+    position: relative;
+  }
+
+  .blog-item.large,
+  .blog-item.corto {
+    height: 180px !important;
+    grid-column: 1;
+    margin: 0;
+  }
+
+  .button-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .button-text {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Zona Automotriz */
+  .zone-banner,
+  .zone-banner-2 {
+    margin: 0;
+    padding: 15px 0;
+    width: 100%;
+    background-color: #0d3393;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin-block-end: 20px;
+  }
+
+  /* Grid de la zona automotriz */
+  .automotive-grid {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Cada ítem del grid */
+  .grid-item {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    margin-bottom: 15px;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  /* Primeros 3 elementos con fondo blanco */
+  .grid-item:nth-child(-n + 3) {
+    background: white;
+    margin-bottom: 1px;
+    padding: 15px;
+  }
+
+  /* Últimos 3 elementos con fondo oscuro */
+  .grid-item:nth-child(n + 4) {
+    padding: 15px;
+    color: white;
+  }
+
+  .grid-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+
+  .grid-item .overlay {
+    padding: 15px 15px 5px 15px;
+    transition: opacity 0.3s ease;
+  }
+  .grid-item .overlay p {
+    font-family: "Outfit", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    line-height: 1.4;
+  }
+  /* Texto blanco para los últimos 3 elementos */
+  .grid-item:nth-child(n + 4) .overlay p {
+    color: white;
+  }
+
+  .grid-item .overlay p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  .grid-item .text-content {
+    transition: opacity 0.3s ease;
+  }
+  .text-content {
+    display: block;
+    padding: 0 15px 15px 15px;
+    color: #666666;
+    font-family: "Outfit", sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* Ocultar text-content en elementos expandidos */
+  .grid-item.hidden-mobile .text-content {
+    display: none;
+  }
+  /* Ocultar inicialmente los últimos elementos */
+  .grid-item.hidden-mobile {
+    display: none;
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+  }
+  .grid-item.hidden-mobile.show {
+    max-height: 500px; /* Altura máxima que puede alcanzar */
+    opacity: 1;
+    margin-bottom: 15px;
+    padding: 15px;
+  }
+
+  /* Botón ver más */
+  .ver-mas {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 40px;
+    font-family: "Outfit", sans-serif;
+    transition: all 0.3s ease;
+  }
+
+  .ver-mas a {
+    color: #0d3393;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .hidden-mobile {
+    display: none;
+  }
+
+  /* Icono para el botón */
+  .ver-mas i {
+    transition: transform 0.5s ease;
+  }
+
+  .ver-mas.active i {
+    transform: rotate(180deg);
+  }
+  /* Decorativo" */
+  .decorative-zone {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    background: white;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 1px;
+    padding: 15px;
+    cursor: pointer;
+  }
+
+  .card-image {
+    width: 100%;
+    height: 200px;
+  }
+
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-content {
+    flex: 1;
+    padding: 15px 15px 5px 15px;
+  }
+
+  .card-title {
+    font-family: "Outfit", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    text-align: left;
+    line-height: 1.4;
+  }
+
+  /* Agregar el texto descriptivo */
+  .card-text {
+    display: block;
+    padding: 0 15px 15px 15px;
+    color: #666666;
+    font-family: "Outfit", sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* Paginación */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0 40px 0;
+  }
+
+  .page-button {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+    background: white;
+    border: 1px solid #0d3393;
+    color: #0d3393;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-button.active {
+    background: #0d3393;
+    color: white;
+  }
+
+  /* Sección Inspírate */
+  .inspirate-section {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+
+  .image-container {
+    width: 100%;
+    height: 200px;
+    margin: 0;
+    position: relative;
+  }
+
+  .background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .overlay-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .overlay-content h2 {
+    font-size: 16px;
+  }
+
+  .line-decorativa {
+    font-size: 22px;
+    padding: 8px 20px;
+    background: white;
+    border-radius: 20px;
+    margin-top: -10px;
+  }
+
+  .linea-decorativa-btn {
+    width: 100%;
+    max-width: 250px;
+    height: 50px;
+    padding: 25px 20px;
+    border-radius: 40px;
+    background: #cc6600;
+    color: white;
+    font-size: 15px;
+    margin-top: 15px;
+    border: none;
+  }
+
+  .isnp-txt {
+    font-size: 12px;
+    margin: 0;
+    margin-top: -15px;
+  }
+}
+@media (min-width: 751px) {
+  .ver-mas {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .arriba a {
+    transform: translateX(445px);
+  }
+  .arriba p {
+    transform: translateX(445px);
+  }
+
+}
+/* Mejoras de accesibilidad y usabilidad */
+@media (hover: hover) {
+  .blog-item:hover .button-overlay,
+  .grid-item:hover .overlay,
+  .card:hover {
+    opacity: 0.9;
+  }
+}
+
+@media (hover: none) {
+  .blog-item .button-overlay,
+  .grid-item .overlay,
+  .card-content {
+    opacity: 0.9;
+  }
+}

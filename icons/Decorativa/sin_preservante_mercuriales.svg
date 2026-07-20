@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 59 59">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: Outfit-Medium, Outfit;
+        font-size: 21.07px;
+        font-weight: 500;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #0d3393;
+      }
+
+      .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-3 {
+        fill: none;
+        stroke: #0d3393;
+        stroke-miterlimit: 10;
+        stroke-width: .75px;
+      }
+    </style>
+  </defs>
+  <g id="Capa_1-2" data-name="Capa 1">
+    <g>
+      <path class="cls-2" d="m29.5,59C13.23,59,0,45.77,0,29.5S13.23,0,29.5,0s29.5,13.23,29.5,29.5-13.23,29.5-29.5,29.5Zm0-57.07C14.3,1.93,1.93,14.3,1.93,29.5s12.37,27.57,27.57,27.57,27.57-12.37,27.57-27.57S44.7,1.93,29.5,1.93Z"/>
+      <circle class="cls-3" cx="37.84" cy="11.4" r="4.4"/>
+      <circle class="cls-3" cx="21.41" cy="46.32" r="4.4"/>
+      <text class="cls-1" transform="translate(15.94 34.6)"><tspan x="0" y="0">Hg</tspan></text>
+      <circle class="cls-2" cx="7.86" cy="20.72" r="1.6"/>
+      <circle class="cls-2" cx="51.15" cy="36.45" r="1.6"/>
+      <circle class="cls-2" cx="20.63" cy="12.94" r="2.32"/>
+      <circle class="cls-2" cx="40" cy="48" r="2.34"/>
+      <circle class="cls-2" cx="10.55" cy="35.61" r="2.34"/>
+      <circle class="cls-2" cx="48.06" cy="20.27" r="2.34"/>
+      <rect class="cls-2" x=".28" y="28.48" width="57.91" height="2.74" transform="translate(29.67 -11.93) rotate(45)"/>
+    </g>
+  </g>
+</svg>

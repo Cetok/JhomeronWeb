@@ -1,0 +1,105 @@
+.cabecera-azul {
+    width: 100%;
+    background: #0d3393;
+    position: relative;
+    padding: 0;
+  }
+  
+  .navegacion {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    max-width: 1225px;
+    margin: 0 auto;
+  }
+  
+  .home-icon {
+    display: flex;
+    margin-right: 10px;
+  }
+  
+  .home-icon img {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+  }
+  
+  .navegacion p {
+    font-family: "Outfit", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    margin: 0;
+  }
+  
+  .titulo-principal {
+    max-width: 1225px;
+    margin: 0 auto;
+    padding: 0 0 30px;
+  }
+  
+  .titulo-principal h1 {
+    font-family: "Outfit", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .texto-poli {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: "Outfit", sans-serif;
+  }
+  
+  .texto-poli p {
+    font-family: "Outfit", sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .texto-poli p:first-child {
+    margin-top: 0;
+  }
+  .lnco {
+    display: flex;
+    align-items: center;
+    margin-left: calc((100% - 1225px) / 2);
+    margin-block-end: 50px;
+  }
+  
+  .lnco h3 {
+    font-family: "Outfit", sans-serif;
+    font-size: 12pt;
+    font-weight: 400;
+    margin: 0; /* Elimina cualquier margen extra */
+    margin-right: 15px; /* Espacio entre el h3 y las imágenes */
+  }
+  
+  .redes {
+    display: flex; /* Hace que los elementos dentro de .redes estén en fila */
+    gap: 10px; /* Añade espacio entre las imágenes */
+  }
+  .redes a img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease; /* Agrega una transición suave */
+  }
+  
+  .redes a img:hover {
+    transform: scale(1.2); /* Hace zoom al 120% del tamaño original */
+  }
+  
+  /* Ajustes para dispositivos móviles */
+  @media screen and (max-width: 1300px) {
+    .navegacion,
+    .titulo-principal {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  

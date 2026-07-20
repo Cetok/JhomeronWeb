@@ -1,0 +1,164 @@
+/* Estilos existentes... */
+.map-section {
+  max-width: 1020px;
+  height: 550px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 20px;
+  margin-bottom: 40px; /* Añadido el margen inferior */
+}
+
+.location-dropdown {
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.location-dropdown select {
+  width: 100%; /* Cambiado de width fijo a 100% */
+  max-width: 415px; /* Añadido max-width para mantener el tamaño máximo */
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  appearance: none;
+  background: white
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6" ><path d="M0 0l6 6 6-6z" fill="%230D3393"/></svg>')
+    no-repeat;
+  background-position: right 15px center;
+  font-family: "Outfit", sans-serif;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 400;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+/* Estilos para las opciones del select */
+.location-dropdown select option {
+  padding: 10px 15px;
+  background-color: white;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.map-container {
+  width: 100%;
+  height: 550px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor específico para Google Maps */
+#google-map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.map-search {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: calc(100% - 40px);
+  max-width: 300px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+}
+
+.map-search input {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  color: #666;
+  outline: none;
+}
+
+.map-search button {
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.map-search button img {
+  width: 20px; /* Aumentado el tamaño */
+  height: 20px;
+  opacity: 0.6; /* Añadido para mejor visibilidad */
+}
+
+.map-search button:hover img {
+  opacity: 1;
+}
+
+.map-label {
+  position: absolute;
+  z-index: 99;
+  pointer-events: none;
+}
+
+.label-content {
+  background-color: white;
+  padding: 8px 12px; /* Aumentado el padding */
+  border-radius: 6px; /* Aumentado el radio del borde */
+  font-family: "Outfit", sans-serif;
+  font-size: 14px; /* Aumentado el tamaño de la fuente de 12px a 14px */
+  font-weight: 700;
+  color: #0d3393;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 14px; /* Aumentado el margen inferior */
+  white-space: nowrap;
+  position: relative;
+}
+
+.label-content:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -12px; /* Ajustado para la flecha más grande */
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent; /* Aumentado de 8px a 12px */
+  border-right: 12px solid transparent;
+  border-top: 12px solid white; /* Aumentado de 8px a 12px */
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Estilos responsivos */
+@media (max-width: 750px) {
+  .map-container {
+    height: 400px;
+  }
+
+  .location-dropdown {
+    max-width: 100%;
+  }
+  .location-dropdown select {
+    max-width: 100%; /* El select ocupa todo el ancho disponible */
+    font-size: 14px; /* Reducir tamaño de fuente en móviles */
+  }
+
+}
