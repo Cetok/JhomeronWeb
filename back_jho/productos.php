@@ -7,8 +7,8 @@ session_start();
 require_once "conexion.php";
 
 // Escaneamos las subcarpetas reales de íconos del proyecto
-// icons/decorativa/  -> íconos para "Características"
-// icons/features/    -> íconos para "Aplicación"
+// icons/caracter/  -> íconos para "Características"
+// icons/aplicacion/    -> íconos para "Aplicación"
 function escanearIconos($ruta) {
     $lista = [];
     if (is_dir($ruta)) {
@@ -23,8 +23,8 @@ function escanearIconos($ruta) {
     return $lista;
 }
 
-$iconosCaracteristicas = escanearIconos("../icons/decorativa/");
-$iconosAplicacion = escanearIconos("../icons/features/");
+$iconosCaracteristicas = escanearIconos("../icons/caracter/");
+$iconosAplicacion = escanearIconos("../icons/aplicacion/");
 
 if (!isset($_SESSION["admin_id"])) {
     header("Location: login.php");
@@ -258,7 +258,7 @@ require "header.php";
                             <option value="<?php echo htmlspecialchars($ic); ?>" <?php echo $fila[0] === $ic ? "selected" : ""; ?>><?php echo htmlspecialchars($ic); ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <img class="preview-icono" src="../icons/decorativa/<?php echo htmlspecialchars($fila[0]); ?>.svg"
+                    <img class="preview-icono" src="../icons/caracter/<?php echo htmlspecialchars($fila[0]); ?>.svg"
                          style="width:24px; height:24px; <?php echo $fila[0] ? '' : 'visibility:hidden;'; ?>" onerror="this.style.visibility='hidden'">
                     <input type="text" class="texto-carac" value="<?php echo htmlspecialchars($fila[1]); ?>" placeholder="Texto de la característica" style="margin:0;">
                 </div>
@@ -278,7 +278,7 @@ require "header.php";
                 <label style="display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:500; text-transform:none; margin:0; cursor:pointer;">
                     <input type="checkbox" class="check-aplicacion" value="<?php echo htmlspecialchars($ic); ?>"
                            <?php echo in_array($ic, $aplicacionSeleccionada) ? "checked" : ""; ?> style="width:auto;">
-                    <img src="../icons/features/<?php echo htmlspecialchars($ic); ?>.svg" style="width:20px; height:20px;" onerror="this.style.display='none'">
+                    <img src="../icons/aplicacion/<?php echo htmlspecialchars($ic); ?>.svg" style="width:20px; height:20px;" onerror="this.style.display='none'">
                     <?php echo htmlspecialchars($ic); ?>
                 </label>
                 <?php endforeach; ?>
@@ -348,7 +348,7 @@ require "header.php";
             select.addEventListener("change", function () {
                 const preview = this.parentElement.querySelector(".preview-icono");
                 if (this.value) {
-                    preview.src = "../icons/decorativa/" + this.value + ".svg";
+                    preview.src = "../icons/caracter/" + this.value + ".svg";
                     preview.style.visibility = "visible";
                 } else {
                     preview.style.visibility = "hidden";

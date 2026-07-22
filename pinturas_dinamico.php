@@ -90,13 +90,13 @@ if ($producto && !empty($producto["aplicacion"])) {
         * { box-sizing: border-box; }
         body { font-family: 'Outfit', sans-serif; margin: 0; background: #f5f6fa; }
         .prueba-contenedor { max-width: 1200px; margin: 0 auto; padding: 40px 30px; }
-        .prueba-grid { display: flex; flex-wrap: wrap; gap: 50px; }
+        .prueba-grid { display: flex; flex-wrap: wrap; gap: 90px; }
 
         .prueba-imagen-col { flex: 1 1 380px; min-width: 300px; }
         .prueba-imagen-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; }
         .prueba-imagen-wrap img { max-width: 340px; width: 100%; height: auto; }
         .circulo-flecha {
-            width: 46px !important; height: 46px !important; min-width: 46px; min-height: 46px;
+            width: 56px !important; height: 56px !important; min-width: 56px; min-height: 56px;
             border-radius: 50% !important; background: transparent !important; box-shadow: none !important;
             display: flex !important; align-items: center; justify-content: center;
             cursor: pointer; flex-shrink: 0; border: none; transition: background 0.15s, box-shadow 0.15s;
@@ -107,30 +107,30 @@ if ($producto && !empty($producto["aplicacion"])) {
             box-shadow: 0 3px 10px rgba(20,20,50,0.18) !important;
         }
         .circulo-flecha img {
-            width: 20px !important; height: 20px !important; max-width: 20px !important; max-height: 20px !important;
+            width: 26px !important; height: 26px !important; max-width: 26px !important; max-height: 26px !important;
             display: block; pointer-events: none;
         }
 
         .prueba-info-col { flex: 2 1 500px; min-width: 300px; }
         .prueba-imagen-col h1 { color: #0d3393; font-size: 24px; font-weight: 700; margin: 0 0 10px; }
-        .prueba-descripcion { color: #333; font-size: 15px; line-height: 1.6; max-width: 480px; }
+        .prueba-descripcion { color: #333; font-size: 18px; line-height: 1.6; max-width: 560px; text-align: justify; text-align-last: left; }
 
         .prueba-caracteristicas-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin: 24px 0;
         }
         .caracteristica-box {
-            background: white; border-radius: 12px; padding: 24px 12px; text-align: center;
+            background: white; border-radius: 12px; padding: 28px 14px; text-align: center;
             box-shadow: 0 2px 8px rgba(20,20,50,0.06);
         }
         .caracteristica-box .icono-carac { font-size: 26px; color: #0d3393; margin-bottom: 8px; }
-        .caracteristica-box .icono-carac-img { width: 52px; height: 52px; margin-bottom: 10px; }
+        .caracteristica-box .icono-carac-img { width: 62px; height: 62px; margin-bottom: 10px; }
         .caracteristica-box span { font-size: 12.5px; color: #333; line-height: 1.3; display: block; }
 
         .aplicacion-box {
             background: white; border-radius: 12px; padding: 20px 22px; margin-bottom: 22px;
             box-shadow: 0 2px 8px rgba(20,20,50,0.06); max-width: 340px;
         }
-        .aplicacion-box h4 { margin: 0 0 12px; font-size: 14px; color: #333; font-weight: 600; text-align:center; }
+        .aplicacion-box h4 { margin: 0 0 12px; font-size: 14px; color: #333; font-weight: 400; text-align:center; }
         .aplicacion-iconos { display: flex; justify-content: center; gap: 26px; }
         .aplicacion-iconos img { width: 58px; height: 58px; }
 
@@ -147,10 +147,10 @@ if ($producto && !empty($producto["aplicacion"])) {
 
         .boton-cotizar {
             display: inline-block; background: #ef0606; color: white; font-weight: 700;
-            font-size: 19px; padding: 19px 90px; border-radius: 34px; text-decoration: none;
+            font-size: 23px; padding: 19px 90px; border-radius: 34px; text-decoration: none;
             text-align: center; box-shadow: 0 0 0 0 rgba(239,6,6,0.55);
             animation: pulso-cotizar 1.8s infinite;
-            transition: transform 0.15s;
+            transition: transform 0.08s;
         }
         .boton-cotizar:hover { transform: scale(1.03); }
         @keyframes pulso-cotizar {
@@ -159,22 +159,35 @@ if ($producto && !empty($producto["aplicacion"])) {
             100% { box-shadow: 0 0 0 0 rgba(239,6,6,0); }
         }
 
-        .prueba-botones-doc { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
-        .prueba-botones-doc a {
-            display: flex; align-items: center; justify-content: space-between; gap: 14px;
-            background: white; color: #333; padding: 12px 18px; border-radius: 10px;
-            text-decoration: none; font-size: 13px; font-weight: 600;
-            box-shadow: 0 2px 8px rgba(20,20,50,0.06); min-width: 140px;
+        .prueba-botones-doc {
+            display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; align-items: center;
         }
-        .prueba-botones-doc a i { color: #888; }
+        .prueba-botones-doc a {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+            background: white; color: #666 !important; padding: 14px 20px; border-radius: 10px;
+            text-decoration: none; font-size: 13px; font-weight: 600;
+            border: 2px solid #ccc; box-shadow: none; min-width: 140px;
+        }
+        .prueba-botones-doc a i { color: #666; font-size: 15px; }
 
         .boton-video-youtube {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #ff0000; color: white; font-weight: 700; font-size: 14px;
-            padding: 11px 22px; border-radius: 8px; text-decoration: none;
+            display: flex !important; flex-direction: column; align-items: center; justify-content: center;
+            background: #ff0000 !important; color: white !important; border: none !important;
+            padding: 14px 20px !important; border-radius: 10px; min-width: 140px;
+            text-decoration: none; position: relative; height: 66px;
+            transition: background 0.2s;
         }
-        .boton-video-youtube i { font-size: 18px; }
-        .boton-video-youtube:hover { background: #cc0000; }
+        .boton-video-youtube:hover { background: #cc0000 !important; }
+        .boton-video-youtube .video-icono,
+        .boton-video-youtube .video-texto {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            transition: opacity 0.25s ease;
+        }
+        .boton-video-youtube .video-icono { opacity: 1; font-size: 20px; color: white; }
+        .boton-video-youtube .video-icono i { color: white; }
+        .boton-video-youtube .video-texto { opacity: 0; font-size: 13px; font-weight: 700; white-space: nowrap; color: white; }
+        .boton-video-youtube:hover .video-icono { opacity: 0; }
+        .boton-video-youtube:hover .video-texto { opacity: 1; }
 
         .prueba-colores { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0 22px; }
         .prueba-color-item { text-align: center; width: 60px; }
@@ -185,7 +198,7 @@ if ($producto && !empty($producto["aplicacion"])) {
         .prueba-color-item span { display:block; font-size:11px; color:#666; margin-top:4px; }
 
         .prueba-compartir { margin-top: 20px; display: flex; flex-direction: row; align-items: center; gap: 14px; flex-wrap: wrap; }
-        .texto-compartir { font-size:13px; color:#555; font-weight:600; white-space: nowrap; }
+        .texto-compartir { font-size:15px; color:#555; font-weight:600; white-space: nowrap; }
         .iconos-compartir { display: flex; gap: 12px; }
         .circulo-compartir {
             width: 36px; height: 36px; border-radius: 50%; background: #0d3393; color: white;
@@ -285,11 +298,11 @@ if ($producto && !empty($producto["aplicacion"])) {
                     ?>
                         <div class="caracteristica-box">
                             <?php if ($iconoCarac): ?>
-                                <img src="icons/decorativa/<?php echo htmlspecialchars($iconoCarac); ?>.svg" class="icono-carac-img" alt="" onerror="this.style.display='none'">
+                                <img src="icons/caracter/<?php echo htmlspecialchars($iconoCarac); ?>.svg" class="icono-carac-img" alt="" onerror="this.style.display='none'">
                             <?php else: ?>
                                 <div class="icono-carac">●</div>
                             <?php endif; ?>
-                            <span><?php echo htmlspecialchars($textoCarac); ?></span>
+                            <span><?php echo str_replace("|", "<br>", htmlspecialchars($textoCarac)); ?></span>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -301,7 +314,7 @@ if ($producto && !empty($producto["aplicacion"])) {
                     <h4>Aplicación:</h4>
                     <div class="aplicacion-iconos">
                         <?php foreach ($aplicacionIconos as $icono): ?>
-                            <img src="icons/features/<?php echo htmlspecialchars($icono); ?>.svg" alt="<?php echo htmlspecialchars($icono); ?>"
+                            <img src="icons/aplicacion/<?php echo htmlspecialchars($icono); ?>.svg" alt="<?php echo htmlspecialchars($icono); ?>"
                                  onerror="this.style.display='none'">
                         <?php endforeach; ?>
                     </div>
@@ -312,7 +325,7 @@ if ($producto && !empty($producto["aplicacion"])) {
                     <a href="https://wa.me/957720068" target="_blank" class="boton-cotizar">¡COTIZAR AQUÍ!</a>
                 </div>
 
-                <?php if (count($pdfs) > 0): ?>
+                <?php if (count($pdfs) > 0 || count($videos) > 0): ?>
                 <div class="prueba-botones-doc" style="justify-content:center; margin-top: 90px;">
                     <?php foreach ($pdfs as $pdf): ?>
                         <a href="<?php echo htmlspecialchars($pdf['ruta_original']); ?>" target="_blank" download>
@@ -320,14 +333,10 @@ if ($producto && !empty($producto["aplicacion"])) {
                             <i class="fas fa-download"></i>
                         </a>
                     <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (count($videos) > 0): ?>
-                <div style="text-align:center; margin-top: 18px;">
                     <?php foreach ($videos as $video): ?>
-                        <a href="<?php echo htmlspecialchars($video['ruta_original']); ?>" target="_blank" class="boton-video-youtube">
-                            <i class="fab fa-youtube"></i> <?php echo htmlspecialchars($video['nombre']); ?>
+                        <a href="<?php echo htmlspecialchars($video['ruta_original']); ?>" target="_blank" class="boton-video-youtube" title="<?php echo htmlspecialchars($video['nombre']); ?>">
+                            <span class="video-icono"><i class="fas fa-play"></i></span>
+                            <span class="video-texto">VER VIDEO</span>
                         </a>
                     <?php endforeach; ?>
                 </div>
