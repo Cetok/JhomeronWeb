@@ -83,17 +83,19 @@ if ($producto && !empty($producto["aplicacion"])) {
     <title><?php echo htmlspecialchars($titulo); ?> (prueba dinámica) - Jhomeron</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="stylesFooter.css" />
     <link rel="stylesheet" href="stylesProducto.css" />
     <link rel="stylesheet" href="stylePintura.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <script src="buscador.js"></script>
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Outfit', sans-serif; margin: 0; background: #f5f6fa; }
-        .prueba-contenedor { max-width: 1200px; margin: 0 auto; padding: 40px 30px; }
+        body { font-family: 'Outfit', sans-serif; margin: 0; background: #f3f3f3; }
+        .prueba-contenedor { max-width: 1400px; margin: 0 auto; padding: 20px 6px 40px; }
         .prueba-grid { display: flex; flex-wrap: wrap; gap: 90px; }
 
-        .prueba-imagen-col { flex: 1 1 380px; min-width: 300px; }
-        .prueba-imagen-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; }
+        .prueba-imagen-col { flex: 0 0 480px; min-width: 300px; padding-left: 10px; box-sizing: border-box; }
+        .prueba-imagen-wrap { display: flex; align-items: center; justify-content: flex-start; gap: 20px; }
         .prueba-imagen-wrap img { max-width: 340px; width: 100%; height: auto; }
         .circulo-flecha {
             width: 56px !important; height: 56px !important; min-width: 56px; min-height: 56px;
@@ -111,20 +113,22 @@ if ($producto && !empty($producto["aplicacion"])) {
             display: block; pointer-events: none;
         }
 
-        .prueba-info-col { flex: 2 1 500px; min-width: 300px; }
+        .prueba-info-col { flex: 1 1 auto; min-width: 300px; }
         .prueba-imagen-col h1 { color: #0d3393; font-size: 24px; font-weight: 700; margin: 0 0 10px; }
-        .prueba-descripcion { color: #333; font-size: 18px; line-height: 1.6; max-width: 560px; text-align: justify; text-align-last: left; }
+        .prueba-descripcion { color: #444; font-size: 18px; font-weight: 300; line-height: 1.6; max-width: 560px; text-align: justify; text-align-last: left; }
 
         .prueba-caracteristicas-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin: 24px 0;
+            display: grid; grid-template-columns: repeat(4, 140px); gap: 16px; margin: 24px 0 24px auto;
         }
         .caracteristica-box {
-            background: white; border-radius: 12px; padding: 28px 14px; text-align: center;
+            background: white; border-radius: 12px; padding: 12px; text-align: center;
             box-shadow: 0 2px 8px rgba(20,20,50,0.06);
+            aspect-ratio: 1 / 1;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .caracteristica-box .icono-carac { font-size: 26px; color: #0d3393; margin-bottom: 8px; }
-        .caracteristica-box .icono-carac-img { width: 62px; height: 62px; margin-bottom: 10px; }
-        .caracteristica-box span { font-size: 12.5px; color: #333; line-height: 1.3; display: block; }
+        .caracteristica-box .icono-carac-img { width: 56px; height: 56px; margin-bottom: 8px; }
+        .caracteristica-box span { font-size: 11.5px; color: #333; line-height: 1.25; display: block; }
 
         .aplicacion-box {
             background: white; border-radius: 12px; padding: 20px 22px; margin-bottom: 22px;
@@ -163,18 +167,18 @@ if ($producto && !empty($producto["aplicacion"])) {
             display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; align-items: center;
         }
         .prueba-botones-doc a {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-            background: white; color: #666 !important; padding: 14px 20px; border-radius: 10px;
-            text-decoration: none; font-size: 13px; font-weight: 600;
-            border: 2px solid #ccc; box-shadow: none; min-width: 140px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+            background: white; color: #666 !important; padding: 8px 20px; border-radius: 10px;
+            text-decoration: none; font-size: 13px; font-weight: 400; font-family: 'Outfit', sans-serif;
+            border: 1px solid #888; box-shadow: none; min-width: 140px;
         }
         .prueba-botones-doc a i { color: #666; font-size: 15px; }
 
         .boton-video-youtube {
             display: flex !important; flex-direction: column; align-items: center; justify-content: center;
             background: #ff0000 !important; color: white !important; border: none !important;
-            padding: 14px 20px !important; border-radius: 10px; min-width: 140px;
-            text-decoration: none; position: relative; height: 66px;
+            padding: 8px 20px !important; border-radius: 10px; min-width: 140px;
+            text-decoration: none; position: relative; height: 52px;
             transition: background 0.2s;
         }
         .boton-video-youtube:hover { background: #cc0000 !important; }
@@ -197,6 +201,54 @@ if ($producto && !empty($producto["aplicacion"])) {
         }
         .prueba-color-item span { display:block; font-size:11px; color:#666; margin-top:4px; }
 
+        .boton-ver-colores {
+            display: block; width: 100%; max-width: 220px; margin: 16px auto 0; background: white; color: #0d3393;
+            border: none; padding: 8px 26px; border-radius: 6px; box-shadow: 0 2px 8px rgba(20,20,50,0.1);
+            font-size: 19px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif;
+            transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+        }
+        .boton-ver-colores:hover,
+        .boton-ver-colores.activo { background: #0d3393; color: white; box-shadow: 0 4px 12px rgba(13,51,147,0.3); }
+
+        /* Panel de colores: sin fondo oscuro, flota sobre el contenido (incluye fichas/catálogo) */
+        .modal-colores-overlay {
+            display: none; position: absolute; z-index: 500;
+        }
+        .modal-colores-overlay.abierto { display: block; }
+        .modal-colores-contenido {
+            background: white; border-radius: 14px; padding: 40px 26px 22px; max-width: 620px; width: 92vw;
+            box-shadow: 0 10px 32px rgba(20,20,50,0.22); position: relative;
+        }
+        .cerrar-modal-colores {
+            position: absolute; top: 10px; right: 10px; width: 26px; height: 26px;
+            border-radius: 50%; border: 1.5px solid #ef0606; background: white; color: #ef0606;
+            font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s, color 0.15s;
+        }
+        .cerrar-modal-colores:hover { background: #ef0606; color: white; }
+        .modal-colores-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .modal-color-swatch {
+            width: 32px; height: 32px; border-radius: 4px; cursor: default; position: relative; flex-shrink: 0;
+            border: none; background-repeat: no-repeat; background-size: cover; background-position: center;
+            background-color: white;
+        }
+        .modal-color-swatch .tooltip-color {
+            position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+            background: #0d3393; color: white; font-size: 12px; font-weight: 600; white-space: nowrap;
+            padding: 5px 10px; border-radius: 6px; opacity: 0; pointer-events: none;
+            transition: opacity 0.15s; font-family: 'Outfit', sans-serif; z-index: 10;
+        }
+        .modal-color-swatch .tooltip-color::after {
+            content: ""; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            border: 5px solid transparent; border-bottom-color: #0d3393;
+        }
+        .modal-color-swatch:hover .tooltip-color { opacity: 1; }
+
+        @media (max-width: 700px) {
+            .modal-colores-overlay { position: static; margin-top: 12px; }
+            .modal-colores-contenido { width: 100%; max-width: 100%; }
+        }
+
         .prueba-compartir { margin-top: 20px; display: flex; flex-direction: row; align-items: center; gap: 14px; flex-wrap: wrap; }
         .texto-compartir { font-size:15px; color:#555; font-weight:600; white-space: nowrap; }
         .iconos-compartir { display: flex; gap: 12px; }
@@ -218,13 +270,168 @@ if ($producto && !empty($producto["aplicacion"])) {
             .prueba-grid { gap: 26px; }
             .prueba-caracteristicas-grid { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* ---------- FOOTER RECONSTRUIDO (clases propias jf-*, sin depender de stylesFooter.css) ---------- */
+        /* Reset defensivo: neutraliza cualquier estilo genérico heredado (p, ul, li, a, h3, h4, img)
+           que venga de las hojas de estilo reales de la web, para que este bloque sea 100% independiente */
+        .jf-footer, .jf-footer * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+        }
+        .jf-footer { background: white; width: 100%; font-family: 'Outfit', sans-serif; }
+
+        .jf-top {
+            background: #0d3393; padding: 18px 24px; display: flex; align-items: center;
+            justify-content: center; gap: 22px; flex-wrap: wrap;
+        }
+        .jf-logo { height: 54px; width: auto; }
+        .jf-redes { display: flex; gap: 12px; }
+        .jf-redes a {
+            width: 30px; height: 30px; border-radius: 50%; background: white; color: #0d3393;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; font-size: 14px; transition: background 0.15s, color 0.15s, transform 0.15s;
+        }
+        .jf-redes a:hover { background: #ef0606; color: white; transform: scale(1.1); }
+
+        .jf-columnas {
+            display: flex; flex-wrap: wrap; gap: 40px; padding: 32px 24px 32px 6px;
+        }
+        .jf-col { flex: 1 1 220px; min-width: 200px; }
+        .jf-col h3 {
+            font-size: 14px; font-weight: 700; color: #1b1d29; margin: 0 80px 14px;
+            letter-spacing: 0.3px;
+        }
+        .jf-col h4 {
+            font-size: 13px; font-weight: 700; color: #1b1d29; margin: 16px 80px 8px;
+        }
+        .jf-col ul { list-style: none; margin: 0 90px 0; padding: 0; }
+        .jf-col ul li {
+            font-size: 13.5px; color: #444; margin-bottom: 9px; padding-left: 20px; position: relative;
+        }
+        .jf-col ul li::before {
+            content: "·"; position: absolute; left: 0; color: #888; font-weight: 700;
+        }
+        .jf-col ul li a { color: #444; text-decoration: none; transition: color 0.15s; }
+        .jf-col ul li a:hover { color: #888; text-decoration: underline; }
+
+        .jf-linea-contacto {
+            font-size: 13.5px; color: #444; margin: 0 80px 8px; display: flex; align-items: center; gap: 8px;
+        }
+        .jf-linea-contacto i { color: #1b1d29; width: 16px; text-align: center; }
+        .jf-linea-contacto a { color: #444; text-decoration: none; }
+        .jf-linea-contacto a:hover { color: #888; text-decoration: underline; }
+
+        .jf-direccion {
+            display: flex; gap: 8px; text-decoration: none; color: #444; font-size: 13.5px; line-height: 1.5;
+        }
+        .jf-direccion i { color: #1b1d29; margin-top: 3px; }
+        .jf-direccion:hover span { color: #888; text-decoration: underline; }
+
+        .jf-bottom {
+            background: #f5f5f5; padding: 12px 20px; text-align: center;
+        }
+        .jf-bottom p { margin: 0; font-size: 13px; color: #666; }
+
+        @media (max-width: 700px) {
+            .jf-columnas { padding: 24px 20px; gap: 28px; }
+            .jf-top { padding: 16px 20px; }
+        }
     </style>
 </head>
 <body>
-    <div style="background:#fff3cd; border-left:4px solid #e0a800; padding:12px 20px; font-family:'Outfit', sans-serif; font-size:13px;">
-        🧪 Prueba piloto completa — imágenes, características, tamaños y botones desde la base de datos. Producto: <code><?php echo htmlspecialchars($slug); ?></code>
-    </div>
+    <!-- Header real de Jhomeron -->
+    <header>
+        <div class="navbar">
+            <a href="index.html">
+                <img src="imgs/logo.png" alt="Jhomeron Logo" class="logo" />
+            </a>
+            <div class="wasap">
+                <a href="https://wa.me/957720068" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+            <button class="menu-hamburguesa">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="menu-movil-contenedor">
+                <ul class="menu-movil-items">
+                    <li>
+                        <a href="#" class="trigger-submenu">Líneas <i class="fas fa-chevron-down"></i></a>
+                        <ul class="submenu-movil">
+                            <li><a href="lineasDecorativa.html">Decorativa</a></li>
+                            <li><a href="lineasAuto.html">Automotriz</a></li>
+                            <li><a href="lineaIndus.html">Industrial</a></li>
+                            <li><a href="lineaMarina.html">Marina</a></li>
+                            <li><a href="lineaTrafico.html">Señalización</a></li>
+                            <li><a href="lineaMadera.html">Madera</a></li>
+                            <li><a href="lineaDisolvente.html">Disolventes</a></li>
+                            <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
+                            <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" class="asesoria-movil">Asesoría</a></li>
+                    <li><a href="puntoVenta.html">Puntos de venta</a></li>
+                </ul>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li class="enca">
+                        <a>Líneas <img src="icons/flechita.png" alt="" /></a>
+                        <ul class="submenu">
+                            <li><a href="lineasDecorativa.html">Decorativa</a></li>
+                            <li><a href="lineasAuto.html">Automotriz</a></li>
+                            <li><a href="lineaIndus.html">Industrial</a></li>
+                            <li><a href="lineaMarina.html">Marina</a></li>
+                            <li><a href="lineaTrafico.html">Señalización</a></li>
+                            <li><a href="lineaMadera.html">Madera</a></li>
+                            <li><a href="lineaDisolvente.html">Disolventes</a></li>
+                            <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
+                            <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                        </ul>
+                    </li>
+                    <li class="enca"><a id="asesoria-link">Asesoría</a></li>
+                    <li class="enca"><a href="puntoVenta.html">Puntos de venta</a></li>
+                    <li class="enca"><a id="cotiza-aqui" href="https://wa.me/957720068" target="_blank">¡Cotiza aquí!</a></li>
+                    <li class="wasap">
+                        <a href="https://wa.me/957720068" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    </li>
+                    <li>
+                        <div class="busca">
+                            <input type="text" placeholder="¿Qué producto estás buscando?" required />
+                            <div class="bst">
+                                <img src="imgs/buscar.svg" alt="Buscar" />
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
+    <?php
+    $mapaLineas = [
+        "decorativa" => ["nombre" => "Línea decorativa", "url" => "lineasDecorativa.html"],
+        "automotriz" => ["nombre" => "Línea automotriz", "url" => "lineasAuto.html"],
+        "industrial" => ["nombre" => "Línea industrial", "url" => "lineaIndus.html"],
+        "marina" => ["nombre" => "Línea marina", "url" => "lineaMarina.html"],
+        "trafico" => ["nombre" => "Línea señalización", "url" => "lineaTrafico.html"],
+        "madera" => ["nombre" => "Línea madera", "url" => "lineaMadera.html"],
+        "disolventes" => ["nombre" => "Línea disolventes", "url" => "lineaDisolvente.html"],
+        "resinas-pegamentos" => ["nombre" => "Resinas y pegamentos", "url" => "resinasPegame.html"],
+        "insumos-quimicos" => ["nombre" => "Insumos químicos", "url" => "insuQuimi.html"],
+    ];
+    $lineaActual = $producto["linea"] ?? "";
+    $lineaInfo = $mapaLineas[$lineaActual] ?? ["nombre" => "Línea de productos", "url" => "lineasProducto.html"];
+    ?>
+    <div class="breadcrumb">
+        <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
+        <a href="lineasProducto.html">> Productos</a>
+        <a href="<?php echo htmlspecialchars($lineaInfo['url']); ?>">> <?php echo htmlspecialchars($lineaInfo['nombre']); ?></a>
+        <p>> <span id="product-name"><?php echo htmlspecialchars($titulo); ?></span></p>
+    </div>
     <div class="prueba-contenedor">
         <div class="prueba-grid">
             <!-- COLUMNA IZQUIERDA: título, descripción, imagen, tamaños -->
@@ -232,47 +439,44 @@ if ($producto && !empty($producto["aplicacion"])) {
                 <h1><?php echo $tituloHtml; ?></h1>
                 <p class="prueba-descripcion"><?php echo htmlspecialchars($descripcion); ?></p>
 
-                <div class="prueba-imagen-wrap" style="margin-top:30px;">
+                <div style="display:flex; align-items:center; gap:20px; margin-top:30px;">
                     <button type="button" class="circulo-flecha" onclick="moverCarrusel(-1)">
                         <img src="icons/fle_izq.svg" alt="Anterior">
                     </button>
-                    <img id="product-image" src="<?php echo htmlspecialchars($imagenes[0]); ?>" alt="<?php echo htmlspecialchars($titulo); ?>">
+
+                    <div style="display:flex; flex-direction:column; align-items:center; width:fit-content;">
+                        <img id="product-image" src="<?php echo htmlspecialchars($imagenes[0]); ?>" alt="<?php echo htmlspecialchars($titulo); ?>" style="max-width:340px; width:100%; height:auto;">
+
+                        <?php if (count($tamanos) > 0): ?>
+                        <div class="prueba-tamanos" style="justify-content:center; margin-top:20px;">
+                            <?php foreach ($tamanos as $i => $t):
+                                // Separamos el número de la unidad, ej: "25 Kg" -> "25" + "Kg"
+                                if (preg_match('/^([\d.,]+)\s*(.*)$/', trim($t), $m)) {
+                                    $numeroTam = $m[1];
+                                    $unidadTam = $m[2];
+                                } else {
+                                    $numeroTam = $t;
+                                    $unidadTam = "";
+                                }
+                            ?>
+                                <span class="<?php echo $i === 0 ? 'tamano-activo' : 'tamano-inactivo'; ?>" onclick="seleccionarTamano(this, <?php echo $i; ?>)">
+                                    <span class="numero-tam"><?php echo htmlspecialchars($numeroTam); ?></span><span class="unidad-tam"><?php echo htmlspecialchars($unidadTam); ?></span>
+                                </span>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (count($colores) > 0): ?>
+                        <button type="button" id="ver-colores" class="boton-ver-colores">VER COLORES</button>
+                        <?php endif; ?>
+                    </div>
+
                     <button type="button" class="circulo-flecha" onclick="moverCarrusel(1)">
                         <img src="icons/fle_dere.svg" alt="Siguiente">
                     </button>
                 </div>
 
-                <?php if (count($tamanos) > 0): ?>
-                <div class="prueba-tamanos" style="justify-content:center; margin-top:20px;">
-                    <?php foreach ($tamanos as $i => $t):
-                        // Separamos el número de la unidad, ej: "25 Kg" -> "25" + "Kg"
-                        if (preg_match('/^([\d.,]+)\s*(.*)$/', trim($t), $m)) {
-                            $numeroTam = $m[1];
-                            $unidadTam = $m[2];
-                        } else {
-                            $numeroTam = $t;
-                            $unidadTam = "";
-                        }
-                    ?>
-                        <span class="<?php echo $i === 0 ? 'tamano-activo' : 'tamano-inactivo'; ?>" onclick="seleccionarTamano(this, <?php echo $i; ?>)">
-                            <span class="numero-tam"><?php echo htmlspecialchars($numeroTam); ?></span><span class="unidad-tam"><?php echo htmlspecialchars($unidadTam); ?></span>
-                        </span>
-                    <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (count($colores) > 0): ?>
-                <div class="prueba-colores" style="justify-content:center;">
-                    <?php foreach ($colores as $color): ?>
-                        <div class="prueba-color-item">
-                            <img src="<?php echo htmlspecialchars($color['ruta_thumb'] ?: $color['ruta_original']); ?>" alt="<?php echo htmlspecialchars($color['nombre']); ?>">
-                            <span><?php echo htmlspecialchars($color['nombre']); ?></span>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
-
-                <div class="prueba-compartir" style="margin-top: 94px;">
+                <div class="prueba-compartir" style="margin-top: 40px;">
                     <span class="texto-compartir">Compartir producto:</span>
                     <div class="iconos-compartir">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" target="_blank" class="circulo-compartir"><i class="fab fa-facebook-f"></i></a>
@@ -302,7 +506,7 @@ if ($producto && !empty($producto["aplicacion"])) {
                             <?php else: ?>
                                 <div class="icono-carac">●</div>
                             <?php endif; ?>
-                            <span><?php echo str_replace("|", "<br>", htmlspecialchars($textoCarac)); ?></span>
+                            <span><?php echo str_replace("~~", "<br>", htmlspecialchars($textoCarac)); ?></span>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -321,14 +525,17 @@ if ($producto && !empty($producto["aplicacion"])) {
                 </div>
                 <?php endif; ?>
 
-                <div style="text-align:center; margin-top: 100px;">
+                <div style="text-align:center; margin-top: 100px;" id="contenedor-cotizar">
                     <a href="https://wa.me/957720068" target="_blank" class="boton-cotizar">¡COTIZAR AQUÍ!</a>
                 </div>
 
                 <?php if (count($pdfs) > 0 || count($videos) > 0): ?>
                 <div class="prueba-botones-doc" style="justify-content:center; margin-top: 90px;">
-                    <?php foreach ($pdfs as $pdf): ?>
-                        <a href="<?php echo htmlspecialchars($pdf['ruta_original']); ?>" target="_blank" download>
+                    <?php foreach ($pdfs as $pdf):
+                        // "Catálogo" se abre para VER (sin descargar); el resto se descarga directo
+                        $esCatalogo = (stripos($pdf['nombre'], 'cat') !== false);
+                    ?>
+                        <a href="<?php echo htmlspecialchars($pdf['ruta_original']); ?>" target="_blank" <?php echo $esCatalogo ? '' : 'download'; ?>>
                             <span><?php echo htmlspecialchars($pdf['nombre']); ?></span>
                             <i class="fas fa-download"></i>
                         </a>
@@ -345,6 +552,21 @@ if ($producto && !empty($producto["aplicacion"])) {
         </div>
     </div>
 
+    <?php if (count($colores) > 0): ?>
+    <div class="modal-colores-overlay" id="modal-colores">
+        <div class="modal-colores-contenido">
+            <button type="button" class="cerrar-modal-colores" id="cerrar-modal-colores">&times;</button>
+            <div class="modal-colores-grid">
+                <?php foreach ($colores as $color): ?>
+                    <div class="modal-color-swatch" style="background-image:url('<?php echo htmlspecialchars($color['ruta_thumb'] ?: $color['ruta_original']); ?>');">
+                        <span class="tooltip-color"><?php echo htmlspecialchars($color['nombre']); ?></span>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <script>
         function copiarEnlace(elemento) {
             navigator.clipboard.writeText(window.location.href).then(() => {
@@ -352,6 +574,46 @@ if ($producto && !empty($producto["aplicacion"])) {
                 elemento.innerHTML = "✓";
                 setTimeout(() => { elemento.innerHTML = original; }, 1500);
             });
+        }
+
+        // Abrir/cerrar el modal de colores
+        const botonVerColores = document.getElementById("ver-colores");
+        const modalColores = document.getElementById("modal-colores");
+        const cerrarModalColores = document.getElementById("cerrar-modal-colores");
+        const contenedorCotizar = document.getElementById("contenedor-cotizar");
+
+        function posicionarModalColores() {
+            if (!modalColores || !contenedorCotizar) return;
+            const rect = contenedorCotizar.getBoundingClientRect();
+            modalColores.style.top = (rect.bottom + window.scrollY + 14) + "px";
+            modalColores.style.left = (rect.left + window.scrollX) + "px";
+        }
+
+        if (botonVerColores && modalColores) {
+            botonVerColores.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const abrir = !modalColores.classList.contains("abierto");
+                if (abrir) {
+                    posicionarModalColores();
+                    modalColores.classList.add("abierto");
+                    botonVerColores.classList.add("activo");
+                } else {
+                    modalColores.classList.remove("abierto");
+                    botonVerColores.classList.remove("activo");
+                }
+            });
+            cerrarModalColores.addEventListener("click", () => {
+                modalColores.classList.remove("abierto");
+                botonVerColores.classList.remove("activo");
+            });
+            document.addEventListener("click", (e) => {
+                if (modalColores.classList.contains("abierto") &&
+                    !modalColores.contains(e.target) && e.target !== botonVerColores) {
+                    modalColores.classList.remove("abierto");
+                    botonVerColores.classList.remove("activo");
+                }
+            });
+            window.addEventListener("resize", posicionarModalColores);
         }
 
         const imagenesProducto = <?php echo json_encode($imagenes); ?>;
@@ -398,6 +660,97 @@ if ($producto && !empty($producto["aplicacion"])) {
                 actualizarImagen();
             }
         }
+    </script>
+
+    <!-- Footer reconstruido con clases propias (jf-*) para no depender de stylesFooter.css -->
+    <div class="jf-footer">
+        <div class="jf-top">
+            <img src="icons/logo_jhomeron_footer.svg" alt="Logo" class="jf-logo" />
+            <div class="jf-redes">
+                <a href="https://www.facebook.com/SomosIndustriasJhomeronSA" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/pinturas_jhomeron/?hl=es-la" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@pinturas_jhomeron" target="_blank"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.linkedin.com/in/pinturas-jhomeron-6b869a368" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+
+        <div class="jf-columnas">
+            <div class="jf-col">
+                <h3>NUESTROS PRODUCTOS</h3>
+                <ul>
+                    <li><a href="lineasDecorativa.html">Línea Decorativa</a></li>
+                    <li><a href="lineasAuto.html">Línea Automotriz</a></li>
+                    <li><a href="lineaIndus.html">Línea Industrial</a></li>
+                    <li><a href="lineaMarina.html">Línea Marina</a></li>
+                    <li><a href="lineaTrafico.html">Línea Señalización</a></li>
+                    <li><a href="lineaMadera.html">Línea Madera</a></li>
+                    <li><a href="lineaDisolvente.html">Línea Disolventes</a></li>
+                    <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
+                    <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                </ul>
+            </div>
+
+            <div class="jf-col">
+                <h3>ATENCIÓN AL CLIENTE</h3>
+                <p class="jf-linea-contacto"><i class="fa-solid fa-phone-volume"></i> 536-4214 | 500-8202 | 500-8203</p>
+                <p class="jf-linea-contacto"><i class="fa-solid fa-phone-volume"></i> 500-8205 | 500-8206 | 500-8207</p>
+                <p class="jf-linea-contacto"><i class="fas fa-envelope"></i> <a href="mailto:ventas@jhomeron.com">ventas@jhomeron.com</a></p>
+                <h4>HORARIO DE ATENCIÓN</h4>
+                <ul>
+                    <li>Lu - Vi | 8:00 am - 5:20 pm</li>
+                    <li>Sáb | 8:00 am - 1:00 pm</li>
+                </ul>
+            </div>
+
+            <div class="jf-col">
+                <h3>DIRECCIÓN</h3>
+                <a href="https://www.google.com/maps/place/Industrias+jhomeron+SA" target="_blank" class="jf-direccion">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Calle Santa Ana Mz. "F" Lote 44, Fnd. Chacra Cerro - Chillón<br>Comas - Lima - Perú</span>
+                </a>
+                <h3 style="margin-top:20px;">INFORMACIÓN LEGAL</h3>
+                <ul>
+                    <li><a href="politicaPriva.html">Políticas de privacidad</a></li>
+                    <li><a href="terminosCondi.html">Términos y condiciones</a></li>
+                    <li><a href="libroReclama.html">Libro de Reclamaciones</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="jf-bottom">
+            <p>©2025, Industrias Jhomeron S.A. - RUC: 20601777844</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuBtn = document.querySelector(".menu-hamburguesa");
+            const menuMovil = document.querySelector(".menu-movil-contenedor");
+            const submenuTriggers = document.querySelectorAll(".trigger-submenu");
+
+            if (menuBtn && menuMovil) {
+                menuBtn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    menuMovil.classList.toggle("activo");
+                });
+            }
+
+            submenuTriggers.forEach((trigger) => {
+                trigger.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const submenu = this.nextElementSibling;
+                    submenu.classList.toggle("activo");
+                    this.classList.toggle("active");
+                });
+            });
+
+            document.addEventListener("click", function (e) {
+                if (menuMovil && !menuMovil.contains(e.target) && !menuBtn.contains(e.target)) {
+                    menuMovil.classList.remove("activo");
+                }
+            });
+        });
     </script>
 </body>
 </html>
