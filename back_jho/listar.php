@@ -90,7 +90,7 @@ if (isset($_GET["mover"]) && isset($_GET["id"])) {
     exit;
 }
 
-$resultado = $conexion->query("SELECT * FROM archivos ORDER BY producto_slug ASC, orden ASC, fecha_subida DESC");
+$resultado = $conexion->query("SELECT * FROM archivos WHERE tipo = 'imagen' ORDER BY producto_slug ASC, orden ASC, fecha_subida DESC");
 
 $iconos_tipo = [
     "imagen" => "🖼",

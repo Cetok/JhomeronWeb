@@ -87,7 +87,6 @@ if ($producto && !empty($producto["aplicacion"])) {
     <link rel="stylesheet" href="stylesProducto.css" />
     <link rel="stylesheet" href="stylePintura.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
-    <script src="buscador.js"></script>
     <style>
         * { box-sizing: border-box; }
         body { font-family: 'Outfit', sans-serif; margin: 0; background: #f3f3f3; }
@@ -284,60 +283,73 @@ if ($producto && !empty($producto["aplicacion"])) {
         .jf-footer { background: white; width: 100%; font-family: 'Outfit', sans-serif; }
 
         .jf-top {
-            background: #0d3393; padding: 18px 24px; display: flex; align-items: center;
+            background: #0d3393; padding: 11px 24px; display: flex; align-items: center;
             justify-content: center; gap: 22px; flex-wrap: wrap;
         }
-        .jf-logo { height: 54px; width: auto; }
-        .jf-redes { display: flex; gap: 12px; }
+        .jf-logo { height: 54px; width: auto; margin-top: -7px; }
+        .jf-redes { display: flex; gap: 16px;}
         .jf-redes a {
-            width: 30px; height: 30px; border-radius: 50%; background: white; color: #0d3393;
+            width: 34px; height: 34px; border-radius: 50%; background: white;
             display: flex; align-items: center; justify-content: center;
-            text-decoration: none; font-size: 14px; transition: background 0.15s, color 0.15s, transform 0.15s;
+            text-decoration: none; transition: background 0.15s, transform 0.15s;
         }
-        .jf-redes a:hover { background: #ef0606; color: white; transform: scale(1.1); }
+        .jf-redes a i { color: #0d3393; font-size: 22px; transition: color 0.15s; }
+        .jf-redes a:hover { background: #ef0606; transform: scale(1.08); }
 
         .jf-columnas {
-            display: flex; flex-wrap: wrap; gap: 40px; padding: 32px 24px 32px 6px;
+            display: flex; flex-wrap: wrap; gap: 40px; padding: 32px 24px 32px 16px;
         }
-        .jf-col { flex: 1 1 220px; min-width: 200px; }
-        .jf-col h3 {
-            font-size: 14px; font-weight: 700; color: #1b1d29; margin: 0 80px 14px;
-            letter-spacing: 0.3px;
-        }
-        .jf-col h4 {
-            font-size: 13px; font-weight: 700; color: #1b1d29; margin: 16px 80px 8px;
-        }
-        .jf-col ul { list-style: none; margin: 0 90px 0; padding: 0; }
-        .jf-col ul li {
-            font-size: 13.5px; color: #444; margin-bottom: 9px; padding-left: 20px; position: relative;
-        }
-        .jf-col ul li::before {
-            content: "·"; position: absolute; left: 0; color: #888; font-weight: 700;
-        }
-        .jf-col ul li a { color: #444; text-decoration: none; transition: color 0.15s; }
-        .jf-col ul li a:hover { color: #888; text-decoration: underline; }
+
+        /* ===== BLOQUE 1: NUESTROS PRODUCTOS (100% independiente) ===== */
+        .jf-col-productos { flex: 1 1 220px; min-width: 200px; margin-left: 120px; }
+        .jf-col-productos h3 { font-size: 16px; font-weight: 700; color: #1b1d29; margin: 0 0 16px; letter-spacing: 0.3px; }
+        .jf-col-productos ul { list-style: none; margin: 0; padding: 0; }
+        .jf-col-productos ul li { font-size: 16px; font-weight: 300; color: #444; margin-bottom: 15px; padding-left: 14px; position: relative; }
+        .jf-col-productos ul li::before { content: "·"; position: absolute; left: 0; color: #888; font-weight: 700; }
+        .jf-col-productos ul li a { color: #444; text-decoration: none; }
+        .jf-col-productos ul li a:hover { text-decoration: underline; text-decoration-color: #000; }
+
+        /* ===== BLOQUE 2: ATENCIÓN AL CLIENTE (100% independiente) ===== */
+        .jf-col-atencion { flex: 1 1 220px; min-width: 200px; margin-left: 12px; }
+        .jf-col-atencion h3 { font-size: 16px; font-weight: 700; color: #1b1d29; margin: 0 0 20px; letter-spacing: 0.3px; }
+        .jf-col-atencion h4 { font-size: 15px; font-weight: 700; color: #1b1d29; margin: 18px 0 18px; }
+        .jf-col-atencion ul { list-style: none; margin: 0; padding: 0; }
+        .jf-col-atencion ul li { font-size: 16px; font-weight: 300; color: #444; margin-bottom: 20px; padding-left: 14px; position: relative; }
+        .jf-col-atencion ul li::before { content: "·"; position: absolute; left: 0; color: #888; font-weight: 700; }
+
+        /* ===== BLOQUE 3: DIRECCIÓN + INFORMACIÓN LEGAL (100% independiente) ===== */
+        .jf-col-direccion { flex: 1 1 220px; min-width: 200px; margin-left: 0; }
+        .jf-col-direccion h3 { font-size: 16px; font-weight: 700; color: #1b1d29; margin: 0 0 16px; letter-spacing: 0.3px; }
+        .jf-col-direccion ul { list-style: none; margin: 0; padding: 0; }
+        .jf-col-direccion ul li { font-size: 16px; font-weight: 300; color: #444; margin-bottom: 18px; padding-left: 14px; position: relative; }
+        .jf-col-direccion ul li::before { content: "·"; position: absolute; left: 0; color: #888; font-weight: 700; }
+        .jf-col-direccion ul li a { color: #444; text-decoration: none; }
+        .jf-col-direccion ul li a:hover { text-decoration: underline; text-decoration-color: #000; }
 
         .jf-linea-contacto {
-            font-size: 13.5px; color: #444; margin: 0 80px 8px; display: flex; align-items: center; gap: 8px;
+            font-size: 16px; font-weight: 300; color: #444; margin: 0 0 15px; display: flex; align-items: center; gap: 8px;
         }
         .jf-linea-contacto i { color: #1b1d29; width: 16px; text-align: center; }
         .jf-linea-contacto a { color: #444; text-decoration: none; }
-        .jf-linea-contacto a:hover { color: #888; text-decoration: underline; }
+        .jf-linea-contacto a:hover { text-decoration: underline; text-decoration-color: #000; }
 
         .jf-direccion {
-            display: flex; gap: 8px; text-decoration: none; color: #444; font-size: 13.5px; line-height: 1.5;
+            display: flex; gap: 8px; text-decoration: none; color: #444; font-size: 16px; font-weight: 300; line-height: 1.5;
         }
         .jf-direccion i { color: #1b1d29; margin-top: 3px; }
-        .jf-direccion:hover span { color: #888; text-decoration: underline; }
+        .jf-direccion:hover span { text-decoration: underline; text-decoration-color: #000; }
 
         .jf-bottom {
             background: #f5f5f5; padding: 12px 20px; text-align: center;
         }
-        .jf-bottom p { margin: 0; font-size: 13px; color: #666; }
+        .jf-bottom p { margin: 0; font-size: 14px; color: #666; font-weight: 250; }
 
         @media (max-width: 700px) {
-            .jf-columnas { padding: 24px 20px; gap: 28px; }
+            .jf-columnas { padding: 24px 20px; gap: 28px; flex-direction: column; }
             .jf-top { padding: 16px 20px; }
+            .jf-col-productos { margin-left: 0 !important; width: 100% !important; flex-basis: 100% !important; }
+            .jf-col-atencion { margin-left: 0 !important; width: 100% !important; flex-basis: 100% !important; }
+            .jf-col-direccion { margin-left: 0 !important; width: 100% !important; flex-basis: 100% !important; }
         }
     </style>
 </head>
@@ -575,6 +587,55 @@ if ($producto && !empty($producto["aplicacion"])) {
                 setTimeout(() => { elemento.innerHTML = original; }, 1500);
             });
         }
+	// Buscador del header: busca en productos ya dinamicos (decorativa, industrial, automotriz)
+        (function () {
+            const inputBusqueda = document.querySelector(".busca input");
+            if (!inputBusqueda) return;
+
+            const contenedorBusca = document.querySelector(".busca");
+            contenedorBusca.style.position = "relative";
+
+            const listaResultados = document.createElement("div");
+            listaResultados.style.cssText = "display:none; position:absolute; top:100%; left:0; right:0; background:white; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:1000; max-height:300px; overflow-y:auto; margin-top:6px;";
+            contenedorBusca.appendChild(listaResultados);
+
+            let temporizador = null;
+
+            inputBusqueda.addEventListener("input", function () {
+                const texto = this.value.trim();
+                clearTimeout(temporizador);
+
+                if (texto.length < 2) {
+                    listaResultados.style.display = "none";
+                    return;
+                }
+
+                temporizador = setTimeout(() => {
+                    fetch("buscar_productos.php?q=" + encodeURIComponent(texto))
+                        .then(r => r.json())
+                        .then(productos => {
+                            if (productos.length === 0) {
+                                listaResultados.innerHTML = '<div style="padding:14px; color:#999; font-size:13px; font-family:Outfit,sans-serif;">Sin resultados</div>';
+                            } else {
+                                listaResultados.innerHTML = productos.map(p => `
+                                    <a href="${p.url}" style="display:flex; align-items:center; gap:12px; padding:10px 16px; text-decoration:none; color:#333; font-size:14px; font-family:Outfit,sans-serif; border-bottom:1px solid #eee;">
+                                        <img src="${p.imagen}" alt="" style="width:38px; height:38px; object-fit:contain; flex-shrink:0;" onerror="this.style.display='none'">
+                                        <span>${p.nombre}</span>
+                                    </a>
+                                `).join("");
+                            }
+                            listaResultados.style.display = "block";
+                        })
+                        .catch(() => { listaResultados.style.display = "none"; });
+                }, 250);
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!contenedorBusca.contains(e.target)) {
+                    listaResultados.style.display = "none";
+                }
+            });
+        })();
 
         // Abrir/cerrar el modal de colores
         const botonVerColores = document.getElementById("ver-colores");
@@ -675,7 +736,7 @@ if ($producto && !empty($producto["aplicacion"])) {
         </div>
 
         <div class="jf-columnas">
-            <div class="jf-col">
+            <div class="jf-col-productos">
                 <h3>NUESTROS PRODUCTOS</h3>
                 <ul>
                     <li><a href="lineasDecorativa.html">Línea Decorativa</a></li>
@@ -690,7 +751,7 @@ if ($producto && !empty($producto["aplicacion"])) {
                 </ul>
             </div>
 
-            <div class="jf-col">
+            <div class="jf-col-atencion">
                 <h3>ATENCIÓN AL CLIENTE</h3>
                 <p class="jf-linea-contacto"><i class="fa-solid fa-phone-volume"></i> 536-4214 | 500-8202 | 500-8203</p>
                 <p class="jf-linea-contacto"><i class="fa-solid fa-phone-volume"></i> 500-8205 | 500-8206 | 500-8207</p>
@@ -702,11 +763,11 @@ if ($producto && !empty($producto["aplicacion"])) {
                 </ul>
             </div>
 
-            <div class="jf-col">
+            <div class="jf-col-direccion">
                 <h3>DIRECCIÓN</h3>
-                <a href="https://www.google.com/maps/place/Industrias+jhomeron+SA" target="_blank" class="jf-direccion">
+                <a href="https://www.google.com/maps/place/Industrias+jhomeron+SA/@-11.9209387,-77.0650729,15z/data=!4m6!3m5!1s0x9105d1a725719827:0xa2237e095853e1fc!8m2!3d-11.919655!4d-77.065665!16s%2Fg%2F11fs_k_f_f?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="jf-direccion">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>Calle Santa Ana Mz. "F" Lote 44, Fnd. Chacra Cerro - Chillón<br>Comas - Lima - Perú</span>
+                    <span>Calle Santa Ana Mz. "F" Lote 44, Fnd.<br>Chacra Cerro - Chillón<br>Comas - Lima - Perú</span>
                 </a>
                 <h3 style="margin-top:20px;">INFORMACIÓN LEGAL</h3>
                 <ul>
