@@ -116,6 +116,31 @@ if ($producto && !empty($producto["aplicacion"])) {
         .prueba-imagen-col h1 { color: #0d3393; font-size: 24px; font-weight: 700; margin: 0 0 10px; }
         .prueba-descripcion { color: #444; font-size: 18px; font-weight: 300; line-height: 1.6; max-width: 560px; text-align: justify; text-align-last: left; }
 
+        /* Por defecto (escritorio): se usa la versión de "Compartir" dentro de la columna
+           de la imagen; la versión de abajo (al final de todo) permanece oculta. */
+        .prueba-compartir.prueba-compartir-movil { display: none; }
+
+        /* ---------- CENTRADO EN TABLET/MÓVIL (cuando el layout pasa a 1 sola columna) ---------- */
+        /* Antes, al apilarse en 1 columna, todo quedaba pegado a la izquierda porque el
+           flex-wrap no forzaba centrado. Aquí se centra título, descripción, carrusel,
+           tamaños y el bloque de "Compartir" (que además se mueve al final). */
+        @media (max-width: 1250px) {
+            .prueba-grid { flex-direction: column; align-items: center; }
+            .prueba-imagen-col { padding-left: 0; text-align: center; }
+            .prueba-imagen-col h1 { text-align: center; }
+            .prueba-descripcion { text-align: center; text-align-last: center; margin: 0 auto; }
+            .prueba-carrusel-wrap { justify-content: center; }
+            .prueba-info-col { text-align: center; }
+            /* La cuadrícula de características tenía margin-left:auto (la empujaba a la
+               derecha, no la centraba) — se corrige para que quede centrada de verdad */
+            .prueba-caracteristicas-grid { margin: 24px auto; justify-content: center; }
+
+            /* Se oculta la versión de "Compartir" de arriba (junto a la imagen)... */
+            .prueba-compartir.prueba-compartir-desktop { display: none; }
+            /* ...y se muestra la de abajo, ya al final de todo el contenido, centrada */
+            .prueba-compartir.prueba-compartir-movil { display: flex; justify-content: center; width: 100%; }
+        }
+
         .prueba-caracteristicas-grid {
             display: grid; grid-template-columns: repeat(4, 140px); gap: 16px; margin: 24px 0 24px auto;
         }
@@ -474,7 +499,7 @@ if ($producto && !empty($producto["aplicacion"])) {
                 <h1><?php echo $tituloHtml; ?></h1>
                 <p class="prueba-descripcion"><?php echo htmlspecialchars($descripcion); ?></p>
 
-                <div style="display:flex; align-items:center; gap:20px; margin-top:30px;">
+                <div class="prueba-carrusel-wrap" style="display:flex; align-items:center; gap:20px; margin-top:30px;">
                     <button type="button" class="circulo-flecha" onclick="moverCarrusel(-1)">
                         <img src="icons/fle_izq.svg" alt="Anterior">
                     </button>
@@ -511,7 +536,7 @@ if ($producto && !empty($producto["aplicacion"])) {
                     </button>
                 </div>
 
-                <div class="prueba-compartir" style="margin-top: 40px;">
+                <div class="prueba-compartir prueba-compartir-desktop" style="margin-top: 40px;">
                     <span class="texto-compartir">Compartir producto:</span>
                     <div class="iconos-compartir">
                         <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" target="_blank" class="circulo-compartir"><i class="fab fa-facebook-f"></i></a>
@@ -583,6 +608,20 @@ if ($producto && !empty($producto["aplicacion"])) {
                     <?php endforeach; ?>
                 </div>
                 <?php endif; ?>
+            </div>
+
+            <!-- Versión móvil/tablet del "Compartir": aparece al final de todo, después de
+                 características, aplicación, cotizar y documentos. Oculta en escritorio
+                 (ahí se usa la versión de arriba, dentro de la columna de la imagen). -->
+            <div class="prueba-compartir prueba-compartir-movil" style="margin-top: 30px;">
+                <span class="texto-compartir">Compartir producto:</span>
+                <div class="iconos-compartir">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" target="_blank" class="circulo-compartir"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" target="_blank" class="circulo-compartir"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://pinterest.com/pin/create/button/?url=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" target="_blank" class="circulo-compartir"><i class="fab fa-pinterest-p"></i></a>
+                    <a href="https://wa.me/?text=<?php echo urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); ?>" target="_blank" class="circulo-compartir"><i class="fab fa-whatsapp"></i></a>
+                    <a href="javascript:void(0)" onclick="copiarEnlace(this)" class="circulo-compartir"><i class="fas fa-link"></i></a>
+                </div>
             </div>
         </div>
     </div>
