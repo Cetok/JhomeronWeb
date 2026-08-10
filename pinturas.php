@@ -270,7 +270,30 @@ if ($producto && !empty($producto["aplicacion"])) {
             .prueba-caracteristicas-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        /* ---------- FOOTER RECONSTRUIDO (clases propias jf-*, sin depender de stylesFooter.css) ---------- */
+        /* ---------- BREADCRUMB: truncar nombres de producto muy largos ---------- */
+        /* El nombre del producto (#product-name) no tenía límite de ancho: si el
+           nombre era muy largo, empujaba y descuadraba el breadcrumb en móvil.
+           Se corta con "..." según el ancho disponible en cada tamaño de pantalla. */
+        .breadcrumb p span#product-name {
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: bottom;
+            max-width: 100%;
+        }
+        @media (max-width: 750px) {
+            .breadcrumb p span#product-name {
+                max-width: 160px;
+            }
+        }
+        @media (max-width: 480px) {
+            .breadcrumb p span#product-name {
+                max-width: 110px;
+            }
+        }
+
+
         /* Reset defensivo: neutraliza cualquier estilo genérico heredado (p, ul, li, a, h3, h4, img)
            que venga de las hojas de estilo reales de la web, para que este bloque sea 100% independiente */
         .jf-footer, .jf-footer * {
@@ -373,7 +396,7 @@ if ($producto && !empty($producto["aplicacion"])) {
                     <li>
                         <a href="#" class="trigger-submenu">Líneas <i class="fas fa-chevron-down"></i></a>
                         <ul class="submenu-movil">
-                            <li><a href="lineasDecorativa.html">Decorativa</a></li>
+                            <li><a href="lineasDecorativa.php">Decorativa</a></li>
                             <li><a href="lineasAuto.html">Automotriz</a></li>
                             <li><a href="lineaIndus.html">Industrial</a></li>
                             <li><a href="lineaMarina.html">Marina</a></li>
@@ -393,7 +416,7 @@ if ($producto && !empty($producto["aplicacion"])) {
                     <li class="enca">
                         <a>Líneas <img src="icons/flechita.png" alt="" /></a>
                         <ul class="submenu">
-                            <li><a href="lineasDecorativa.html">Decorativa</a></li>
+                            <li><a href="lineasDecorativa.php">Decorativa</a></li>
                             <li><a href="lineasAuto.html">Automotriz</a></li>
                             <li><a href="lineaIndus.html">Industrial</a></li>
                             <li><a href="lineaMarina.html">Marina</a></li>
@@ -425,7 +448,7 @@ if ($producto && !empty($producto["aplicacion"])) {
 
     <?php
     $mapaLineas = [
-        "decorativa" => ["nombre" => "Línea decorativa", "url" => "lineasDecorativa.html"],
+        "decorativa" => ["nombre" => "Línea decorativa", "url" => "lineasDecorativa.php"],
         "automotriz" => ["nombre" => "Línea automotriz", "url" => "lineasAuto.html"],
         "industrial" => ["nombre" => "Línea industrial", "url" => "lineaIndus.html"],
         "marina" => ["nombre" => "Línea marina", "url" => "lineaMarina.html"],
@@ -739,7 +762,7 @@ if ($producto && !empty($producto["aplicacion"])) {
             <div class="jf-col-productos">
                 <h3>NUESTROS PRODUCTOS</h3>
                 <ul>
-                    <li><a href="lineasDecorativa.html">Línea Decorativa</a></li>
+                    <li><a href="lineasDecorativa.php">Línea Decorativa</a></li>
                     <li><a href="lineasAuto.html">Línea Automotriz</a></li>
                     <li><a href="lineaIndus.html">Línea Industrial</a></li>
                     <li><a href="lineaMarina.html">Línea Marina</a></li>

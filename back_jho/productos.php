@@ -277,8 +277,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["producto_slug"])) {
     $caracteristicas = trim($_POST["caracteristicas"] ?? "");
     $tamanos = trim($_POST["tamanos"] ?? "");
     $aplicacion = trim($_POST["aplicacion"] ?? "");
-    $stmt = $conexion->prepare("UPDATE productos SET nombre_display = ?, descripcion = ?, caracteristicas = ?, tamanos = ?, aplicacion = ? WHERE producto_slug = ?");
-    $stmt->bind_param("ssssss", $nombreDisplay, $descripcion, $caracteristicas, $tamanos, $aplicacion, $slug);
+    $categoria = trim($_POST["categoria"] ?? "");
+    $grupoFiltro = trim($_POST["grupo_filtro"] ?? "");
+    // Si dejaron "Grupo del filtro" vacío pero sí pusieron categoría,
+    // el grupo se vuelve igual a la categoría (o sea: botón propio, sin agrupar con otros)
+    if ($grupoFiltro === "" && $categoria !== "") {
+        $grupoFiltro = $categoria;
+    }
+    $stmt = $conexion->prepare("UPDATE productos SET nombre_display = ?, descripcion = ?, caracteristicas = ?, tamanos = ?, aplicacion = ?, categoria = ?, grupo_filtro = ? WHERE producto_slug = ?");
+    $stmt->bind_param("ssssssss", $nombreDisplay, $descripcion, $caracteristicas, $tamanos, $aplicacion, $categoria, $grupoFiltro, $slug);
     $stmt->execute();
 
     // Documentos y video (solo se tocan si el admin subió/escribió algo nuevo)
@@ -305,6 +312,11 @@ foreach ($nuevos as $nuevo) {
     $stmt->bind_param("ss", $nuevo["producto_slug"], $nuevo["linea"]);
     $stmt->execute();
 }
+
+// Categorías y grupos de filtro ya usados en toda la BD, para sugerirlos con autocompletado
+// (así no hay que escribir "Otros" a mano cada vez, y se evitan errores de tipeo que rompan el filtro)
+$categoriasExistentes = $conexion->query("SELECT DISTINCT categoria FROM productos WHERE categoria IS NOT NULL AND categoria != '' ORDER BY categoria ASC")->fetch_all(MYSQLI_ASSOC);
+$gruposExistentes = $conexion->query("SELECT DISTINCT grupo_filtro FROM productos WHERE grupo_filtro IS NOT NULL AND grupo_filtro != '' ORDER BY grupo_filtro ASC")->fetch_all(MYSQLI_ASSOC);
 
 $filtroLinea = $_GET["filtro"] ?? "";
 
@@ -364,6 +376,12 @@ require "header.php";
                         <br>
                         <code style="background:var(--gris-fondo); padding:2px 7px; border-radius:6px; font-size:11px;"><?php echo htmlspecialchars($p["producto_slug"]); ?></code>
                         <span style="color:#9298a8; font-size:12px; margin-left:6px;">Línea: <?php echo htmlspecialchars($p["linea"] ?: "—"); ?></span>
+                        <?php if (!empty($p["categoria"])): ?>
+                            <span style="color:#9298a8; font-size:12px; margin-left:6px;">· Categoría: <?php echo htmlspecialchars($p["categoria"]); ?></span>
+                        <?php endif; ?>
+                        <?php if (!empty($p["grupo_filtro"]) && $p["grupo_filtro"] !== $p["categoria"]): ?>
+                            <span style="color:#9298a8; font-size:12px; margin-left:6px;">· Grupo: <?php echo htmlspecialchars($p["grupo_filtro"]); ?></span>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <span style="font-size:12px; color:#9298a8;">Clic para editar ▾</span>
@@ -382,6 +400,23 @@ require "header.php";
 
             <label>Descripción</label>
             <input type="text" name="descripcion" value="<?php echo htmlspecialchars($p["descripcion"] ?? ''); ?>" placeholder="Breve descripción del producto">
+
+            <label>Categoría (para el filtro de la línea, ej: Imprimante, Sellador, Acrílico)</label>
+            <input type="text" name="categoria" list="lista-categorias" value="<?php echo htmlspecialchars($p["categoria"] ?? ''); ?>" placeholder="ej: Imprimante">
+            <datalist id="lista-categorias">
+                <?php foreach ($categoriasExistentes as $c): ?>
+                    <option value="<?php echo htmlspecialchars($c['categoria']); ?>">
+                <?php endforeach; ?>
+            </datalist>
+
+            <label>Grupo del filtro (déjalo vacío si esta categoría va con su propio botón. Escribe "Otros" — o el nombre del botón que quieras — si esta categoría debe agruparse con otras dentro de un desplegable)</label>
+            <input type="text" name="grupo_filtro" list="lista-grupos" value="<?php echo htmlspecialchars($p["grupo_filtro"] ?? ''); ?>" placeholder="Déjalo vacío = botón propio">
+            <datalist id="lista-grupos">
+                <?php foreach ($gruposExistentes as $g): ?>
+                    <option value="<?php echo htmlspecialchars($g['grupo_filtro']); ?>">
+                <?php endforeach; ?>
+            </datalist>
+            <p class="nota">Ejemplo: si "Acrílico", "Pulidor" y "Protector" tienen todos <code>Grupo del filtro = Otros</code>, aparecerán juntos bajo un botón desplegable llamado "Otros" con checkboxes. Si dejas el grupo vacío, la categoría sale como botón propio de selección única.</p>
 
             <label>Características (elige ícono + escribe el texto, hasta 6). Usa <code>~~</code> donde quieras un salto de línea dentro del texto, ej: <code>Rendimiento:~~54 m² a una mano</code></label>
             <div class="filas-caracteristicas" data-slug="<?php echo htmlspecialchars($p['producto_slug']); ?>">

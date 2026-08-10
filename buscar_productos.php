@@ -47,7 +47,7 @@ while ($fila = $resultado->fetch_assoc()) {
     $nombreLimpio = str_replace("|", " ", $fila["nombre_display"] ?: str_replace("-", " ", $fila["producto_slug"]));
     $resultados[] = [
         "nombre" => $nombreLimpio,
-        "url" => "pinturas_dinamico.php?product=" . urlencode($fila["producto_slug"]),
+        "url" => "pinturas.php?product=" . urlencode($fila["producto_slug"]),
         "imagen" => $fila["imagen"] ?: "imgs/default-product.png",
     ];
 }

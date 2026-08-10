@@ -1,10 +1,9 @@
 <?php
-// lineasDecorativa_dinamico.php
-// PRUEBA PILOTO: versión de lineasDecorativa.html donde las tarjetas de
-// producto se generan automáticamente desde la base de datos.
-//
-// Lógica: por cada "producto_slug" distinto que exista con linea='decorativa',
-// se muestra 1 tarjeta, usando su primera imagen (según orden de subida) como miniatura.
+// lineasDecorativa.php
+// Página de línea decorativa, conectada a la base de datos.
+// Las tarjetas de producto se generan automáticamente desde la BD:
+// por cada "producto_slug" distinto con linea='decorativa', se muestra 1 tarjeta,
+// usando su primera imagen (según orden de subida) como miniatura.
 
 require_once "back_jho/conexion.php";
 
@@ -47,8 +46,12 @@ foreach ($productos as $p) {
     }
 }
 uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
-    $ia = array_search($a, $ordenPreferido);
-    $ib = array_search($b, $ordenPreferido);
+    // Comparamos versiones normalizadas (sin tildes, en minúsculas) para que no importe
+    // si en el panel se escribió "Pasta Mural" o "pasta mural" o "Pasta mural" — todas
+    // deben coincidir con el orden preferido de todas formas.
+    $ordenSlugs = array_map("slugCategoria", $ordenPreferido);
+    $ia = array_search(slugCategoria($a), $ordenSlugs);
+    $ib = array_search(slugCategoria($b), $ordenSlugs);
     $ia = ($ia === false) ? 999 : $ia;
     $ib = ($ib === false) ? 999 : $ib;
     return $ia <=> $ib;
@@ -66,7 +69,19 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
     <link rel="stylesheet" href="stylesFooter.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
     <style>
-        /* ---------- FOOTER RECONSTRUIDO (clases propias jf-*, sin depender de stylesFooter.css) ---------- */
+        /* ---------- BOTONES DE FILTRO: ajuste de ancho dinámico ---------- */
+        /* La clase .btn1 real (styleslinea.css) trae un ancho fijo de 110px pensado
+           para las páginas estáticas, que además ajustan cada botón por su #id específico.
+           Como aquí los botones se generan dinámicamente (sin esos ids), sobreescribimos
+           el ancho para que cada uno se adapte a su propio texto, con espacio a los lados
+           y sin saltos de línea. */
+        .arb2 .btn1 {
+            width: auto;
+            padding: 0 22px;
+            white-space: nowrap;
+        }
+
+
         /* Reset defensivo: neutraliza cualquier estilo genérico heredado (p, ul, li, a, h3, h4, img)
            que venga de las hojas de estilo reales de la web, para que este bloque sea 100% independiente */
         .jf-footer, .jf-footer * {
@@ -169,7 +184,7 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
                     <li>
                         <a href="#" class="trigger-submenu">Líneas <i class="fas fa-chevron-down"></i></a>
                         <ul class="submenu-movil">
-                            <li><a href="lineasDecorativa.html">Decorativa</a></li>
+                            <li><a href="lineasDecorativa.php">Decorativa</a></li>
                             <li><a href="lineasAuto.html">Automotriz</a></li>
                             <li><a href="lineaIndus.html">Industrial</a></li>
                             <li><a href="lineaMarina.html">Marina</a></li>
@@ -189,7 +204,7 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
                     <li class="enca">
                         <a>Líneas <img src="icons/flechita.png" alt="" /></a>
                         <ul class="submenu">
-                            <li><a href="lineasDecorativa.html">Decorativa</a></li>
+                            <li><a href="lineasDecorativa.php">Decorativa</a></li>
                             <li><a href="lineasAuto.html">Automotriz</a></li>
                             <li><a href="lineaIndus.html">Industrial</a></li>
                             <li><a href="lineaMarina.html">Marina</a></li>
@@ -303,7 +318,7 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
             <div class="jf-col-productos">
                 <h3>NUESTROS PRODUCTOS</h3>
                 <ul>
-                    <li><a href="lineasDecorativa.html">Línea Decorativa</a></li>
+                    <li><a href="lineasDecorativa.php">Línea Decorativa</a></li>
                     <li><a href="lineasAuto.html">Línea Automotriz</a></li>
                     <li><a href="lineaIndus.html">Línea Industrial</a></li>
                     <li><a href="lineaMarina.html">Línea Marina</a></li>
@@ -360,7 +375,46 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
             listaResultados.style.cssText = "display:none; position:absolute; top:100%; left:0; right:0; background:white; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:1000; max-height:300px; overflow-y:auto; margin-top:6px;";
             contenedorBusca.appendChild(listaResultados);
 
+            // Estilo del hover para cada resultado, inyectado una sola vez
+            const estiloHover = document.createElement("style");
+            estiloHover.textContent = `
+                .resultado-busqueda {
+                    display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+                    text-decoration: none; color: #0d3393; font-size: 14px; font-family: 'Outfit', sans-serif;
+                    border-bottom: 1px solid #eee; transition: background 0.15s;
+                }
+                .resultado-busqueda span { color: #0d3393; font-weight: 600; }
+                .resultado-busqueda:hover { background: #f3f3f3; }
+                .resultado-busqueda:hover span { text-decoration: underline; text-decoration-color: #ef0606; }
+            `;
+            document.head.appendChild(estiloHover);
+
             let temporizador = null;
+            let ultimosResultados = null; // guarda el último resultado para volver a mostrarlo al reenfocar
+
+            function pintarResultados(productos) {
+                if (productos.length === 0) {
+                    listaResultados.innerHTML = '<div style="padding:14px; color:#999; font-size:13px; font-family:Outfit,sans-serif;">Sin resultados</div>';
+                } else {
+                    listaResultados.innerHTML = productos.map(p => `
+                        <a href="${p.url}" class="resultado-busqueda">
+                            <img src="${p.imagen}" alt="" style="width:38px; height:38px; object-fit:contain; flex-shrink:0;" onerror="this.style.display='none'">
+                            <span>${p.nombre}</span>
+                        </a>
+                    `).join("");
+                }
+            }
+
+            function buscarYMostrar(texto) {
+                fetch("buscar_productos.php?q=" + encodeURIComponent(texto))
+                    .then(r => r.json())
+                    .then(productos => {
+                        ultimosResultados = productos;
+                        pintarResultados(productos);
+                        listaResultados.style.display = "block";
+                    })
+                    .catch(() => { listaResultados.style.display = "none"; });
+            }
 
             inputBusqueda.addEventListener("input", function () {
                 const texto = this.value.trim();
@@ -368,33 +422,41 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
 
                 if (texto.length < 2) {
                     listaResultados.style.display = "none";
+                    ultimosResultados = null;
                     return;
                 }
 
-                temporizador = setTimeout(() => {
-                    fetch("buscar_productos.php?q=" + encodeURIComponent(texto))
-                        .then(r => r.json())
-                        .then(productos => {
-                            if (productos.length === 0) {
-                                listaResultados.innerHTML = '<div style="padding:14px; color:#999; font-size:13px; font-family:Outfit,sans-serif;">Sin resultados</div>';
-                            } else {
-                                listaResultados.innerHTML = productos.map(p => `
-                                    <a href="${p.url}" style="display:flex; align-items:center; gap:12px; padding:10px 16px; text-decoration:none; color:#333; font-size:14px; font-family:Outfit,sans-serif; border-bottom:1px solid #eee;">
-                                        <img src="${p.imagen}" alt="" style="width:38px; height:38px; object-fit:contain; flex-shrink:0;" onerror="this.style.display='none'">
-                                        <span>${p.nombre}</span>
-                                    </a>
-                                `).join("");
-                            }
-                            listaResultados.style.display = "block";
-                        })
-                        .catch(() => { listaResultados.style.display = "none"; });
-                }, 250);
+                temporizador = setTimeout(() => buscarYMostrar(texto), 250);
             });
 
+            // Al volver a hacer foco en la barra: si ya había una búsqueda con resultados,
+            // se vuelve a mostrar el mismo panel (sin repetir la petición al servidor)
+            inputBusqueda.addEventListener("focus", function () {
+                const texto = this.value.trim();
+                if (texto.length >= 2 && ultimosResultados !== null) {
+                    pintarResultados(ultimosResultados);
+                    listaResultados.style.display = "block";
+                }
+            });
+
+            // Al salir de la barra (clic afuera, tab, etc.) el panel se oculta por completo:
+            // no debe quedar ningún rastro visual de la búsqueda anterior.
             document.addEventListener("click", function (e) {
                 if (!contenedorBusca.contains(e.target)) {
                     listaResultados.style.display = "none";
                 }
+            });
+
+            // Respaldo: si el campo pierde el foco (blur) sin que haya habido un clic
+            // detectado fuera del contenedor (ej: la barra se encoge de vuelta a su ancho
+            // normal al desenfocarse), igual se oculta el panel. El pequeño retraso permite
+            // que un clic sobre un resultado (el <a>) alcance a registrarse antes de ocultarlo.
+            inputBusqueda.addEventListener("blur", function () {
+                setTimeout(() => {
+                    if (!contenedorBusca.contains(document.activeElement)) {
+                        listaResultados.style.display = "none";
+                    }
+                }, 150);
             });
         })();
 
