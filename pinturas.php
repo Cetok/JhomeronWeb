@@ -56,7 +56,14 @@ if (count($imagenes) === 0) {
 }
 
 $titulo = ($producto && !empty($producto["nombre_display"])) ? $producto["nombre_display"] : str_replace("-", " ", $slug);
-$tituloHtml = str_replace("|", "<br>", htmlspecialchars(mb_strtoupper($titulo)));
+// IMPORTANTE: el "|" (salto de línea) SOLO se usa en las tarjetas del listado de cada línea
+// (lineasAuto.php, lineasDecorativa.php, etc). En esta página de DETALLE, el título nunca
+// debe partirse en dos líneas — por eso aquí el "|" se reemplaza por un espacio, igual que
+// ya hacíamos en el breadcrumb, para que ambos se comporten igual y el título quede siempre
+// en una sola línea sin importar lo que se haya escrito en el panel.
+$tituloHtml = htmlspecialchars(mb_strtoupper(preg_replace('/\s+/', ' ', str_replace("|", " ", $titulo))));
+// Versión del título para el breadcrumb: en una sola línea, sin el "|"
+$tituloBreadcrumb = htmlspecialchars(preg_replace('/\s+/', ' ', str_replace("|", " ", $titulo)));
 
 $descripcion = $producto["descripcion"] ?? "Esta descripción todavía es de ejemplo — súbela desde el panel en 'Productos'.";
 
@@ -114,7 +121,7 @@ if ($producto && !empty($producto["aplicacion"])) {
 
         .prueba-info-col { flex: 1 1 auto; min-width: 300px; }
         .prueba-imagen-col h1 { color: #0d3393; font-size: 24px; font-weight: 700; margin: 0 0 10px; }
-        .prueba-descripcion { color: #444; font-size: 18px; font-weight: 300; line-height: 1.6; max-width: 560px; text-align: justify; text-align-last: left; }
+        .prueba-descripcion { color: #444; font-size: 18px; font-weight: 300; line-height: 1.35; max-width: 560px; text-align: justify; text-align-last: left; }
 
         /* Por defecto (escritorio): se usa la versión de "Compartir" dentro de la columna
            de la imagen; la versión de abajo (al final de todo) permanece oculta. */
@@ -142,9 +149,16 @@ if ($producto && !empty($producto["aplicacion"])) {
         }
 
         .prueba-caracteristicas-grid {
-            display: grid; grid-template-columns: repeat(4, 140px); gap: 16px; margin: 24px 0 24px auto;
+            display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+            max-width: 632px; /* ancho de 4 cajas + separaciones: a partir de la 5ta, pasa a la siguiente fila */
+            margin: 24px auto;
         }
+        /* Cuando hay exactamente 7 características: 3 arriba y 4 abajo, en vez del
+           acomodo automático de la cuadrícula (que dejaría 4 arriba y 3 abajo). */
+        .prueba-caracteristicas-filas { display: flex; flex-direction: column; gap: 16px; margin: 24px auto; width: fit-content; }
+        .prueba-caracteristicas-fila { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
         .caracteristica-box {
+            width: 140px;
             background: white; border-radius: 12px; padding: 12px; text-align: center;
             box-shadow: 0 2px 8px rgba(20,20,50,0.06);
             aspect-ratio: 1 / 1;
@@ -178,13 +192,15 @@ if ($producto && !empty($producto["aplicacion"])) {
             font-size: 23px; padding: 19px 90px; border-radius: 34px; text-decoration: none;
             text-align: center; box-shadow: 0 0 0 0 rgba(239,6,6,0.55);
             animation: pulso-cotizar 1.8s infinite;
-            transition: transform 0.08s;
+            transition: transform 0.15s ease;
         }
-        .boton-cotizar:hover { transform: scale(1.03); }
+        .boton-cotizar:hover { transform: scale(1.08); }
+        .boton-cotizar:active { transform: scale(0.95); }
         @keyframes pulso-cotizar {
-            0%   { box-shadow: 0 0 0 0 rgba(239,6,6,0.55); }
+            0%   { box-shadow: 0 0 0 0 rgba(239,6,6,0.55); transform: scale(1); }
+            50%  { transform: scale(1.05); }
             70%  { box-shadow: 0 0 0 16px rgba(239,6,6,0); }
-            100% { box-shadow: 0 0 0 0 rgba(239,6,6,0); }
+            100% { box-shadow: 0 0 0 0 rgba(239,6,6,0); transform: scale(1); }
         }
 
         .prueba-botones-doc {
@@ -292,7 +308,19 @@ if ($producto && !empty($producto["aplicacion"])) {
         @media (max-width: 700px) {
             .prueba-contenedor { padding: 20px 16px; }
             .prueba-grid { gap: 26px; }
-            .prueba-caracteristicas-grid { grid-template-columns: repeat(2, 1fr); }
+            .prueba-caracteristicas-grid { max-width: 296px; } /* 2 cajas de 130px + separación */
+            .prueba-caracteristicas-fila { max-width: 300px; }
+            .prueba-caracteristicas-grid .caracteristica-box,
+            .prueba-caracteristicas-fila .caracteristica-box { width: 130px; }
+        }
+
+        @media (max-width: 480px) {
+            .prueba-caracteristicas-grid { max-width: 100%; }
+            .prueba-caracteristicas-fila { max-width: 100%; }
+            .prueba-caracteristicas-grid .caracteristica-box,
+            .prueba-caracteristicas-fila .caracteristica-box { width: 44%; padding: 10px; }
+            .caracteristica-box .icono-carac-img { width: 44px; height: 44px; }
+            .caracteristica-box span { font-size: 10.5px; }
         }
 
         /* ---------- BREADCRUMB: truncar nombres de producto muy largos ---------- */
@@ -490,7 +518,7 @@ if ($producto && !empty($producto["aplicacion"])) {
         <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
         <a href="lineasProducto.html">> Productos</a>
         <a href="<?php echo htmlspecialchars($lineaInfo['url']); ?>">> <?php echo htmlspecialchars($lineaInfo['nombre']); ?></a>
-        <p>> <span id="product-name"><?php echo htmlspecialchars($titulo); ?></span></p>
+        <p>> <span id="product-name"><?php echo $tituloBreadcrumb; ?></span></p>
     </div>
     <div class="prueba-contenedor">
         <div class="prueba-grid">
@@ -499,31 +527,58 @@ if ($producto && !empty($producto["aplicacion"])) {
                 <h1><?php echo $tituloHtml; ?></h1>
                 <p class="prueba-descripcion"><?php echo htmlspecialchars($descripcion); ?></p>
 
-                <div class="prueba-carrusel-wrap" style="display:flex; align-items:center; gap:20px; margin-top:30px;">
+                <div class="prueba-carrusel-wrap" style="display:flex; align-items:center; justify-content:center; gap:20px; margin-top:30px;">
+                    <?php if (count($imagenes) > 1): ?>
                     <button type="button" class="circulo-flecha" onclick="moverCarrusel(-1)">
                         <img src="icons/fle_izq.svg" alt="Anterior">
                     </button>
+                    <?php endif; ?>
 
                     <div style="display:flex; flex-direction:column; align-items:center; width:fit-content;">
                         <img id="product-image" src="<?php echo htmlspecialchars($imagenes[0]); ?>" alt="<?php echo htmlspecialchars($titulo); ?>" style="max-width:340px; width:100%; height:auto;">
 
-                        <?php if (count($tamanos) > 0): ?>
-                        <div class="prueba-tamanos" style="justify-content:center; margin-top:20px;">
-                            <?php foreach ($tamanos as $i => $t):
-                                // Separamos el número de la unidad, ej: "25 Kg" -> "25" + "Kg"
-                                if (preg_match('/^([\d.,]+)\s*(.*)$/', trim($t), $m)) {
+                        <?php if (count($tamanos) > 0):
+                            // Reindexamos secuencial (0,1,2...) preservando el orden del panel,
+                            // para poder dividir en filas de forma predecible.
+                            $tamanosList = array_values($tamanos);
+                            $totalTamanos = count($tamanosList);
+
+                            // Arma 1 botón de tamaño (para no repetir el HTML dos veces)
+                            $renderizarTamano = function ($t, $i) {
+                                if (preg_match('/^([\d.,\/]+)\s*(.*)$/', trim($t), $m)) {
                                     $numeroTam = $m[1];
                                     $unidadTam = $m[2];
                                 } else {
                                     $numeroTam = $t;
                                     $unidadTam = "";
                                 }
-                            ?>
+                                ob_start();
+                                ?>
                                 <span class="<?php echo $i === 0 ? 'tamano-activo' : 'tamano-inactivo'; ?>" onclick="seleccionarTamano(this, <?php echo $i; ?>)">
                                     <span class="numero-tam"><?php echo htmlspecialchars($numeroTam); ?></span><span class="unidad-tam"><?php echo htmlspecialchars($unidadTam); ?></span>
                                 </span>
-                            <?php endforeach; ?>
-                        </div>
+                                <?php
+                                return ob_get_clean();
+                            };
+                        ?>
+                        <?php if ($totalTamanos >= 4):
+                            // 2 filas: la primera se lleva la mitad redondeada hacia arriba
+                            // (4 -> 2+2, 5 -> 3+2, 6 -> 3+3, 7 -> 4+3, etc.)
+                            $cantidadPrimeraFila = (int) ceil($totalTamanos / 2);
+                        ?>
+                            <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+                                <div class="prueba-tamanos" style="justify-content:center; margin:0;">
+                                    <?php for ($i = 0; $i < $cantidadPrimeraFila; $i++) echo $renderizarTamano($tamanosList[$i], $i); ?>
+                                </div>
+                                <div class="prueba-tamanos" style="justify-content:center; margin:0;">
+                                    <?php for ($i = $cantidadPrimeraFila; $i < $totalTamanos; $i++) echo $renderizarTamano($tamanosList[$i], $i); ?>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <div class="prueba-tamanos" style="justify-content:center; margin-top:20px;">
+                                <?php foreach ($tamanosList as $i => $t) echo $renderizarTamano($t, $i); ?>
+                            </div>
+                        <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if (count($colores) > 0): ?>
@@ -531,9 +586,11 @@ if ($producto && !empty($producto["aplicacion"])) {
                         <?php endif; ?>
                     </div>
 
+                    <?php if (count($imagenes) > 1): ?>
                     <button type="button" class="circulo-flecha" onclick="moverCarrusel(1)">
                         <img src="icons/fle_dere.svg" alt="Siguiente">
                     </button>
+                    <?php endif; ?>
                 </div>
 
                 <div class="prueba-compartir prueba-compartir-desktop" style="margin-top: 40px;">
@@ -550,16 +607,17 @@ if ($producto && !empty($producto["aplicacion"])) {
 
             <!-- COLUMNA DERECHA: características, aplicación, botón cotizar, documentos -->
             <div class="prueba-info-col">
-                <?php if (count($caracteristicas) > 0): ?>
-                <div class="prueba-caracteristicas-grid">
-                    <?php foreach ($caracteristicas as $c):
-                        // Formato: "icono::texto" — si no trae "::" se usa un ícono genérico
+                <?php if (count($caracteristicas) > 0):
+                    $totalCaracteristicas = count($caracteristicas);
+                    // Función que arma 1 caja de característica (para no repetir el mismo bloque HTML dos veces)
+                    $renderizarCaja = function ($c) {
                         if (strpos($c, "::") !== false) {
                             [$iconoCarac, $textoCarac] = explode("::", $c, 2);
                         } else {
                             $iconoCarac = ""; $textoCarac = $c;
                         }
-                    ?>
+                        ob_start();
+                        ?>
                         <div class="caracteristica-box">
                             <?php if ($iconoCarac): ?>
                                 <img src="icons/caracter/<?php echo htmlspecialchars($iconoCarac); ?>.svg" class="icono-carac-img" alt="" onerror="this.style.display='none'">
@@ -568,8 +626,25 @@ if ($producto && !empty($producto["aplicacion"])) {
                             <?php endif; ?>
                             <span><?php echo str_replace("~~", "<br>", htmlspecialchars($textoCarac)); ?></span>
                         </div>
-                    <?php endforeach; ?>
-                </div>
+                        <?php
+                        return ob_get_clean();
+                    };
+                ?>
+                    <?php if ($totalCaracteristicas === 7): ?>
+                        <!-- Caso especial: 7 características -> 3 arriba, 4 abajo -->
+                        <div class="prueba-caracteristicas-filas">
+                            <div class="prueba-caracteristicas-fila">
+                                <?php foreach (array_slice($caracteristicas, 0, 3) as $c) echo $renderizarCaja($c); ?>
+                            </div>
+                            <div class="prueba-caracteristicas-fila">
+                                <?php foreach (array_slice($caracteristicas, 3, 4) as $c) echo $renderizarCaja($c); ?>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="prueba-caracteristicas-grid">
+                            <?php foreach ($caracteristicas as $c) echo $renderizarCaja($c); ?>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <?php if (!empty($aplicacionIconos)): ?>
@@ -661,7 +736,46 @@ if ($producto && !empty($producto["aplicacion"])) {
             listaResultados.style.cssText = "display:none; position:absolute; top:100%; left:0; right:0; background:white; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:1000; max-height:300px; overflow-y:auto; margin-top:6px;";
             contenedorBusca.appendChild(listaResultados);
 
+            // Estilo del hover para cada resultado, inyectado una sola vez
+            const estiloHover = document.createElement("style");
+            estiloHover.textContent = `
+                .resultado-busqueda {
+                    display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+                    text-decoration: none; font-size: 14px; font-family: 'Outfit', sans-serif;
+                    border-bottom: 1px solid #eee; transition: background 0.15s;
+                }
+                .resultado-busqueda span { color: #0d3393; font-weight: 500; }
+                .resultado-busqueda:hover { background: #f3f3f3; }
+                .resultado-busqueda:hover span { text-decoration: underline; text-decoration-color: #ef0606; }
+            `;
+            document.head.appendChild(estiloHover);
+
             let temporizador = null;
+            let ultimosResultados = null; // guarda el último resultado para volver a mostrarlo al reenfocar
+
+            function pintarResultados(productos) {
+                if (productos.length === 0) {
+                    listaResultados.innerHTML = '<div style="padding:14px; color:#999; font-size:13px; font-family:Outfit,sans-serif;">Sin resultados</div>';
+                } else {
+                    listaResultados.innerHTML = productos.map(p => `
+                        <a href="${p.url}" class="resultado-busqueda">
+                            <img src="${p.imagen}" alt="" style="width:38px; height:38px; object-fit:contain; flex-shrink:0;" onerror="this.style.display='none'">
+                            <span>${p.nombre}</span>
+                        </a>
+                    `).join("");
+                }
+            }
+
+            function buscarYMostrar(texto) {
+                fetch("buscar_productos.php?q=" + encodeURIComponent(texto))
+                    .then(r => r.json())
+                    .then(productos => {
+                        ultimosResultados = productos;
+                        pintarResultados(productos);
+                        listaResultados.style.display = "block";
+                    })
+                    .catch(() => { listaResultados.style.display = "none"; });
+            }
 
             inputBusqueda.addEventListener("input", function () {
                 const texto = this.value.trim();
@@ -669,31 +783,35 @@ if ($producto && !empty($producto["aplicacion"])) {
 
                 if (texto.length < 2) {
                     listaResultados.style.display = "none";
+                    ultimosResultados = null;
                     return;
                 }
 
-                temporizador = setTimeout(() => {
-                    fetch("buscar_productos.php?q=" + encodeURIComponent(texto))
-                        .then(r => r.json())
-                        .then(productos => {
-                            if (productos.length === 0) {
-                                listaResultados.innerHTML = '<div style="padding:14px; color:#999; font-size:13px; font-family:Outfit,sans-serif;">Sin resultados</div>';
-                            } else {
-                                listaResultados.innerHTML = productos.map(p => `
-                                    <a href="${p.url}" style="display:flex; align-items:center; gap:12px; padding:10px 16px; text-decoration:none; color:#333; font-size:14px; font-family:Outfit,sans-serif; border-bottom:1px solid #eee;">
-                                        <img src="${p.imagen}" alt="" style="width:38px; height:38px; object-fit:contain; flex-shrink:0;" onerror="this.style.display='none'">
-                                        <span>${p.nombre}</span>
-                                    </a>
-                                `).join("");
-                            }
-                            listaResultados.style.display = "block";
-                        })
-                        .catch(() => { listaResultados.style.display = "none"; });
-                }, 250);
+                temporizador = setTimeout(() => buscarYMostrar(texto), 250);
             });
 
+            // Al volver a hacer foco en la barra: si ya había una búsqueda con resultados,
+            // se vuelve a mostrar el mismo panel (sin repetir la petición al servidor)
+            inputBusqueda.addEventListener("focus", function () {
+                const texto = this.value.trim();
+                if (texto.length >= 2 && ultimosResultados !== null) {
+                    pintarResultados(ultimosResultados);
+                    listaResultados.style.display = "block";
+                }
+            });
+
+            // Al salir de la barra (clic afuera, tab, etc.) el panel se oculta de inmediato:
+            // no debe quedar ningún rastro visual de la búsqueda anterior.
             document.addEventListener("click", function (e) {
                 if (!contenedorBusca.contains(e.target)) {
+                    listaResultados.style.display = "none";
+                }
+            });
+
+            // Respaldo: si el campo pierde el foco (blur) sin que haya un clic detectado
+            // fuera del contenedor, también se oculta al instante (sin demora).
+            inputBusqueda.addEventListener("blur", function () {
+                if (!contenedorBusca.contains(document.activeElement)) {
                     listaResultados.style.display = "none";
                 }
             });

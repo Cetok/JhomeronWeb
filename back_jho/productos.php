@@ -333,6 +333,29 @@ if ($filtroLinea !== "") {
 
 require "header.php";
 ?>
+    <style>
+        /* Botón "quitar característica": chico, sutil, gris por defecto -> rojo solo al pasar el mouse */
+        .boton-quitar-caracteristica {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #aaa;
+            font-size: 15px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, color 0.15s;
+        }
+        .boton-quitar-caracteristica:hover {
+            background: #fdeaea;
+            color: #ef0606;
+        }
+    </style>
     <div class="encabezado-pagina">
         <h2>Productos</h2>
         <p>Ponle un nombre claro a cada producto y ordena cómo aparecen sus tarjetas en el listado. Usa <code>|</code> donde quieras un salto de línea, ej: <code>IMPRIMANTE ACRÍLICO|JHOMERON</code></p>
@@ -418,7 +441,7 @@ require "header.php";
             </datalist>
             <p class="nota">Ejemplo: si "Acrílico", "Pulidor" y "Protector" tienen todos <code>Grupo del filtro = Otros</code>, aparecerán juntos bajo un botón desplegable llamado "Otros" con checkboxes. Si dejas el grupo vacío, la categoría sale como botón propio de selección única.</p>
 
-            <label>Características (elige ícono + escribe el texto, hasta 6). Usa <code>~~</code> donde quieras un salto de línea dentro del texto, ej: <code>Rendimiento:~~54 m² a una mano</code></label>
+            <label>Características (elige ícono + escribe el texto, hasta 8). Usa <code>~~</code> donde quieras un salto de línea dentro del texto, ej: <code>Rendimiento:~~54 m² a una mano</code></label>
             <div class="filas-caracteristicas" data-slug="<?php echo htmlspecialchars($p['producto_slug']); ?>">
                 <?php
                 $filasExistentes = [];
@@ -430,10 +453,13 @@ require "header.php";
                         $filasExistentes[] = [$ic, $tx];
                     }
                 }
-                while (count($filasExistentes) < 6) { $filasExistentes[] = ["", ""]; }
+                // Ya no se rellena hasta 6 a la fuerza: se muestran solo las que ya existen
+                // (o 1 vacía si el producto no tiene ninguna todavía). Las demás se agregan
+                // con el botón "+ Agregar característica", hasta un máximo de 8.
+                if (count($filasExistentes) === 0) { $filasExistentes[] = ["", ""]; }
                 foreach ($filasExistentes as $fila):
                 ?>
-                <div style="display:flex; gap:8px; margin-bottom:8px; align-items:center;">
+                <div class="fila-caracteristica" style="display:flex; gap:8px; margin-bottom:8px; align-items:center;">
                     <select class="select-icono-carac" style="width:170px; flex-shrink:0;">
                         <option value="">-- ícono --</option>
                         <?php foreach ($iconosCaracteristicas as $ic): ?>
@@ -441,11 +467,15 @@ require "header.php";
                         <?php endforeach; ?>
                     </select>
                     <img class="preview-icono" src="../icons/caracter/<?php echo htmlspecialchars($fila[0]); ?>.svg"
-                         style="width:24px; height:24px; <?php echo $fila[0] ? '' : 'visibility:hidden;'; ?>" onerror="this.style.visibility='hidden'">
+                         style="width:24px; height:24px; flex-shrink:0; <?php echo $fila[0] ? '' : 'visibility:hidden;'; ?>" onerror="this.style.visibility='hidden'">
                     <input type="text" class="texto-carac" value="<?php echo htmlspecialchars($fila[1]); ?>" placeholder="Texto de la característica" style="margin:0;">
+                    <button type="button" class="boton-quitar-caracteristica" title="Quitar esta característica">&times;</button>
                 </div>
                 <?php endforeach; ?>
             </div>
+            <button type="button" class="boton-agregar-caracteristica" style="margin-top:4px; background:white; color:#0d3393; border:1.5px solid #0d3393; border-radius:6px; padding:7px 16px; font-size:13px; cursor:pointer;">
+                + Agregar característica
+            </button>
             <input type="hidden" name="caracteristicas" class="input-caracteristicas-final">
 
             <label>Tamaños disponibles (separados por coma)</label>
@@ -571,7 +601,7 @@ require "header.php";
             form.addEventListener("submit", function () {
                 const filasDiv = form.querySelector(".filas-caracteristicas");
                 if (filasDiv) {
-                    const filas = filasDiv.querySelectorAll("div");
+                    const filas = filasDiv.querySelectorAll(".fila-caracteristica");
                     const partes = [];
                     filas.forEach(fila => {
                         const icono = fila.querySelector(".select-icono-carac")?.value || "";
@@ -593,16 +623,61 @@ require "header.php";
             });
         });
 
-        // Vista previa del ícono al cambiar el select de cada característica
-        document.querySelectorAll(".select-icono-carac").forEach(select => {
-            select.addEventListener("change", function () {
-                const preview = this.parentElement.querySelector(".preview-icono");
-                if (this.value) {
-                    preview.src = "../icons/caracter/" + this.value + ".svg";
+        // Lista de íconos disponibles (la misma que ya usa el <select> generado por PHP),
+        // para poder armar filas nuevas de característica sin recargar la página.
+        const iconosCaracteristicasJS = <?php echo json_encode(array_values($iconosCaracteristicas)); ?>;
+        const MAX_CARACTERISTICAS = 8;
+
+        function crearFilaCaracteristica() {
+            const fila = document.createElement("div");
+            fila.className = "fila-caracteristica";
+            fila.style.cssText = "display:flex; gap:8px; margin-bottom:8px; align-items:center;";
+
+            const opciones = ['<option value="">-- ícono --</option>']
+                .concat(iconosCaracteristicasJS.map(ic => `<option value="${ic}">${ic}</option>`))
+                .join("");
+
+            fila.innerHTML = `
+                <select class="select-icono-carac" style="width:170px; flex-shrink:0;">${opciones}</select>
+                <img class="preview-icono" src="" style="width:24px; height:24px; flex-shrink:0; visibility:hidden;" onerror="this.style.visibility='hidden'">
+                <input type="text" class="texto-carac" placeholder="Texto de la característica" style="margin:0;">
+                <button type="button" class="boton-quitar-caracteristica" title="Quitar esta característica">&times;</button>
+            `;
+            return fila;
+        }
+
+        // Botón "+ Agregar característica" (hasta un máximo de 8 por producto)
+        document.querySelectorAll(".boton-agregar-caracteristica").forEach(boton => {
+            boton.addEventListener("click", function () {
+                const contenedor = this.previousElementSibling; // .filas-caracteristicas
+                const filasActuales = contenedor.querySelectorAll(".fila-caracteristica").length;
+                if (filasActuales >= MAX_CARACTERISTICAS) {
+                    alert("Ya tienes el máximo de " + MAX_CARACTERISTICAS + " características para este producto.");
+                    return;
+                }
+                contenedor.appendChild(crearFilaCaracteristica());
+            });
+        });
+
+        // Vista previa del ícono al cambiar el select, y botón de quitar fila:
+        // se usa delegación de eventos sobre cada contenedor para que funcione también
+        // en las filas agregadas dinámicamente (no solo en las que ya venían del servidor).
+        document.querySelectorAll(".filas-caracteristicas").forEach(contenedor => {
+            contenedor.addEventListener("change", function (e) {
+                if (!e.target.classList.contains("select-icono-carac")) return;
+                const preview = e.target.parentElement.querySelector(".preview-icono");
+                if (e.target.value) {
+                    preview.src = "../icons/caracter/" + e.target.value + ".svg";
                     preview.style.visibility = "visible";
                 } else {
                     preview.style.visibility = "hidden";
                 }
+            });
+
+            contenedor.addEventListener("click", function (e) {
+                const boton = e.target.closest(".boton-quitar-caracteristica");
+                if (!boton) return;
+                boton.closest(".fila-caracteristica").remove();
             });
         });
     </script>
