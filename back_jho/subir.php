@@ -25,9 +25,9 @@ function generarMiniatura($rutaOrigen, $rutaDestino, $ancho, $alto) {
     if (!$info) return false;
     $mime = $info['mime'];
     switch ($mime) {
-        case 'image/jpeg': $imagenOrigen = imagecreatefromjpeg($rutaOrigen); break;
-        case 'image/png':  $imagenOrigen = imagecreatefrompng($rutaOrigen); break;
-        case 'image/webp': $imagenOrigen = imagecreatefromwebp($rutaOrigen); break;
+        case 'image/jpeg': $imagenOrigen = @imagecreatefromjpeg($rutaOrigen); break;
+        case 'image/png':  $imagenOrigen = @imagecreatefrompng($rutaOrigen); break;
+        case 'image/webp': $imagenOrigen = @imagecreatefromwebp($rutaOrigen); break;
         default: return false;
     }
     $anchoOrigen = imagesx($imagenOrigen);
