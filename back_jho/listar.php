@@ -91,6 +91,28 @@ if (isset($_GET["mover"]) && isset($_GET["id"])) {
 }
 
 $resultado = $conexion->query("SELECT * FROM archivos WHERE tipo = 'imagen' ORDER BY producto_slug ASC, orden ASC, fecha_subida DESC");
+$filas = $resultado->fetch_all(MYSQLI_ASSOC);
+
+// Calculamos, para cada imagen, su posición dentro de su propio producto (ej: "2 de 4")
+// y si es la primera/última de su grupo — así se puede mostrar "Posición X de Y" en vez
+// del número crudo de "orden", y las flechas ▲▼ se desactivan visualmente en los extremos
+// (antes se podían pulsar igual ahí, sin hacer nada, lo cual confundía).
+$totalPorGrupo = [];
+foreach ($filas as $fila) {
+    if ($fila["producto_slug"]) $totalPorGrupo[$fila["producto_slug"]] = ($totalPorGrupo[$fila["producto_slug"]] ?? 0) + 1;
+}
+$contadorPorGrupo = [];
+foreach ($filas as &$fila) {
+    if ($fila["producto_slug"]) {
+        $contadorPorGrupo[$fila["producto_slug"]] = ($contadorPorGrupo[$fila["producto_slug"]] ?? 0) + 1;
+        $fila["_posicion"] = $contadorPorGrupo[$fila["producto_slug"]];
+        $fila["_total_grupo"] = $totalPorGrupo[$fila["producto_slug"]];
+    } else {
+        $fila["_posicion"] = null;
+        $fila["_total_grupo"] = null;
+    }
+}
+unset($fila);
 
 $iconos_tipo = [
     "imagen" => "🖼",
@@ -101,6 +123,10 @@ $iconos_tipo = [
 
 require "header.php";
 ?>
+    <style>
+        .etiqueta-portada { font-size: 11px; color: #0d3393; font-weight: 600; margin-left: 4px; }
+        .accion-orden-desactivada { color: #ccc; cursor: default; pointer-events: none; }
+    </style>
     <div class="encabezado-pagina">
         <h2>Archivos subidos</h2>
         <p>Gestiona las imágenes, PDFs, videos y links de tu catálogo.</p>
@@ -114,13 +140,13 @@ require "header.php";
                 <th>Tipo</th>
                 <th>Línea</th>
                 <th>Producto</th>
-                <th>Orden</th>
+                <th>Posición</th>
                 <th>Fecha</th>
                 <th></th>
             </tr>
-            <?php if ($resultado->num_rows === 0): ?>
+            <?php if (count($filas) === 0): ?>
             <tr><td colspan="8" class="vacio">Aún no has subido ningún archivo. <a class="link-secundario" href="subir.php">Sube el primero →</a></td></tr>
-            <?php else: while ($fila = $resultado->fetch_assoc()): ?>
+            <?php else: foreach ($filas as $fila): ?>
             <tr>
                 <td>
                     <?php if ($fila["tipo"] === "imagen" && $fila["ruta_thumb"]): ?>
@@ -133,19 +159,36 @@ require "header.php";
                 <td><span class="gota-tipo gota-<?php echo htmlspecialchars($fila["tipo"]); ?>"><?php echo htmlspecialchars($fila["tipo"]); ?></span></td>
                 <td><?php echo htmlspecialchars($fila["linea"] ?: "—"); ?></td>
                 <td><?php echo htmlspecialchars($fila["producto_slug"] ?: "—"); ?></td>
-                <td><?php echo (int) $fila["orden"]; ?></td>
+                <td>
+                    <?php if ($fila["_posicion"] !== null): ?>
+                        <?php echo (int) $fila["_posicion"]; ?> de <?php echo (int) $fila["_total_grupo"]; ?>
+                        <?php if ($fila["_posicion"] === 1): ?>
+                            <span class="etiqueta-portada" title="Esta es la primera imagen: la que se usa como portada / tamaño 1">· portada</span>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        —
+                    <?php endif; ?>
+                </td>
                 <td class="col-fecha"><?php echo htmlspecialchars($fila["fecha_subida"]); ?></td>
                 <td style="white-space:nowrap;">
-                    <?php if ($fila["producto_slug"]): ?>
-                        <a href="listar.php?mover=arriba&id=<?php echo $fila['id']; ?>" class="accion-orden" title="Subir">▲</a>
-                        <a href="listar.php?mover=abajo&id=<?php echo $fila['id']; ?>" class="accion-orden" title="Bajar">▼</a>
+                    <?php if ($fila["producto_slug"] && $fila["_total_grupo"] > 1): ?>
+                        <?php if ($fila["_posicion"] > 1): ?>
+                            <a href="listar.php?mover=arriba&id=<?php echo $fila['id']; ?>" class="accion-orden" title="Subir">▲</a>
+                        <?php else: ?>
+                            <span class="accion-orden accion-orden-desactivada" title="Ya es la primera">▲</span>
+                        <?php endif; ?>
+                        <?php if ($fila["_posicion"] < $fila["_total_grupo"]): ?>
+                            <a href="listar.php?mover=abajo&id=<?php echo $fila['id']; ?>" class="accion-orden" title="Bajar">▼</a>
+                        <?php else: ?>
+                            <span class="accion-orden accion-orden-desactivada" title="Ya es la última">▼</span>
+                        <?php endif; ?>
                     <?php endif; ?>
                     <a class="accion-editar" href="editar.php?id=<?php echo $fila['id']; ?>">Editar</a>
                     <a class="accion-borrar" href="listar.php?borrar=<?php echo $fila['id']; ?>"
                        onclick="return confirm('¿Seguro que quieres borrar este archivo?');">Borrar</a>
                 </td>
             </tr>
-            <?php endwhile; endif; ?>
+            <?php endforeach; endif; ?>
         </table>
     </div>
 <?php require "footer.php"; ?>

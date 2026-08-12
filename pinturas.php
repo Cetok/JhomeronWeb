@@ -110,6 +110,19 @@ if ($producto && !empty($producto["aplicacion"])) {
             display: flex !important; align-items: center; justify-content: center;
             cursor: pointer; flex-shrink: 0; border: none; transition: background 0.15s, box-shadow 0.15s;
             padding: 0;
+            /* Posicionadas de forma absoluta respecto a .prueba-imagen-relativa (que solo
+               envuelve la imagen), así siempre quedan centradas contra la imagen y no contra
+               toda la columna (que incluye tamaños/ver colores, y por eso antes se veían
+               "muy abajo" cuando esa columna era más alta que la imagen). */
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .circulo-flecha.flecha-izq { left: -66px; }
+        .circulo-flecha.flecha-der { right: -66px; }
+        @media (max-width: 480px) {
+            .circulo-flecha.flecha-izq { left: -46px; }
+            .circulo-flecha.flecha-der { right: -46px; }
         }
         .circulo-flecha:hover {
             background: white !important;
@@ -451,18 +464,44 @@ if ($producto && !empty($producto["aplicacion"])) {
                         <a href="#" class="trigger-submenu">Líneas <i class="fas fa-chevron-down"></i></a>
                         <ul class="submenu-movil">
                             <li><a href="lineasDecorativa.php">Decorativa</a></li>
-                            <li><a href="lineasAuto.html">Automotriz</a></li>
-                            <li><a href="lineaIndus.html">Industrial</a></li>
-                            <li><a href="lineaMarina.html">Marina</a></li>
-                            <li><a href="lineaTrafico.html">Señalización</a></li>
-                            <li><a href="lineaMadera.html">Madera</a></li>
-                            <li><a href="lineaDisolvente.html">Disolventes</a></li>
-                            <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
-                            <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                            <li><a href="lineasAuto.php">Automotriz</a></li>
+                            <li><a href="lineaIndus.php">Industrial</a></li>
+                            <li><a href="lineaMarina.php">Marina</a></li>
+                            <li><a href="lineaTrafico.php">Señalización</a></li>
+                            <li><a href="lineaMadera.php">Madera</a></li>
+                            <li><a href="lineaDisolvente.php">Disolventes</a></li>
+                            <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
+                            <li><a href="insuQuimi.php">Insumos Químicos</a></li>
                         </ul>
                     </li>
                     <li><a href="#" class="asesoria-movil">Asesoría</a></li>
                     <li><a href="puntoVenta.html">Puntos de venta</a></li>
+
+                    <li>
+                        <a href="#" class="trigger-submenu-cotiza">
+                            ¡Cotiza aquí! <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <ul class="submenu-movil-cotiza">
+                            <li>
+                                <a href="https://wa.me/957720068" target="_blank" rel="noopener noreferrer" class="whatsapp2-btn">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <span>¡Chatear con un asesor!</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tel:945057702" class="call-btn">
+                                    <i class="fas fa-phone"></i>
+                                    <span>¡Llamar a un asesor!</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="email-btn cotiza-email-movil">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>¡Enviar un correo!</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <nav>
@@ -471,14 +510,14 @@ if ($producto && !empty($producto["aplicacion"])) {
                         <a>Líneas <img src="icons/flechita.png" alt="" /></a>
                         <ul class="submenu">
                             <li><a href="lineasDecorativa.php">Decorativa</a></li>
-                            <li><a href="lineasAuto.html">Automotriz</a></li>
-                            <li><a href="lineaIndus.html">Industrial</a></li>
-                            <li><a href="lineaMarina.html">Marina</a></li>
-                            <li><a href="lineaTrafico.html">Señalización</a></li>
-                            <li><a href="lineaMadera.html">Madera</a></li>
-                            <li><a href="lineaDisolvente.html">Disolventes</a></li>
-                            <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
-                            <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                            <li><a href="lineasAuto.php">Automotriz</a></li>
+                            <li><a href="lineaIndus.php">Industrial</a></li>
+                            <li><a href="lineaMarina.php">Marina</a></li>
+                            <li><a href="lineaTrafico.php">Señalización</a></li>
+                            <li><a href="lineaMadera.php">Madera</a></li>
+                            <li><a href="lineaDisolvente.php">Disolventes</a></li>
+                            <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
+                            <li><a href="insuQuimi.php">Insumos Químicos</a></li>
                         </ul>
                     </li>
                     <li class="enca"><a id="asesoria-link">Asesoría</a></li>
@@ -624,15 +663,24 @@ if ($producto && !empty($producto["aplicacion"])) {
                 <h1><?php echo $tituloHtml; ?></h1>
                 <p class="prueba-descripcion"><?php echo htmlspecialchars($descripcion); ?></p>
 
-                <div class="prueba-carrusel-wrap" style="display:flex; align-items:center; justify-content:center; gap:20px; margin-top:30px;">
-                    <?php if (count($imagenes) > 1): ?>
-                    <button type="button" class="circulo-flecha" onclick="moverCarrusel(-1)">
-                        <img src="icons/fle_izq.svg" alt="Anterior">
-                    </button>
-                    <?php endif; ?>
+                <div class="prueba-carrusel-wrap" style="display:flex; flex-direction:column; align-items:center; margin-top:30px;">
+                    <div class="prueba-imagen-relativa" style="position:relative; display:inline-block;">
+                        <?php if (count($imagenes) > 1): ?>
+                        <button type="button" class="circulo-flecha flecha-izq" onclick="moverCarrusel(-1)">
+                            <img src="icons/fle_izq.svg" alt="Anterior">
+                        </button>
+                        <?php endif; ?>
+
+                        <img id="product-image" src="<?php echo htmlspecialchars($imagenes[0]); ?>" alt="<?php echo htmlspecialchars($titulo); ?>" style="max-width:340px; width:100%; height:auto; display:block;">
+
+                        <?php if (count($imagenes) > 1): ?>
+                        <button type="button" class="circulo-flecha flecha-der" onclick="moverCarrusel(1)">
+                            <img src="icons/fle_dere.svg" alt="Siguiente">
+                        </button>
+                        <?php endif; ?>
+                    </div>
 
                     <div style="display:flex; flex-direction:column; align-items:center; width:fit-content;">
-                        <img id="product-image" src="<?php echo htmlspecialchars($imagenes[0]); ?>" alt="<?php echo htmlspecialchars($titulo); ?>" style="max-width:340px; width:100%; height:auto;">
 
                         <?php if (count($tamanos) > 0):
                             // Reindexamos secuencial (0,1,2...) preservando el orden del panel,
@@ -682,12 +730,6 @@ if ($producto && !empty($producto["aplicacion"])) {
                         <button type="button" id="ver-colores" class="boton-ver-colores">VER COLORES</button>
                         <?php endif; ?>
                     </div>
-
-                    <?php if (count($imagenes) > 1): ?>
-                    <button type="button" class="circulo-flecha" onclick="moverCarrusel(1)">
-                        <img src="icons/fle_dere.svg" alt="Siguiente">
-                    </button>
-                    <?php endif; ?>
                 </div>
 
                 <div class="prueba-compartir prueba-compartir-desktop" style="margin-top: 40px;">
@@ -958,9 +1000,12 @@ if ($producto && !empty($producto["aplicacion"])) {
         const cantidadTamanos = <?php echo count($tamanos); ?>;
         let indiceActual = 0;
 
-        // Solo sincronizamos automáticamente si hay la misma cantidad de imágenes que de tamaños
-        // (es decir, cada imagen representa una presentación/tamaño distinto)
-        const sincronizado = cantidadTamanos > 0 && cantidadTamanos === imagenesProducto.length;
+        // Antes solo se sincronizaba si la cantidad de tamaños era EXACTAMENTE igual a la
+        // de imágenes — por eso con 3, 4 o 5 tamaños (sin esa misma cantidad de fotos) el
+        // clic no cambiaba nada. Ahora se sincroniza siempre que haya más de 1 imagen,
+        // usando el índice más cercano disponible (si el tamaño clickeado no tiene su
+        // propia foto, se queda mostrando la última imagen válida en vez de no hacer nada).
+        const sincronizado = cantidadTamanos > 0 && imagenesProducto.length > 1;
 
         function actualizarImagen() {
             document.getElementById("product-image").src = imagenesProducto[indiceActual];
@@ -968,8 +1013,11 @@ if ($producto && !empty($producto["aplicacion"])) {
 
         function actualizarBotonesTamano() {
             const botones = document.querySelectorAll(".prueba-tamanos > span");
+            // Igual que con las imágenes: si hay menos botones de tamaño que imágenes,
+            // se resalta el último tamaño disponible en vez de ninguno.
+            const indiceBoton = Math.min(indiceActual, botones.length - 1);
             botones.forEach((boton, i) => {
-                if (i === indiceActual) {
+                if (i === indiceBoton) {
                     boton.classList.add("tamano-activo");
                     boton.classList.remove("tamano-inactivo");
                 } else {
@@ -994,7 +1042,9 @@ if ($producto && !empty($producto["aplicacion"])) {
             elegido.classList.add("tamano-activo");
 
             if (sincronizado) {
-                indiceActual = indice;
+                // Si el tamaño clickeado no tiene su propia foto (hay más tamaños que
+                // imágenes), se queda en la última imagen disponible en vez de no cambiar.
+                indiceActual = Math.min(indice, imagenesProducto.length - 1);
                 actualizarImagen();
             }
         }
@@ -1017,14 +1067,14 @@ if ($producto && !empty($producto["aplicacion"])) {
                 <h3>NUESTROS PRODUCTOS</h3>
                 <ul>
                     <li><a href="lineasDecorativa.php">Línea Decorativa</a></li>
-                    <li><a href="lineasAuto.html">Línea Automotriz</a></li>
-                    <li><a href="lineaIndus.html">Línea Industrial</a></li>
-                    <li><a href="lineaMarina.html">Línea Marina</a></li>
-                    <li><a href="lineaTrafico.html">Línea Señalización</a></li>
-                    <li><a href="lineaMadera.html">Línea Madera</a></li>
-                    <li><a href="lineaDisolvente.html">Línea Disolventes</a></li>
-                    <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
-                    <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                    <li><a href="lineasAuto.php">Línea Automotriz</a></li>
+                    <li><a href="lineaIndus.php">Línea Industrial</a></li>
+                    <li><a href="lineaMarina.php">Línea Marina</a></li>
+                    <li><a href="lineaTrafico.php">Línea Señalización</a></li>
+                    <li><a href="lineaMadera.php">Línea Madera</a></li>
+                    <li><a href="lineaDisolvente.php">Línea Disolventes</a></li>
+                    <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
+                    <li><a href="insuQuimi.php">Insumos Químicos</a></li>
                 </ul>
             </div>
 
@@ -1082,6 +1132,29 @@ if ($producto && !empty($producto["aplicacion"])) {
                     this.classList.toggle("active");
                 });
             });
+
+
+            // Submenú móvil de "¡Cotiza aquí!" (Chatear / Llamar / Enviar correo)
+            const triggerCotiza = document.querySelector(".trigger-submenu-cotiza");
+            if (triggerCotiza) {
+                triggerCotiza.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const submenuCotiza = this.nextElementSibling;
+                    submenuCotiza.classList.toggle("activo");
+                    this.classList.toggle("active");
+                });
+            }
+            const cotizaEmailMovil = document.querySelector(".cotiza-email-movil");
+            if (cotizaEmailMovil) {
+                cotizaEmailMovil.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const formOverlayMovil = document.getElementById("formOverlay");
+                    if (formOverlayMovil) {
+                        formOverlayMovil.classList.remove("hidden");
+                        if (menuMovil) menuMovil.classList.remove("activo");
+                    }
+                });
+            }
 
             document.addEventListener("click", function (e) {
                 if (menuMovil && !menuMovil.contains(e.target) && !menuBtn.contains(e.target)) {

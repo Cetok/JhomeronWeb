@@ -1,9 +1,8 @@
 <?php
-// lineaIndus.php
-// Página de línea industrial, conectada a la base de datos.
-// Las tarjetas de producto se generan automáticamente desde la BD:
-// por cada "producto_slug" distinto con linea='industrial', se muestra 1 tarjeta,
-// usando su primera imagen (según orden de subida) como miniatura.
+// insuQuimi.php
+// Página de línea "Insumos Químicos", conectada a la base de datos.
+// A diferencia de las demás líneas, usa vista de LISTA (no tarjetas), aunque sí
+// mantiene el filtro por categoría, tal como el diseño original de insuQuimi.html.
 
 require_once "back_jho/conexion.php";
 
@@ -18,13 +17,13 @@ function slugCategoria($texto) {
     return trim($texto, '-');
 }
 
-// Traemos 1 imagen representativa por cada producto de la línea industrial
+// Traemos 1 imagen representativa por cada producto de la línea insumos-quimicos
 $sql = "SELECT a.producto_slug, a.nombre, a.ruta_thumb, a.ruta_original, p.nombre_display, p.orden_listado, p.categoria, p.grupo_filtro
         FROM archivos a
         INNER JOIN (
             SELECT producto_slug, MIN(orden) AS min_orden, MIN(id) AS min_id
             FROM archivos
-            WHERE linea = 'industrial' AND tipo = 'imagen' AND producto_slug IS NOT NULL AND producto_slug != ''
+            WHERE linea = 'insumos-quimicos' AND tipo = 'imagen' AND producto_slug IS NOT NULL AND producto_slug != ''
             GROUP BY producto_slug
         ) primero
         ON a.producto_slug = primero.producto_slug AND a.id = primero.min_id
@@ -38,7 +37,7 @@ $productos = $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
 // - Si un grupo tiene MÁS DE UNA categoría distinta -> sale como botón desplegable con checkboxes
 //   (ej: "Preparación" agrupa "Preparación de Superficies" y "Preparación de adherencia").
 // - Si un grupo tiene UNA sola categoría -> sale como botón simple de selección única (como antes).
-$ordenPreferido = []; // aún no conocemos las categorías típicas de industrial; se pueden agregar aquí
+$ordenPreferido = ["Secante", "Pigmento", "Aditivo", "Talco"]; // orden visto en tu captura de referencia
                        // en el orden que prefieras (ej: ["Recubrimientos", "Anticorrosivos", ...]).
                        // Mientras tanto, sale en el orden en que aparecen los productos. "Otros" igual
                        // se manda siempre al final, sin importar esta lista.
@@ -81,7 +80,7 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Línea Industrial - Jhomeron</title>
+    <title>Insumos Químicos - Jhomeron</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="styleslinea.css" />
@@ -89,6 +88,38 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
+        /* El CSS real, a 768px y 480px, REDISEÑA la lista como tarjetas separadas
+           (con huecos entre cada fila y el botón "VER DETALLES" cuadrado/pegado al
+           borde) — muy distinto al estilo de escritorio (fila continua, sin huecos,
+           botón en forma de píldora). Aquí cancelamos ese rediseño y forzamos que
+           se vea EXACTAMENTE igual que en escritorio, en cualquier tamaño de pantalla. */
+        @media (max-width: 768px) {
+            .lista-resinas { gap: 0 !important; }
+            .item-resina {
+                border-radius: 5px !important;
+                padding: 10px 20px !important;
+                overflow: visible !important;
+            }
+            .btn-ver-detalles {
+                border-radius: 100px !important;
+                height: auto !important;
+                padding: 5px 20px !important;
+                white-space: nowrap;
+            }
+        }
+        @media (max-width: 480px) {
+            .lista-resinas { gap: 0 !important; }
+            .item-resina {
+                border-radius: 5px !important;
+                padding: 8px 14px !important;
+            }
+            .btn-ver-detalles {
+                border-radius: 100px !important;
+                padding: 4px 14px !important;
+                min-width: auto !important;
+            }
+        }
+
         /* ---------- BOTONES DE FILTRO: ajuste de ancho dinámico ---------- */
         /* La clase .btn1 real (styleslinea.css) trae un ancho fijo de 110px pensado
            para las páginas estáticas, que además ajustan cada botón por su #id específico.
@@ -426,11 +457,11 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
             <div class="nav-links">
                 <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
                 <a href="lineasProducto.html">> Productos</a>
-                <span>> Línea Industrial</span>
+                <span>> Insumos Químicos</span>
             </div>
 
             <div class="arb2">
-                <h2>LÍNEA INDUSTRIAL</h2>
+                <h2>INSUMOS QUÍMICOS</h2>
 
                 <?php if (count($gruposFiltro) > 0): ?>
                 <!-- Filtro móvil (dropdown) -->
@@ -483,32 +514,37 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
     </div>
 
     <div class="main-content">
-        <div class="cards-pintura desktop-version">
-            <div class="cards-row">
+        <div class="conte-resinas" style="width:100%; box-sizing:border-box;">
+            <div class="lista-resinas" style="width:100%;">
                 <?php if (count($productos) === 0): ?>
                     <p style="font-family:'Outfit', sans-serif; padding: 20px;">
-                        Aún no hay productos con línea "industrial" y un producto_slug asignado.
+                        Aún no hay productos con línea "insumos-quimicos" y un producto_slug asignado.
                         Sube alguno desde el panel para verlo aparecer aquí automáticamente.
                     </p>
                 <?php else: foreach ($productos as $producto):
                     $slugCatProducto = !empty($producto["categoria"]) ? slugCategoria($producto["categoria"]) : "";
+                    $tituloProd = !empty($producto["nombre_display"]) ? $producto["nombre_display"] : str_replace("-", " ", $producto["producto_slug"]);
+                    $tituloProd = str_replace("|", " ", $tituloProd); // en la lista no aplica el salto de línea
                 ?>
-                    <div class="card product-card" data-category="<?php echo htmlspecialchars($slugCatProducto); ?>">
-                        <div class="card-header">
-                            <p><?php
-                            $titulo = !empty($producto["nombre_display"]) ? $producto["nombre_display"] : str_replace("-", " ", $producto["producto_slug"]);
-                            $tituloEscapado = htmlspecialchars(mb_strtoupper($titulo));
-                            echo str_replace("|", "<br>", $tituloEscapado); // "|" se convierte en salto de línea
-                        ?></p>
-                            <img src="icons/goteo2.svg" alt="Estilo Arriba" class="img-estilo" />
+                    <div class="item-resina product-card" data-category="<?php echo htmlspecialchars($slugCatProducto); ?>" style="width:100%; box-sizing:border-box;">
+                        <div class="item-left">
+                            <span class="bullet"></span>
+                            <span class="nombre-resina"><?php echo htmlspecialchars(mb_strtoupper($tituloProd)); ?></span>
                         </div>
-                        <img src="<?php echo htmlspecialchars($producto["ruta_thumb"] ?: $producto["ruta_original"]); ?>"
-                             alt="<?php echo htmlspecialchars($producto["nombre"]); ?>" class="img-contenido" />
-                        <a href="pinturas.php?product=<?php echo urlencode($producto["producto_slug"]); ?>" class="ver-mas">
-                            VER DETALLES
-                        </a>
+                        <a href="pinturaSimple.php?product=<?php echo urlencode($producto["producto_slug"]); ?>" class="btn-ver-detalles">VER DETALLES</a>
                     </div>
                 <?php endforeach; endif; ?>
+            </div>
+        </div>
+
+        <div class="lnco">
+            <h3>Compartir productos:</h3>
+            <div class="redes" id="redes-compartir-lista">
+                <a href="#" data-red="facebook"><img src="icons/redes/face.svg" alt="facebook" /></a>
+                <a href="#" data-red="linkedin"><img src="icons/redes/linke.svg" alt="linkedin" /></a>
+                <a href="#" data-red="pinterest"><img src="icons/redes/pinte.svg" alt="pinterest" /></a>
+                <a href="#" data-red="whatsapp"><img src="icons/redes/wasap.svg" alt="whatsapp" /></a>
+                <a href="#" data-red="copiar"><img src="icons/redes/enlace.svg" alt="enlace" /></a>
             </div>
         </div>
     </div>
@@ -673,7 +709,6 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 
         // Filtro por categoría (botones simples y desplegables con checkboxes)
         document.addEventListener("DOMContentLoaded", function () {
-            const cardsContainer = document.querySelector(".cards-pintura.desktop-version");
             const allCards = document.querySelectorAll(".product-card");
             const botonesSimples = document.querySelectorAll(".arbtn > .btn1[data-filter]");
             const botonesGrupo = document.querySelectorAll(".btn-grupo-trigger");
@@ -682,18 +717,10 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
             const mobileFilterMenu = document.getElementById("mobileFilterMenu");
             const filterItems = document.querySelectorAll(".filter-item");
 
+            // En la vista de lista no hace falta reagrupar en filas de "N por fila"
+            // (eso era solo para la cuadrícula de tarjetas). Aquí basta con mostrar/ocultar.
             function reorganizarTarjetas(tarjetasVisibles) {
-                if (!cardsContainer) return;
-                cardsContainer.querySelectorAll(".cards-row").forEach(fila => fila.remove());
-                let filaActual;
-                tarjetasVisibles.forEach((card, i) => {
-                    if (i % 5 === 0) {
-                        filaActual = document.createElement("div");
-                        filaActual.className = "cards-row";
-                        cardsContainer.appendChild(filaActual);
-                    }
-                    filaActual.appendChild(card);
-                });
+                // no-op: se deja intencionalmente vacío, ver comentario arriba
             }
 
             function resetearTodo() {
@@ -846,6 +873,38 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 
             // Al cargar, se muestran todos los productos sin ningún filtro activo
             mostrarTodos();
+        });
+
+        // "Compartir productos" (la lista completa, no un producto individual)
+        document.addEventListener("DOMContentLoaded", function () {
+            const enlaces = document.querySelectorAll("#redes-compartir-lista a[data-red]");
+            const urlActual = encodeURIComponent(window.location.href);
+
+            enlaces.forEach(enlace => {
+                const red = enlace.getAttribute("data-red");
+                if (red === "facebook") {
+                    enlace.href = "https://www.facebook.com/sharer/sharer.php?u=" + urlActual;
+                    enlace.target = "_blank";
+                } else if (red === "linkedin") {
+                    enlace.href = "https://www.linkedin.com/sharing/share-offsite/?url=" + urlActual;
+                    enlace.target = "_blank";
+                } else if (red === "pinterest") {
+                    enlace.href = "https://pinterest.com/pin/create/button/?url=" + urlActual;
+                    enlace.target = "_blank";
+                } else if (red === "whatsapp") {
+                    enlace.href = "https://wa.me/?text=" + urlActual;
+                    enlace.target = "_blank";
+                } else if (red === "copiar") {
+                    enlace.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        navigator.clipboard.writeText(window.location.href).then(() => {
+                            const original = enlace.innerHTML;
+                            enlace.innerHTML = "✓";
+                            setTimeout(() => { enlace.innerHTML = original; }, 1500);
+                        });
+                    });
+                }
+            });
         });
 
         document.addEventListener("DOMContentLoaded", function () {

@@ -1,8 +1,8 @@
 <?php
-// lineaIndus.php
-// Página de línea industrial, conectada a la base de datos.
+// lineaDisolvente.php
+// Página de línea de disolventes, conectada a la base de datos.
 // Las tarjetas de producto se generan automáticamente desde la BD:
-// por cada "producto_slug" distinto con linea='industrial', se muestra 1 tarjeta,
+// por cada "producto_slug" distinto con linea='disolventes', se muestra 1 tarjeta,
 // usando su primera imagen (según orden de subida) como miniatura.
 
 require_once "back_jho/conexion.php";
@@ -18,13 +18,13 @@ function slugCategoria($texto) {
     return trim($texto, '-');
 }
 
-// Traemos 1 imagen representativa por cada producto de la línea industrial
+// Traemos 1 imagen representativa por cada producto de la línea de disolventes
 $sql = "SELECT a.producto_slug, a.nombre, a.ruta_thumb, a.ruta_original, p.nombre_display, p.orden_listado, p.categoria, p.grupo_filtro
         FROM archivos a
         INNER JOIN (
             SELECT producto_slug, MIN(orden) AS min_orden, MIN(id) AS min_id
             FROM archivos
-            WHERE linea = 'industrial' AND tipo = 'imagen' AND producto_slug IS NOT NULL AND producto_slug != ''
+            WHERE linea = 'disolventes' AND tipo = 'imagen' AND producto_slug IS NOT NULL AND producto_slug != ''
             GROUP BY producto_slug
         ) primero
         ON a.producto_slug = primero.producto_slug AND a.id = primero.min_id
@@ -38,7 +38,7 @@ $productos = $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
 // - Si un grupo tiene MÁS DE UNA categoría distinta -> sale como botón desplegable con checkboxes
 //   (ej: "Preparación" agrupa "Preparación de Superficies" y "Preparación de adherencia").
 // - Si un grupo tiene UNA sola categoría -> sale como botón simple de selección única (como antes).
-$ordenPreferido = []; // aún no conocemos las categorías típicas de industrial; se pueden agregar aquí
+$ordenPreferido = []; // aún no conocemos las categorías típicas de esta línea; se pueden agregar aquí
                        // en el orden que prefieras (ej: ["Recubrimientos", "Anticorrosivos", ...]).
                        // Mientras tanto, sale en el orden en que aparecen los productos. "Otros" igual
                        // se manda siempre al final, sin importar esta lista.
@@ -81,7 +81,7 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Línea Industrial - Jhomeron</title>
+    <title>Línea Disolventes - Jhomeron</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="styleslinea.css" />
@@ -426,11 +426,11 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
             <div class="nav-links">
                 <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
                 <a href="lineasProducto.html">> Productos</a>
-                <span>> Línea Industrial</span>
+                <span>> Línea Disolventes</span>
             </div>
 
             <div class="arb2">
-                <h2>LÍNEA INDUSTRIAL</h2>
+                <h2>LÍNEA DISOLVENTES</h2>
 
                 <?php if (count($gruposFiltro) > 0): ?>
                 <!-- Filtro móvil (dropdown) -->
@@ -487,7 +487,7 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
             <div class="cards-row">
                 <?php if (count($productos) === 0): ?>
                     <p style="font-family:'Outfit', sans-serif; padding: 20px;">
-                        Aún no hay productos con línea "industrial" y un producto_slug asignado.
+                        Aún no hay productos con línea "disolventes" y un producto_slug asignado.
                         Sube alguno desde el panel para verlo aparecer aquí automáticamente.
                     </p>
                 <?php else: foreach ($productos as $producto):

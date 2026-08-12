@@ -253,15 +253,41 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
                             <li><a href="lineasAuto.php">Automotriz</a></li>
                             <li><a href="lineaIndus.php">Industrial</a></li>
                             <li><a href="lineaMarina.php">Marina</a></li>
-                            <li><a href="lineaTrafico.html">Señalización</a></li>
-                            <li><a href="lineaMadera.html">Madera</a></li>
-                            <li><a href="lineaDisolvente.html">Disolventes</a></li>
-                            <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
-                            <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                            <li><a href="lineaTrafico.php">Señalización</a></li>
+                            <li><a href="lineaMadera.php">Madera</a></li>
+                            <li><a href="lineaDisolvente.php">Disolventes</a></li>
+                            <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
+                            <li><a href="insuQuimi.php">Insumos Químicos</a></li>
                         </ul>
                     </li>
                     <li><a href="#" class="asesoria-movil">Asesoría</a></li>
                     <li><a href="puntoVenta.html">Puntos de venta</a></li>
+
+                    <li>
+                        <a href="#" class="trigger-submenu-cotiza">
+                            ¡Cotiza aquí! <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <ul class="submenu-movil-cotiza">
+                            <li>
+                                <a href="https://wa.me/957720068" target="_blank" rel="noopener noreferrer" class="whatsapp2-btn">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <span>¡Chatear con un asesor!</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tel:945057702" class="call-btn">
+                                    <i class="fas fa-phone"></i>
+                                    <span>¡Llamar a un asesor!</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="email-btn cotiza-email-movil">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>¡Enviar un correo!</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <nav>
@@ -273,11 +299,11 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
                             <li><a href="lineasAuto.php">Automotriz</a></li>
                             <li><a href="lineaIndus.php">Industrial</a></li>
                             <li><a href="lineaMarina.php">Marina</a></li>
-                            <li><a href="lineaTrafico.html">Señalización</a></li>
-                            <li><a href="lineaMadera.html">Madera</a></li>
-                            <li><a href="lineaDisolvente.html">Disolventes</a></li>
-                            <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
-                            <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                            <li><a href="lineaTrafico.php">Señalización</a></li>
+                            <li><a href="lineaMadera.php">Madera</a></li>
+                            <li><a href="lineaDisolvente.php">Disolventes</a></li>
+                            <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
+                            <li><a href="insuQuimi.php">Insumos Químicos</a></li>
                         </ul>
                     </li>
                     <li class="enca"><a id="asesoria-link">Asesoría</a></li>
@@ -507,11 +533,11 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
                     <li><a href="lineasAuto.php">Línea Automotriz</a></li>
                     <li><a href="lineaIndus.php">Línea Industrial</a></li>
                     <li><a href="lineaMarina.php">Línea Marina</a></li>
-                    <li><a href="lineaTrafico.html">Línea Señalización</a></li>
-                    <li><a href="lineaMadera.html">Línea Madera</a></li>
-                    <li><a href="lineaDisolvente.html">Línea Disolventes</a></li>
-                    <li><a href="resinasPegame.html">Resinas y Pegamentos</a></li>
-                    <li><a href="insuQuimi.html">Insumos Químicos</a></li>
+                    <li><a href="lineaTrafico.php">Línea Señalización</a></li>
+                    <li><a href="lineaMadera.php">Línea Madera</a></li>
+                    <li><a href="lineaDisolvente.php">Línea Disolventes</a></li>
+                    <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
+                    <li><a href="insuQuimi.php">Insumos Químicos</a></li>
                 </ul>
             </div>
 
@@ -843,6 +869,29 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
                     this.classList.toggle("active");
                 });
             });
+
+
+            // Submenú móvil de "¡Cotiza aquí!" (Chatear / Llamar / Enviar correo)
+            const triggerCotiza = document.querySelector(".trigger-submenu-cotiza");
+            if (triggerCotiza) {
+                triggerCotiza.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const submenuCotiza = this.nextElementSibling;
+                    submenuCotiza.classList.toggle("activo");
+                    this.classList.toggle("active");
+                });
+            }
+            const cotizaEmailMovil = document.querySelector(".cotiza-email-movil");
+            if (cotizaEmailMovil) {
+                cotizaEmailMovil.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const formOverlayMovil = document.getElementById("formOverlay");
+                    if (formOverlayMovil) {
+                        formOverlayMovil.classList.remove("hidden");
+                        if (menuMovil) menuMovil.classList.remove("activo");
+                    }
+                });
+            }
 
             document.addEventListener("click", function (e) {
                 if (menuMovil && !menuMovil.contains(e.target) && !menuBtn.contains(e.target)) {

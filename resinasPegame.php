@@ -1,30 +1,18 @@
 <?php
-// lineaIndus.php
-// Página de línea industrial, conectada a la base de datos.
-// Las tarjetas de producto se generan automáticamente desde la BD:
-// por cada "producto_slug" distinto con linea='industrial', se muestra 1 tarjeta,
-// usando su primera imagen (según orden de subida) como miniatura.
+// resinasPegame.php
+// Página de línea "Resinas y Pegamentos", conectada a la base de datos.
+// A diferencia de las demás líneas, esta usa vista de LISTA (no tarjetas) y no tiene
+// filtro por categoría, tal como el diseño original de resinasPegame.php.
 
 require_once "back_jho/conexion.php";
 
-// Convierte "Látex acabado" -> "latex-acabado", sin tildes, para usarlo como
-// valor de filtro (data-category) y como id de botón. Así el filtro funciona
-// automáticamente sin importar qué categorías existan en la base de datos.
-function slugCategoria($texto) {
-    $texto = mb_strtolower(trim($texto), "UTF-8");
-    $mapa = ["á"=>"a","é"=>"e","í"=>"i","ó"=>"o","ú"=>"u","ñ"=>"n"];
-    $texto = strtr($texto, $mapa);
-    $texto = preg_replace('/[^a-z0-9]+/', '-', $texto);
-    return trim($texto, '-');
-}
-
-// Traemos 1 imagen representativa por cada producto de la línea industrial
-$sql = "SELECT a.producto_slug, a.nombre, a.ruta_thumb, a.ruta_original, p.nombre_display, p.orden_listado, p.categoria, p.grupo_filtro
+// Traemos 1 imagen representativa por cada producto de la línea resinas-pegamentos
+$sql = "SELECT a.producto_slug, a.nombre, a.ruta_thumb, a.ruta_original, p.nombre_display, p.orden_listado
         FROM archivos a
         INNER JOIN (
             SELECT producto_slug, MIN(orden) AS min_orden, MIN(id) AS min_id
             FROM archivos
-            WHERE linea = 'industrial' AND tipo = 'imagen' AND producto_slug IS NOT NULL AND producto_slug != ''
+            WHERE linea = 'resinas-pegamentos' AND tipo = 'imagen' AND producto_slug IS NOT NULL AND producto_slug != ''
             GROUP BY producto_slug
         ) primero
         ON a.producto_slug = primero.producto_slug AND a.id = primero.min_id
@@ -33,119 +21,60 @@ $sql = "SELECT a.producto_slug, a.nombre, a.ruta_thumb, a.ruta_original, p.nombr
 
 $resultado = $conexion->query($sql);
 $productos = $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
-
-// Agrupamos las categorías encontradas por su "grupo_filtro":
-// - Si un grupo tiene MÁS DE UNA categoría distinta -> sale como botón desplegable con checkboxes
-//   (ej: "Preparación" agrupa "Preparación de Superficies" y "Preparación de adherencia").
-// - Si un grupo tiene UNA sola categoría -> sale como botón simple de selección única (como antes).
-$ordenPreferido = []; // aún no conocemos las categorías típicas de industrial; se pueden agregar aquí
-                       // en el orden que prefieras (ej: ["Recubrimientos", "Anticorrosivos", ...]).
-                       // Mientras tanto, sale en el orden en que aparecen los productos. "Otros" igual
-                       // se manda siempre al final, sin importar esta lista.
-$gruposFiltro = []; // "Preparación" => ["Preparación de Superficies", "Preparación de adherencia"]
-foreach ($productos as $p) {
-    $cat = trim($p["categoria"] ?? "");
-    if ($cat === "") continue;
-    $grupo = trim($p["grupo_filtro"] ?? "");
-    if ($grupo === "") $grupo = $cat; // sin grupo asignado = botón propio (grupo = su propia categoría)
-
-    if (!isset($gruposFiltro[$grupo])) $gruposFiltro[$grupo] = [];
-    if (!in_array($cat, $gruposFiltro[$grupo], true)) $gruposFiltro[$grupo][] = $cat;
-}
-uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
-    // "Otros" (o cualquier variante: Otro, OTROS, etc.) siempre va al final, sin excepción.
-    $slugA = slugCategoria($a);
-    $slugB = slugCategoria($b);
-    $esOtrosA = in_array($slugA, ["otros", "otro"], true);
-    $esOtrosB = in_array($slugB, ["otros", "otro"], true);
-    if ($esOtrosA && !$esOtrosB) return 1;
-    if ($esOtrosB && !$esOtrosA) return -1;
-    if ($esOtrosA && $esOtrosB) return 0;
-
-    // Para el resto: coincidencia flexible contra el orden preferido (usamos "empieza con"
-    // en vez de coincidencia exacta, para que "Masilla" y "Masillas" cuenten igual).
-    $ordenSlugs = array_map("slugCategoria", $ordenPreferido);
-    $buscarPosicion = function ($slug) use ($ordenSlugs) {
-        foreach ($ordenSlugs as $i => $s) {
-            if ($slug === $s || strpos($slug, $s) === 0 || strpos($s, $slug) === 0) return $i;
-        }
-        return 999;
-    };
-    $ia = $buscarPosicion($slugA);
-    $ib = $buscarPosicion($slugB);
-    return $ia <=> $ib;
-});
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Línea Industrial - Jhomeron</title>
+    <title>Resinas y Pegamentos - Jhomeron</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="styleslinea.css" />
+    <link rel="stylesheet" href="styleslinea2.css" />
     <link rel="stylesheet" href="stylesFooter.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
-        /* ---------- BOTONES DE FILTRO: ajuste de ancho dinámico ---------- */
-        /* La clase .btn1 real (styleslinea.css) trae un ancho fijo de 110px pensado
-           para las páginas estáticas, que además ajustan cada botón por su #id específico.
-           Como aquí los botones se generan dinámicamente (sin esos ids), sobreescribimos
-           el ancho para que cada uno se adapte a su propio texto, con espacio a los lados
-           y sin saltos de línea. */
-        .arb2 .btn1 {
-            width: auto;
-            padding: 0 22px;
-            white-space: nowrap;
-        }
+        /* El .item-resina no se estiraba solo al ancho completo del contenedor
+           (se acomodaba solo al tamaño de su contenido: título + botón), dejando
+           la barra azul mucho más corta de lo que debería. Se fuerza explícitamente. */
+        .lista-resinas { width: 100%; box-sizing: border-box; }
+        .item-resina { width: 100%; box-sizing: border-box; }
 
-        /* ---------- BOTÓN DESPLEGABLE DE GRUPO (ej: "Preparación", "Otros") ---------- */
-        /* Se usa cuando varias categorías comparten el mismo grupo_filtro: en vez de
-           un botón por categoría, sale 1 botón con un desplegable de checkboxes. */
-        .grupo-filtro-wrap { position: relative; }
-        .btn-grupo-trigger i { margin-left: 8px; font-size: 12px; transition: transform 0.15s; }
-        .btn-grupo-trigger.abierto i { transform: rotate(180deg); }
-
-        .grupo-dropdown-panel {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            margin-top: 6px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-            padding: 10px 4px;
-            min-width: 220px;
-            z-index: 500;
+        /* A 768px el CSS real deja el botón "VER DETALLES" con esquinas 100%
+           cuadradas (border-radius:0), lo cual se ve feo. Se redondea solo
+           el lado derecho, a juego con el radio del contenedor (8px). */
+        /* El CSS real, a 768px y 480px, REDISEÑA la lista como tarjetas separadas
+           (con huecos entre cada fila y el botón "VER DETALLES" cuadrado/pegado al
+           borde) — muy distinto al estilo de escritorio (fila continua, sin huecos,
+           botón en forma de píldora). Aquí cancelamos ese rediseño y forzamos que
+           se vea EXACTAMENTE igual que en escritorio, en cualquier tamaño de pantalla. */
+        @media (max-width: 768px) {
+            .lista-resinas { gap: 0 !important; }
+            .item-resina {
+                border-radius: 5px !important;
+                padding: 10px 20px !important;
+                overflow: visible !important;
+            }
+            .btn-ver-detalles {
+                border-radius: 100px !important;
+                height: auto !important;
+                padding: 5px 20px !important;
+                white-space: nowrap;
+            }
         }
-        .grupo-dropdown-panel.abierto { display: block; }
-        .grupo-dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 14px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            color: #0d3393;
-            cursor: pointer;
-            white-space: nowrap;
+        @media (max-width: 480px) {
+            .lista-resinas { gap: 0 !important; }
+            .item-resina {
+                border-radius: 5px !important;
+                padding: 8px 14px !important;
+            }
+            .btn-ver-detalles {
+                border-radius: 100px !important;
+                padding: 4px 14px !important;
+                min-width: auto !important;
+            }
         }
-        .grupo-dropdown-item:hover { background: #f3f3f3; }
-        .grupo-dropdown-item input[type="checkbox"],
-        .grupo-dropdown-item:hover input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: #0d3393;
-            border: 1px solid #0d3393;
-            filter: none;
-            opacity: 1;
-        }
-
 
         /* Reset defensivo: neutraliza cualquier estilo genérico heredado (p, ul, li, a, h3, h4, img)
            que venga de las hojas de estilo reales de la web, para que este bloque sea 100% independiente */
@@ -422,94 +351,53 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
     </div>
 
     <div class="arriba">
-        <div class="arb">
-            <div class="nav-links">
-                <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
-                <a href="lineasProducto.html">> Productos</a>
-                <span>> Línea Industrial</span>
-            </div>
+        <a href="index.html" class="regres"><img src="icons/home.svg" alt="inicio" /></a>
+        <a href="lineasProducto.html" class="regres">> Productos</a>
+        <p class="lin-tex">> Resinas y Pegamentos</p>
+    </div>
 
-            <div class="arb2">
-                <h2>LÍNEA INDUSTRIAL</h2>
-
-                <?php if (count($gruposFiltro) > 0): ?>
-                <!-- Filtro móvil (dropdown) -->
-                <div class="mobile-filter-btn">
-                    <button id="mobileFilterBtn">
-                        Filtrar productos
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div id="mobileFilterMenu" class="mobile-filter-menu">
-                        <div class="filter-item" data-filter="all">Todos los productos</div>
-                        <?php foreach ($gruposFiltro as $nombreGrupo => $categoriasDelGrupo): ?>
-                            <?php foreach ($categoriasDelGrupo as $nombreCat): ?>
-                                <div class="filter-item" data-filter="<?php echo htmlspecialchars(slugCategoria($nombreCat)); ?>"><?php echo htmlspecialchars($nombreCat); ?></div>
-                            <?php endforeach; ?>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Filtro desktop -->
-                <div class="arbtn">
-                    <?php foreach ($gruposFiltro as $nombreGrupo => $categoriasDelGrupo):
-                        $slugGrupo = slugCategoria($nombreGrupo);
-                    ?>
-                        <?php if (count($categoriasDelGrupo) === 1): ?>
-                            <!-- Grupo con 1 sola categoría: botón simple de selección única -->
-                            <button class="btn1" data-filter="<?php echo htmlspecialchars(slugCategoria($categoriasDelGrupo[0])); ?>" data-grupo="<?php echo htmlspecialchars($slugGrupo); ?>">
-                                <?php echo htmlspecialchars($categoriasDelGrupo[0]); ?>
-                            </button>
-                        <?php else: ?>
-                            <!-- Grupo con varias categorías: botón desplegable con checkboxes (selección múltiple) -->
-                            <div class="grupo-filtro-wrap">
-                                <button type="button" class="btn1 btn-grupo-trigger" data-grupo="<?php echo htmlspecialchars($slugGrupo); ?>">
-                                    <?php echo htmlspecialchars($nombreGrupo); ?> <i class="fas fa-chevron-down"></i>
-                                </button>
-                                <div class="grupo-dropdown-panel">
-                                    <?php foreach ($categoriasDelGrupo as $nombreCat): ?>
-                                        <label class="grupo-dropdown-item">
-                                            <input type="checkbox" data-grupo="<?php echo htmlspecialchars($slugGrupo); ?>" data-categoria="<?php echo htmlspecialchars(slugCategoria($nombreCat)); ?>">
-                                            <?php echo htmlspecialchars($nombreCat); ?>
-                                        </label>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
-            </div>
+    <div class="lnbase bases-section">
+        <h2>RESINAS Y PEGAMENTOS</h2>
+        <div class="lnar">
+            <article>
+                Nuestras resinas industriales están formuladas para brindar un alto
+                rendimiento en una amplia gama de aplicaciones. Son componentes clave en
+                la fabricación de pinturas, recubrimientos, adhesivos, plásticos y otros
+                productos industriales.
+            </article>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="cards-pintura desktop-version">
-            <div class="cards-row">
-                <?php if (count($productos) === 0): ?>
-                    <p style="font-family:'Outfit', sans-serif; padding: 20px;">
-                        Aún no hay productos con línea "industrial" y un producto_slug asignado.
-                        Sube alguno desde el panel para verlo aparecer aquí automáticamente.
-                    </p>
-                <?php else: foreach ($productos as $producto):
-                    $slugCatProducto = !empty($producto["categoria"]) ? slugCategoria($producto["categoria"]) : "";
-                ?>
-                    <div class="card product-card" data-category="<?php echo htmlspecialchars($slugCatProducto); ?>">
-                        <div class="card-header">
-                            <p><?php
-                            $titulo = !empty($producto["nombre_display"]) ? $producto["nombre_display"] : str_replace("-", " ", $producto["producto_slug"]);
-                            $tituloEscapado = htmlspecialchars(mb_strtoupper($titulo));
-                            echo str_replace("|", "<br>", $tituloEscapado); // "|" se convierte en salto de línea
-                        ?></p>
-                            <img src="icons/goteo2.svg" alt="Estilo Arriba" class="img-estilo" />
-                        </div>
-                        <img src="<?php echo htmlspecialchars($producto["ruta_thumb"] ?: $producto["ruta_original"]); ?>"
-                             alt="<?php echo htmlspecialchars($producto["nombre"]); ?>" class="img-contenido" />
-                        <a href="pinturas.php?product=<?php echo urlencode($producto["producto_slug"]); ?>" class="ver-mas">
-                            VER DETALLES
-                        </a>
+    <div class="conte-resinas" style="width:100%; box-sizing:border-box;">
+        <div class="lista-resinas" style="width:100%;">
+            <?php if (count($productos) === 0): ?>
+                <p style="font-family:'Outfit', sans-serif; padding: 20px;">
+                    Aún no hay productos con línea "resinas-pegamentos" y un producto_slug asignado.
+                    Sube alguno desde el panel para verlo aparecer aquí automáticamente.
+                </p>
+            <?php else: foreach ($productos as $producto):
+                $tituloProd = !empty($producto["nombre_display"]) ? $producto["nombre_display"] : str_replace("-", " ", $producto["producto_slug"]);
+                $tituloProd = str_replace("|", " ", $tituloProd); // en la lista no aplica el salto de línea
+            ?>
+                <div class="item-resina" style="width:100%; box-sizing:border-box;">
+                    <div class="item-left">
+                        <span class="bullet"></span>
+                        <span class="nombre-resina"><?php echo htmlspecialchars(mb_strtoupper($tituloProd)); ?></span>
                     </div>
-                <?php endforeach; endif; ?>
-            </div>
+                    <a href="pinturaSimple.php?product=<?php echo urlencode($producto["producto_slug"]); ?>" class="btn-ver-detalles">VER DETALLES</a>
+                </div>
+            <?php endforeach; endif; ?>
+        </div>
+    </div>
+
+    <div class="lnco">
+        <h3>Compartir productos:</h3>
+        <div class="redes" id="redes-compartir-lista">
+            <a href="#" data-red="facebook"><img src="icons/redes/face.svg" alt="facebook" /></a>
+            <a href="#" data-red="linkedin"><img src="icons/redes/linke.svg" alt="linkedin" /></a>
+            <a href="#" data-red="pinterest"><img src="icons/redes/pinte.svg" alt="pinterest" /></a>
+            <a href="#" data-red="whatsapp"><img src="icons/redes/wasap.svg" alt="whatsapp" /></a>
+            <a href="#" data-red="copiar"><img src="icons/redes/enlace.svg" alt="enlace" /></a>
         </div>
     </div>
 
@@ -671,181 +559,36 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
             });
         })();
 
-        // Filtro por categoría (botones simples y desplegables con checkboxes)
+        // "Compartir productos" (la lista completa, no un producto individual)
         document.addEventListener("DOMContentLoaded", function () {
-            const cardsContainer = document.querySelector(".cards-pintura.desktop-version");
-            const allCards = document.querySelectorAll(".product-card");
-            const botonesSimples = document.querySelectorAll(".arbtn > .btn1[data-filter]");
-            const botonesGrupo = document.querySelectorAll(".btn-grupo-trigger");
-            const checkboxesGrupo = document.querySelectorAll(".grupo-dropdown-item input[type=checkbox]");
-            const mobileFilterBtn = document.getElementById("mobileFilterBtn");
-            const mobileFilterMenu = document.getElementById("mobileFilterMenu");
-            const filterItems = document.querySelectorAll(".filter-item");
+            const enlaces = document.querySelectorAll("#redes-compartir-lista a[data-red]");
+            const urlActual = encodeURIComponent(window.location.href);
 
-            function reorganizarTarjetas(tarjetasVisibles) {
-                if (!cardsContainer) return;
-                cardsContainer.querySelectorAll(".cards-row").forEach(fila => fila.remove());
-                let filaActual;
-                tarjetasVisibles.forEach((card, i) => {
-                    if (i % 5 === 0) {
-                        filaActual = document.createElement("div");
-                        filaActual.className = "cards-row";
-                        cardsContainer.appendChild(filaActual);
-                    }
-                    filaActual.appendChild(card);
-                });
-            }
-
-            function resetearTodo() {
-                botonesSimples.forEach(btn => { btn.style.backgroundColor = "#0d3393"; btn.style.color = "#f3f3f3"; });
-                botonesGrupo.forEach(btn => { btn.style.backgroundColor = "#0d3393"; btn.style.color = "#f3f3f3"; btn.classList.remove("abierto"); });
-                checkboxesGrupo.forEach(chk => { chk.checked = false; });
-                document.querySelectorAll(".grupo-dropdown-panel").forEach(p => p.classList.remove("abierto"));
-            }
-
-            function activarBotonSimple(btn) {
-                resetearTodo();
-                if (btn) { btn.style.backgroundColor = "#fff"; btn.style.color = "#0D3393"; }
-            }
-
-            function activarBotonGrupo(slugGrupo) {
-                const btn = Array.from(botonesGrupo).find(b => b.getAttribute("data-grupo") === slugGrupo);
-                if (btn) { btn.style.backgroundColor = "#fff"; btn.style.color = "#0D3393"; }
-            }
-
-            function mostrarTodos() {
-                resetearTodo();
-                allCards.forEach(card => { card.style.display = "flex"; });
-                reorganizarTarjetas(Array.from(allCards));
-            }
-
-            // Filtra mostrando cualquier tarjeta cuya categoría esté dentro del set (OR)
-            function filtrarPorCategorias(setCategorias) {
-                const visibles = [];
-                allCards.forEach(card => {
-                    if (setCategorias.has(card.getAttribute("data-category"))) {
-                        card.style.display = "flex";
-                        visibles.push(card);
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-                reorganizarTarjetas(visibles);
-            }
-
-            let grupoActivo = null;              // slug del grupo actualmente en uso (botón simple o desplegable)
-            let categoriasActivas = new Set();    // slugs de categorías filtrando ahora mismo
-
-            // --- Botones simples (1 categoría = 1 grupo) ---
-            botonesSimples.forEach(btn => {
-                btn.addEventListener("click", function () {
-                    const categoria = this.getAttribute("data-filter");
-                    const grupo = this.getAttribute("data-grupo");
-                    if (grupoActivo === grupo && categoriasActivas.size === 1 && categoriasActivas.has(categoria)) {
-                        // Volver a tocar el mismo botón: quita el filtro
-                        grupoActivo = null;
-                        categoriasActivas = new Set();
-                        mostrarTodos();
-                    } else {
-                        grupoActivo = grupo;
-                        categoriasActivas = new Set([categoria]);
-                        activarBotonSimple(this);
-                        filtrarPorCategorias(categoriasActivas);
-                    }
-                });
-            });
-
-            // --- Botones de grupo (abren/cierran el desplegable de checkboxes) ---
-            botonesGrupo.forEach(btn => {
-                btn.addEventListener("click", function (e) {
-                    e.stopPropagation();
-                    const panel = this.nextElementSibling;
-                    const estabaAbierto = panel.classList.contains("abierto");
-                    document.querySelectorAll(".grupo-dropdown-panel").forEach(p => p.classList.remove("abierto"));
-                    botonesGrupo.forEach(b => b.classList.remove("abierto"));
-                    if (!estabaAbierto) {
-                        panel.classList.add("abierto");
-                        this.classList.add("abierto");
-                    }
-                });
-            });
-
-            // Cerrar cualquier desplegable de grupo al hacer clic afuera
-            document.addEventListener("click", function (e) {
-                if (!e.target.closest(".grupo-filtro-wrap")) {
-                    document.querySelectorAll(".grupo-dropdown-panel").forEach(p => p.classList.remove("abierto"));
-                    botonesGrupo.forEach(b => b.classList.remove("abierto"));
+            enlaces.forEach(enlace => {
+                const red = enlace.getAttribute("data-red");
+                if (red === "facebook") {
+                    enlace.href = "https://www.facebook.com/sharer/sharer.php?u=" + urlActual;
+                    enlace.target = "_blank";
+                } else if (red === "linkedin") {
+                    enlace.href = "https://www.linkedin.com/sharing/share-offsite/?url=" + urlActual;
+                    enlace.target = "_blank";
+                } else if (red === "pinterest") {
+                    enlace.href = "https://pinterest.com/pin/create/button/?url=" + urlActual;
+                    enlace.target = "_blank";
+                } else if (red === "whatsapp") {
+                    enlace.href = "https://wa.me/?text=" + urlActual;
+                    enlace.target = "_blank";
+                } else if (red === "copiar") {
+                    enlace.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        navigator.clipboard.writeText(window.location.href).then(() => {
+                            const original = enlace.innerHTML;
+                            enlace.innerHTML = "✓";
+                            setTimeout(() => { enlace.innerHTML = original; }, 1500);
+                        });
+                    });
                 }
             });
-
-            // --- Checkboxes dentro de un grupo: selección múltiple (OR) ---
-            checkboxesGrupo.forEach(chk => {
-                chk.addEventListener("change", function () {
-                    const grupo = this.getAttribute("data-grupo");
-                    const categoria = this.getAttribute("data-categoria");
-
-                    // Si se estaba usando otro filtro (botón simple u otro grupo), se limpia primero
-                    // (tanto visualmente como el conjunto de categorías activas en memoria)
-                    if (grupoActivo !== null && grupoActivo !== grupo) {
-                        const estabaMarcado = this.checked;
-                        resetearTodo();
-                        categoriasActivas = new Set();
-                        this.checked = estabaMarcado;
-                    }
-
-                    grupoActivo = grupo;
-                    if (this.checked) {
-                        categoriasActivas.add(categoria);
-                    } else {
-                        categoriasActivas.delete(categoria);
-                    }
-
-                    if (categoriasActivas.size === 0) {
-                        grupoActivo = null;
-                        mostrarTodos();
-                    } else {
-                        activarBotonGrupo(grupo);
-                        filtrarPorCategorias(categoriasActivas);
-                    }
-                });
-            });
-
-            if (mobileFilterBtn && mobileFilterMenu) {
-                mobileFilterBtn.addEventListener("click", function (e) {
-                    e.stopPropagation();
-                    mobileFilterMenu.classList.toggle("show");
-                });
-                document.addEventListener("click", function (e) {
-                    if (!mobileFilterBtn.contains(e.target) && !mobileFilterMenu.contains(e.target)) {
-                        mobileFilterMenu.classList.remove("show");
-                    }
-                });
-            }
-
-            // En móvil se mantiene selección única por simplicidad (tocar una opción = solo esa categoría)
-            filterItems.forEach(item => {
-                item.addEventListener("click", function () {
-                    const categoria = this.getAttribute("data-filter");
-                    if (mobileFilterBtn) {
-                        mobileFilterBtn.innerHTML = this.textContent + ' <i class="fas fa-chevron-down"></i>';
-                    }
-                    if (mobileFilterMenu) mobileFilterMenu.classList.remove("show");
-
-                    if (categoria === "all") {
-                        grupoActivo = null;
-                        categoriasActivas = new Set();
-                        mostrarTodos();
-                    } else {
-                        resetearTodo();
-                        grupoActivo = "movil";
-                        categoriasActivas = new Set([categoria]);
-                        filtrarPorCategorias(categoriasActivas);
-                    }
-                });
-            });
-
-            // Al cargar, se muestran todos los productos sin ningún filtro activo
-            mostrarTodos();
         });
 
         document.addEventListener("DOMContentLoaded", function () {
