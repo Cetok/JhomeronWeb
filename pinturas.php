@@ -299,8 +299,8 @@ if ($producto && !empty($producto["aplicacion"])) {
         .modal-color-swatch:hover .tooltip-color { opacity: 1; }
 
         @media (max-width: 700px) {
-            .modal-colores-overlay { position: static; margin-top: 12px; }
-            .modal-colores-contenido { width: 100%; max-width: 100%; }
+            .modal-colores-overlay { margin-top: 6px; }
+            .modal-colores-contenido { width: 92vw; max-width: 420px; }
         }
 
         .prueba-compartir { margin-top: 20px; display: flex; flex-direction: row; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -960,13 +960,57 @@ if ($producto && !empty($producto["aplicacion"])) {
         const botonVerColores = document.getElementById("ver-colores");
         const modalColores = document.getElementById("modal-colores");
         const cerrarModalColores = document.getElementById("cerrar-modal-colores");
-        const contenedorCotizar = document.getElementById("contenedor-cotizar");
 
         function posicionarModalColores() {
-            if (!modalColores || !contenedorCotizar) return;
-            const rect = contenedorCotizar.getBoundingClientRect();
-            modalColores.style.top = (rect.bottom + window.scrollY + 14) + "px";
-            modalColores.style.left = (rect.left + window.scrollX) + "px";
+            // Se posiciona respecto al botón "VER COLORES" (antes usaba, por error,
+            // el contenedor del botón "Cotizar", por eso en tablet/móvil aparecía
+            // muy abajo, lejos de donde realmente estaba el botón).
+            if (!modalColores || !botonVerColores) return;
+            const rect = botonVerColores.getBoundingClientRect();
+            const anchoModal = modalColores.querySelector(".modal-colores-contenido").offsetWidth || 300;
+
+            // En vez de medir el ancho de la ventana con JS (lo cual puede desincronizarse
+            // del CSS cerca del límite de 1250px, por temas de scrollbar/zoom), se revisa
+            // directamente cómo está armado el CSS en este momento: si .prueba-grid ya está
+            // en 1 sola columna (flex-direction: column), es porque el @media de tablet/móvil
+            // ya está activo — esto SIEMPRE coincide exactamente con lo que decidió el CSS.
+            const gridProducto = document.querySelector(".prueba-grid");
+            const esTabletOMovil = gridProducto && getComputedStyle(gridProducto).flexDirection === "column";
+
+            let izquierda;
+            let arriba;
+            if (esTabletOMovil) {
+                // En tablet/móvil (mismo punto donde el resto de la página pasa a
+                // 1 sola columna centrada) el panel de colores también se centra en
+                // la pantalla, en vez de alinearse con el borde izquierdo del botón.
+                izquierda = window.scrollX + (window.innerWidth - anchoModal) / 2;
+                arriba = rect.bottom + window.scrollY + 10;
+            } else {
+                // Se corre un poco más a la derecha para no tapar el botón "VER COLORES"
+                // y quedar mejor alineado con la fila de fichas. El "clamp" de abajo se
+                // sigue aplicando siempre, así que esto se mantiene responsive (se ajusta
+                // solo) en cualquier ancho de escritorio, hasta llegar al punto donde
+                // pasa al estilo de tablet/móvil.
+                izquierda = rect.left + window.scrollX + 400;
+                // Si se desbordaría por la derecha de la pantalla, se recorre hacia la
+                // izquierda lo justo para que quede completo dentro del viewport.
+                const maxIzquierda = window.scrollX + window.innerWidth - anchoModal - 10;
+                if (izquierda > maxIzquierda) izquierda = Math.max(10, maxIzquierda);
+
+                // En escritorio el panel se alinea con la fila de fichas (técnica /
+                // seguridad / catálogo), no justo debajo del botón — así queda flotando
+                // a la altura de esa fila, tal como en el diseño de referencia. Si el
+                // producto no tiene fichas, se usa la posición debajo del botón como respaldo.
+                const filaFichas = document.querySelector(".prueba-botones-doc");
+                if (filaFichas) {
+                    arriba = filaFichas.getBoundingClientRect().top + window.scrollY - 20;
+                } else {
+                    arriba = rect.bottom + window.scrollY + 10;
+                }
+            }
+
+            modalColores.style.top = arriba + "px";
+            modalColores.style.left = izquierda + "px";
         }
 
         if (botonVerColores && modalColores) {
@@ -974,8 +1018,8 @@ if ($producto && !empty($producto["aplicacion"])) {
                 e.stopPropagation();
                 const abrir = !modalColores.classList.contains("abierto");
                 if (abrir) {
-                    posicionarModalColores();
                     modalColores.classList.add("abierto");
+                    posicionarModalColores();
                     botonVerColores.classList.add("activo");
                 } else {
                     modalColores.classList.remove("abierto");
