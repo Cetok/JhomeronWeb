@@ -270,6 +270,26 @@ if (isset($_GET["eliminar_color"])) {
     exit;
 }
 
+// --- Quitar un PDF (Ficha técnica / Ficha de seguridad / Catálogo) sin tener que reemplazarlo ---
+if (isset($_GET["eliminar_pdf"]) && isset($_GET["slug_pdf"])) {
+    $etiquetaPdf = $_GET["eliminar_pdf"];
+    $slugPdf = $_GET["slug_pdf"];
+    $stmt = $conexion->prepare("SELECT id, ruta_original FROM archivos WHERE producto_slug = ? AND tipo = 'pdf' AND nombre = ?");
+    $stmt->bind_param("ss", $slugPdf, $etiquetaPdf);
+    $stmt->execute();
+    $docAEliminar = $stmt->get_result()->fetch_assoc();
+    if ($docAEliminar) {
+        $rutaDoc = "../" . $docAEliminar["ruta_original"];
+        if (file_exists($rutaDoc)) unlink($rutaDoc);
+        $stmtD = $conexion->prepare("DELETE FROM archivos WHERE id = ?");
+        $stmtD->bind_param("i", $docAEliminar["id"]);
+        $stmtD->execute();
+    }
+    $volverA = isset($_GET["filtro"]) ? "productos.php?filtro=" . urlencode($_GET["filtro"]) : "productos.php";
+    header("Location: " . $volverA);
+    exit;
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["producto_slug"])) {
     $slug = $_POST["producto_slug"];
     $nombreDisplay = trim($_POST["nombre_display"]);
@@ -320,7 +340,32 @@ $gruposExistentes = $conexion->query("SELECT DISTINCT grupo_filtro FROM producto
 
 $filtroLinea = $_GET["filtro"] ?? "";
 
-$lineasDisponibles = $conexion->query("SELECT DISTINCT linea FROM productos WHERE linea IS NOT NULL AND linea != '' ORDER BY linea ASC")->fetch_all(MYSQLI_ASSOC);
+// Mismo orden que aparecen las líneas en la web real, no alfabético.
+$ordenLineas = [
+    "decorativa", "automotriz", "industrial", "marina", "trafico",
+    "madera", "disolventes", "resinas-pegamentos", "insumos-quimicos",
+];
+$nombresLineas = [
+    "decorativa" => "Decorativa",
+    "automotriz" => "Automotriz",
+    "industrial" => "Industrial",
+    "marina" => "Marina",
+    "trafico" => "Señalización",
+    "madera" => "Madera",
+    "disolventes" => "Disolventes",
+    "resinas-pegamentos" => "Resinas y Pegamentos",
+    "insumos-quimicos" => "Insumos Químicos",
+];
+
+$lineasDisponiblesRaw = $conexion->query("SELECT DISTINCT linea FROM productos WHERE linea IS NOT NULL AND linea != ''")->fetch_all(MYSQLI_ASSOC);
+usort($lineasDisponiblesRaw, function ($a, $b) use ($ordenLineas) {
+    $ia = array_search($a["linea"], $ordenLineas);
+    $ib = array_search($b["linea"], $ordenLineas);
+    $ia = ($ia === false) ? 999 : $ia;
+    $ib = ($ib === false) ? 999 : $ib;
+    return $ia <=> $ib;
+});
+$lineasDisponibles = $lineasDisponiblesRaw;
 
 if ($filtroLinea !== "") {
     $stmtF = $conexion->prepare("SELECT * FROM productos WHERE linea = ? ORDER BY orden_listado ASC");
@@ -328,7 +373,7 @@ if ($filtroLinea !== "") {
     $stmtF->execute();
     $productos = $stmtF->get_result()->fetch_all(MYSQLI_ASSOC);
 } else {
-    $productos = $conexion->query("SELECT * FROM productos ORDER BY linea ASC, orden_listado ASC")->fetch_all(MYSQLI_ASSOC);
+    $productos = $conexion->query("SELECT * FROM productos ORDER BY FIELD(linea, 'decorativa','automotriz','industrial','marina','trafico','madera','disolventes','resinas-pegamentos','insumos-quimicos') ASC, orden_listado ASC")->fetch_all(MYSQLI_ASSOC);
 }
 
 require "header.php";
@@ -366,7 +411,7 @@ require "header.php";
         <?php foreach ($lineasDisponibles as $l): ?>
             <a href="productos.php?filtro=<?php echo urlencode($l['linea']); ?>"
                class="filtro-linea <?php echo $filtroLinea === $l['linea'] ? 'filtro-activo' : ''; ?>">
-                <?php echo htmlspecialchars(ucwords(str_replace('-', ' ', $l['linea']))); ?>
+                <?php echo htmlspecialchars($nombresLineas[$l['linea']] ?? ucwords(str_replace('-', ' ', $l['linea']))); ?>
             </a>
         <?php endforeach; ?>
     </div>
@@ -515,79 +560,271 @@ require "header.php";
             $coloresExistentes = $stmtColores->get_result()->fetch_all(MYSQLI_ASSOC);
             ?>
 
-            <label style="margin-top:20px;">Ficha técnica (PDF) <?php echo isset($docsExistentes["Ficha técnica"]) ? '<span style="color:#1ea672;">✓ ya subida</span>' : ''; ?></label>
-            <div class="zona-archivo">
-                <input type="file" name="ficha_tecnica" accept="application/pdf" onchange="mostrarNombreArchivo(this)">
-                <span class="icono-subida">📎</span>
-                <div class="texto-subida"><strong>Haz clic para subir</strong> o reemplazar el PDF</div>
-                <div class="nombre-archivo-elegido"></div>
-            </div>
+            <label style="margin-top:20px;">Fichas y catálogo (PDF)</label>
+            <div style="display:flex; flex-wrap:wrap; gap:14px;">
+                <div style="flex:1 1 200px; min-width:180px;">
+                    <label style="margin-top:0;">Ficha técnica
+                        <?php if (isset($docsExistentes["Ficha técnica"])): ?>
+                            <span style="color:#1ea672;">✓ ya subida</span>
+                            <a href="productos.php?eliminar_pdf=<?php echo urlencode('Ficha técnica'); ?>&slug_pdf=<?php echo urlencode($p['producto_slug']); ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>"
+                               onclick="return confirm('¿Quitar la ficha técnica de este producto?');"
+                               style="color:var(--rojo); font-size:12px; margin-left:6px; text-decoration:none;">Quitar</a>
+                        <?php endif; ?>
+                    </label>
+                    <div class="zona-archivo">
+                        <input type="file" name="ficha_tecnica" accept="application/pdf" onchange="mostrarNombreArchivo(this)">
+                        <span class="icono-subida">📎</span>
+                        <div class="texto-subida"><strong>Haz clic para subir</strong> o reemplazar el PDF</div>
+                        <div class="nombre-archivo-elegido"></div>
+                    </div>
+                </div>
 
-            <label>Ficha de seguridad (PDF) <?php echo isset($docsExistentes["Ficha de seguridad"]) ? '<span style="color:#1ea672;">✓ ya subida</span>' : ''; ?></label>
-            <div class="zona-archivo">
-                <input type="file" name="ficha_seguridad" accept="application/pdf" onchange="mostrarNombreArchivo(this)">
-                <span class="icono-subida">📎</span>
-                <div class="texto-subida"><strong>Haz clic para subir</strong> o reemplazar el PDF</div>
-                <div class="nombre-archivo-elegido"></div>
-            </div>
+                <div style="flex:1 1 200px; min-width:180px;">
+                    <label style="margin-top:0;">Ficha de seguridad
+                        <?php if (isset($docsExistentes["Ficha de seguridad"])): ?>
+                            <span style="color:#1ea672;">✓ ya subida</span>
+                            <a href="productos.php?eliminar_pdf=<?php echo urlencode('Ficha de seguridad'); ?>&slug_pdf=<?php echo urlencode($p['producto_slug']); ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>"
+                               onclick="return confirm('¿Quitar la ficha de seguridad de este producto?');"
+                               style="color:var(--rojo); font-size:12px; margin-left:6px; text-decoration:none;">Quitar</a>
+                        <?php endif; ?>
+                    </label>
+                    <div class="zona-archivo">
+                        <input type="file" name="ficha_seguridad" accept="application/pdf" onchange="mostrarNombreArchivo(this)">
+                        <span class="icono-subida">📎</span>
+                        <div class="texto-subida"><strong>Haz clic para subir</strong> o reemplazar el PDF</div>
+                        <div class="nombre-archivo-elegido"></div>
+                    </div>
+                </div>
 
-            <label>Catálogo (PDF) <?php echo isset($docsExistentes["Catálogo"]) ? '<span style="color:#1ea672;">✓ ya subido</span>' : ''; ?></label>
-            <div class="zona-archivo">
-                <input type="file" name="catalogo" accept="application/pdf" onchange="mostrarNombreArchivo(this)">
-                <span class="icono-subida">📎</span>
-                <div class="texto-subida"><strong>Haz clic para subir</strong> o reemplazar el PDF</div>
-                <div class="nombre-archivo-elegido"></div>
+                <div style="flex:1 1 200px; min-width:180px;">
+                    <label style="margin-top:0;">Catálogo
+                        <?php if (isset($docsExistentes["Catálogo"])): ?>
+                            <span style="color:#1ea672;">✓ ya subido</span>
+                            <a href="productos.php?eliminar_pdf=<?php echo urlencode('Catálogo'); ?>&slug_pdf=<?php echo urlencode($p['producto_slug']); ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>"
+                               onclick="return confirm('¿Quitar el catálogo de este producto?');"
+                               style="color:var(--rojo); font-size:12px; margin-left:6px; text-decoration:none;">Quitar</a>
+                        <?php endif; ?>
+                    </label>
+                    <div class="zona-archivo">
+                        <input type="file" name="catalogo" accept="application/pdf" onchange="mostrarNombreArchivo(this)">
+                        <span class="icono-subida">📎</span>
+                        <div class="texto-subida"><strong>Haz clic para subir</strong> o reemplazar el PDF</div>
+                        <div class="nombre-archivo-elegido"></div>
+                    </div>
+                </div>
             </div>
 
             <label>Video (pega la URL de YouTube; déjalo vacío para quitar el video)</label>
             <input type="text" name="video_url" value="<?php echo htmlspecialchars($videoActual); ?>" placeholder="https://youtube.com/watch?v=...">
 
-            <label style="margin-top:24px;">Colores del producto</label>
-            <?php if (count($coloresExistentes) > 0): ?>
-                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
-                    <?php foreach ($coloresExistentes as $color): ?>
-                        <div style="text-align:center; width:80px;">
-                            <img src="../<?php echo htmlspecialchars($color['ruta_thumb'] ?: $color['ruta_original']); ?>"
-                                 style="width:56px; height:56px; border-radius:6px; object-fit:cover; border:1px solid var(--gris-borde); background:white;">
-                            <div style="font-size:10.5px; color:#333; margin-top:4px; line-height:1.2;"><?php echo htmlspecialchars($color['nombre']); ?></div>
-                            <a href="javascript:void(0)" onclick="renombrarColor(<?php echo $color['id']; ?>, '<?php echo htmlspecialchars(addslashes($color['nombre']), ENT_QUOTES); ?>', '<?php echo htmlspecialchars($filtroLinea); ?>')"
-                               style="font-size:10px; color:var(--azul); text-decoration:none;">Editar nombre</a>
-                            <div style="margin-top:4px; display:flex; justify-content:center; gap:4px;">
-                                <a href="productos.php?mover_color=arriba&color_id=<?php echo $color['id']; ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>" class="accion-orden" title="Subir" style="font-size:9px; padding:2px 5px;">▲</a>
-                                <a href="productos.php?mover_color=abajo&color_id=<?php echo $color['id']; ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>" class="accion-orden" title="Bajar" style="font-size:9px; padding:2px 5px;">▼</a>
-                            </div>
-                            <a href="productos.php?eliminar_color=<?php echo $color['id']; ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>"
-                               onclick="return confirm('¿Borrar este color?');"
-                               style="font-size:10px; color:var(--rojo); text-decoration:none; display:block; margin-top:4px;">Borrar</a>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php else: ?>
-                <p class="nota" style="margin-top:0;">Este producto todavía no tiene colores agregados.</p>
-            <?php endif; ?>
-
-            <label>Agregar nuevo color</label>
-            <input type="text" name="color_nombre_nuevo" placeholder="Nombre del color, ej: Rojo Bandera">
-            <div class="zona-archivo">
-                <input type="file" name="color_imagen_nueva" accept="image/*" onchange="mostrarNombreArchivo(this)">
-                <span class="icono-subida">🎨</span>
-                <div class="texto-subida"><strong>Haz clic para elegir</strong> la imagen del color</div>
-                <div class="nombre-archivo-elegido"></div>
-            </div>
-
-            <button type="submit" style="max-width:200px;">Guardar</button>
+            <button type="submit" style="max-width:200px; margin-top:10px;">Guardar</button>
                 </form>
+
+                <!-- Colores del producto: FUERA del formulario grande, a propósito.
+                     Se maneja 100% con AJAX (color_ajax.php) para que subir, borrar,
+                     renombrar o reordenar un color sea instantáneo, sin recargar toda
+                     la página ni perder el lugar donde estabas trabajando. -->
+                <div class="seccion-colores" data-slug="<?php echo htmlspecialchars($p["producto_slug"]); ?>" data-linea="<?php echo htmlspecialchars($p["linea"] ?? ''); ?>" style="margin-top:24px; padding-top:20px; border-top:1px solid var(--gris-borde);">
+                    <label>Colores del producto</label>
+                    <div class="lista-colores" style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+                        <?php foreach ($coloresExistentes as $i => $color): ?>
+                            <div class="item-color" data-color-id="<?php echo $color['id']; ?>" style="text-align:center; width:80px;">
+                                <div style="font-size:10px; color:#9298a8; font-weight:700;">#<span class="numero-orden"><?php echo $i + 1; ?></span></div>
+                                <img src="../<?php echo htmlspecialchars($color['ruta_thumb'] ?: $color['ruta_original']); ?>"
+                                     style="width:56px; height:56px; border-radius:6px; object-fit:cover; border:1px solid var(--gris-borde); background:white;">
+                                <div class="nombre-color" style="font-size:10.5px; color:#333; margin-top:4px; line-height:1.2;"><?php echo htmlspecialchars($color['nombre']); ?></div>
+                                <a href="javascript:void(0)" onclick="renombrarColorAjax(this)"
+                                   style="font-size:10px; color:var(--azul); text-decoration:none;">Editar nombre</a>
+                                <div style="margin-top:4px; display:flex; justify-content:center; gap:4px;">
+                                    <a href="javascript:void(0)" onclick="moverColorAjax(this, 'arriba')" class="accion-orden" title="Subir" style="font-size:9px; padding:2px 5px;">▲</a>
+                                    <a href="javascript:void(0)" onclick="moverColorAjax(this, 'abajo')" class="accion-orden" title="Bajar" style="font-size:9px; padding:2px 5px;">▼</a>
+                                </div>
+                                <a href="javascript:void(0)" onclick="borrarColorAjax(this)"
+                                   style="font-size:10px; color:var(--rojo); text-decoration:none; display:block; margin-top:4px;">Borrar</a>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <p class="nota nota-sin-colores" style="margin-top:0; <?php echo count($coloresExistentes) > 0 ? 'display:none;' : ''; ?>">Este producto todavía no tiene colores agregados.</p>
+
+                    <label>Agregar nuevo color</label>
+                    <input type="text" class="input-nombre-color-nuevo" placeholder="Nombre del color, ej: Rojo Bandera">
+                    <div class="zona-archivo">
+                        <input type="file" class="input-imagen-color-nueva" accept="image/*" onchange="mostrarNombreArchivo(this)">
+                        <span class="icono-subida">🎨</span>
+                        <div class="texto-subida"><strong>Haz clic para elegir</strong> la imagen del color</div>
+                        <div class="nombre-archivo-elegido"></div>
+                    </div>
+                    <button type="button" class="boton-subir-color" onclick="agregarColorAjax(this)" style="max-width:200px; margin-top:10px;">Subir color</button>
+                    <div class="mensaje-color" style="margin-top:8px; font-size:12.5px;"></div>
+                </div>
             </div>
         </details>
     </div>
     <?php endforeach; endif; ?>
 <script>
-        function renombrarColor(id, nombreActual, filtro) {
+        // ---------- Manejo de colores 100% por AJAX (sin recargar la página) ----------
+
+        function mostrarMensajeColor(contenedor, texto, esError) {
+            const el = contenedor.querySelector(".mensaje-color");
+            if (!el) return;
+            el.textContent = texto;
+            el.style.color = esError ? "var(--rojo)" : "#1ea672";
+            if (!esError) setTimeout(() => { el.textContent = ""; }, 2500);
+        }
+
+        function renumerarColores(contenedor) {
+            contenedor.querySelectorAll(".item-color .numero-orden").forEach((span, i) => {
+                span.textContent = i + 1;
+            });
+        }
+
+        async function agregarColorAjax(boton) {
+            const contenedor = boton.closest(".seccion-colores");
+            const slug = contenedor.dataset.slug;
+            const linea = contenedor.dataset.linea;
+            const inputNombre = contenedor.querySelector(".input-nombre-color-nuevo");
+            const inputImagen = contenedor.querySelector(".input-imagen-color-nueva");
+            const nombre = inputNombre.value.trim();
+
+            if (!nombre || !inputImagen.files.length) {
+                mostrarMensajeColor(contenedor, "Escribe un nombre y elige una imagen antes de subir.", true);
+                return;
+            }
+
+            boton.disabled = true;
+            boton.textContent = "Subiendo...";
+
+            const datos = new FormData();
+            datos.append("accion", "agregar");
+            datos.append("producto_slug", slug);
+            datos.append("linea", linea);
+            datos.append("nombre", nombre);
+            datos.append("imagen", inputImagen.files[0]);
+
+            try {
+                const resp = await fetch("color_ajax.php", { method: "POST", body: datos });
+                const data = await resp.json();
+                if (!data.ok) {
+                    mostrarMensajeColor(contenedor, data.error || "No se pudo subir el color.", true);
+                    return;
+                }
+
+                // Se agrega la nueva miniatura directo al DOM, sin recargar nada
+                const lista = contenedor.querySelector(".lista-colores");
+                const item = document.createElement("div");
+                item.className = "item-color";
+                item.dataset.colorId = data.color.id;
+                item.style.cssText = "text-align:center; width:80px;";
+                item.innerHTML = `
+                    <div style="font-size:10px; color:#9298a8; font-weight:700;">#<span class="numero-orden">${data.color.posicion}</span></div>
+                    <img src="../${data.color.thumb}" style="width:56px; height:56px; border-radius:6px; object-fit:cover; border:1px solid var(--gris-borde); background:white;">
+                    <div class="nombre-color" style="font-size:10.5px; color:#333; margin-top:4px; line-height:1.2;">${data.color.nombre}</div>
+                    <a href="javascript:void(0)" onclick="renombrarColorAjax(this)" style="font-size:10px; color:var(--azul); text-decoration:none;">Editar nombre</a>
+                    <div style="margin-top:4px; display:flex; justify-content:center; gap:4px;">
+                        <a href="javascript:void(0)" onclick="moverColorAjax(this, 'arriba')" class="accion-orden" title="Subir" style="font-size:9px; padding:2px 5px;">▲</a>
+                        <a href="javascript:void(0)" onclick="moverColorAjax(this, 'abajo')" class="accion-orden" title="Bajar" style="font-size:9px; padding:2px 5px;">▼</a>
+                    </div>
+                    <a href="javascript:void(0)" onclick="borrarColorAjax(this)" style="font-size:10px; color:var(--rojo); text-decoration:none; display:block; margin-top:4px;">Borrar</a>
+                `;
+                lista.appendChild(item);
+
+                const notaSinColores = contenedor.querySelector(".nota-sin-colores");
+                if (notaSinColores) notaSinColores.style.display = "none";
+
+                // Se limpia el formulario para poder subir el siguiente color de una,
+                // sin tener que volver a buscar el producto en la página.
+                inputNombre.value = "";
+                inputImagen.value = "";
+                const nombreArchivoEl = contenedor.querySelector(".nombre-archivo-elegido");
+                if (nombreArchivoEl) nombreArchivoEl.textContent = "";
+
+                mostrarMensajeColor(contenedor, "✓ Color agregado.", false);
+            } catch (err) {
+                mostrarMensajeColor(contenedor, "Error de conexión al subir el color.", true);
+            } finally {
+                boton.disabled = false;
+                boton.textContent = "Subir color";
+            }
+        }
+
+        async function borrarColorAjax(enlace) {
+            if (!confirm("¿Borrar este color?")) return;
+            const item = enlace.closest(".item-color");
+            const contenedor = enlace.closest(".seccion-colores");
+            const colorId = item.dataset.colorId;
+
+            const datos = new FormData();
+            datos.append("accion", "eliminar");
+            datos.append("color_id", colorId);
+
+            try {
+                const resp = await fetch("color_ajax.php", { method: "POST", body: datos });
+                const data = await resp.json();
+                if (!data.ok) {
+                    mostrarMensajeColor(contenedor, data.error || "No se pudo borrar el color.", true);
+                    return;
+                }
+                item.remove();
+                renumerarColores(contenedor);
+                const lista = contenedor.querySelector(".lista-colores");
+                const notaSinColores = contenedor.querySelector(".nota-sin-colores");
+                if (notaSinColores && lista.children.length === 0) notaSinColores.style.display = "block";
+            } catch (err) {
+                mostrarMensajeColor(contenedor, "Error de conexión al borrar el color.", true);
+            }
+        }
+
+        async function renombrarColorAjax(enlace) {
+            const item = enlace.closest(".item-color");
+            const contenedor = enlace.closest(".seccion-colores");
+            const nombreActual = item.querySelector(".nombre-color").textContent;
             const nuevoNombre = prompt("Nuevo nombre para este color:", nombreActual);
-            if (nuevoNombre !== null && nuevoNombre.trim() !== "") {
-                let url = "productos.php?renombrar_color=" + id + "&nuevo_nombre=" + encodeURIComponent(nuevoNombre.trim());
-                if (filtro) url += "&filtro=" + encodeURIComponent(filtro);
-                window.location.href = url;
+            if (nuevoNombre === null || nuevoNombre.trim() === "") return;
+
+            const datos = new FormData();
+            datos.append("accion", "renombrar");
+            datos.append("color_id", item.dataset.colorId);
+            datos.append("nuevo_nombre", nuevoNombre.trim());
+
+            try {
+                const resp = await fetch("color_ajax.php", { method: "POST", body: datos });
+                const data = await resp.json();
+                if (!data.ok) {
+                    mostrarMensajeColor(contenedor, data.error || "No se pudo renombrar el color.", true);
+                    return;
+                }
+                item.querySelector(".nombre-color").textContent = data.nombre;
+            } catch (err) {
+                mostrarMensajeColor(contenedor, "Error de conexión al renombrar el color.", true);
+            }
+        }
+
+        async function moverColorAjax(enlace, direccion) {
+            const item = enlace.closest(".item-color");
+            const contenedor = enlace.closest(".seccion-colores");
+            const lista = contenedor.querySelector(".lista-colores");
+
+            const datos = new FormData();
+            datos.append("accion", "mover");
+            datos.append("color_id", item.dataset.colorId);
+            datos.append("direccion", direccion);
+
+            try {
+                const resp = await fetch("color_ajax.php", { method: "POST", body: datos });
+                const data = await resp.json();
+                if (!data.ok) {
+                    mostrarMensajeColor(contenedor, data.error || "No se pudo reordenar.", true);
+                    return;
+                }
+                // Reacomodamos las miniaturas en pantalla según el nuevo orden que
+                // devolvió el servidor, sin recargar nada.
+                data.orden.forEach(fila => {
+                    const el = lista.querySelector(`.item-color[data-color-id="${fila.id}"]`);
+                    if (el) lista.appendChild(el);
+                });
+                renumerarColores(contenedor);
+            } catch (err) {
+                mostrarMensajeColor(contenedor, "Error de conexión al reordenar.", true);
             }
         }
 

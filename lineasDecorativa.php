@@ -70,6 +70,50 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
+        /* ---------- TARJETAS RESPONSIVE (5 en escritorio, 3 en tablet, 2 en móvil) ---------- */
+        /* El CSS real oculta ".desktop-version" por completo a partir de 750px, esperando
+           un bloque separado ".mobile-version" para reemplazarlo — pero esa página nunca se
+           construyó así, se generan las tarjetas 1 sola vez desde la BD. Se anula ese ocultado
+           y en su lugar las mismas tarjetas se reacomodan solas según el ancho de pantalla. */
+        .cards-pintura.desktop-version { display: flex !important; }
+        .cards-pintura .cards-row {
+            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%;
+        }
+        .card.product-card { width: 230px; } /* escritorio: como venía */
+        /* La ola decorativa del header (.img-estilo) tenía altura fija (107px) mientras
+           el ancho de la tarjeta ahora es variable — con object-fit:cover eso recortaba
+           la imagen distinto en cada ancho, dejando esquinas blancas raras. Se bloquea
+           la proporción real del diseño (230x107) para que se vea igual sin importar
+           el ancho real de la tarjeta en cada resolución. */
+        .card-header .img-estilo { height: auto; aspect-ratio: 230 / 107; }
+
+        @media (max-width: 1250px) and (min-width: 751px) {
+            /* Tablet: 3 tarjetas por fila (con tope de ancho, para que no se sigan
+               agrandando mientras más ancha esté la pantalla dentro de este rango) */
+            .card.product-card { width: calc(33.333% - 14px); max-width: 230px; }
+        }
+        @media (max-width: 750px) {
+            /* Móvil: 2 tarjetas por fila */
+            .cards-pintura .cards-row { gap: 15px; }
+            .card.product-card { width: calc(50% - 7.5px); min-height: 350px; height: auto; }
+            /* El título se sube un poco y se reduce el padding, para que los nombres
+               largos (2 líneas) no queden tapados/cortados por la ola decorativa de
+               abajo, que con tarjetas más chicas tiene menos espacio disponible. */
+            .card-header p { top: -6px; padding: 10px 0; font-size: 15px; line-height: 1.2; }
+        }
+
+        /* ---------- FILTRO: pasa a "select" desde 999px (no 750px) ---------- */
+        /* Entre 999px y 750px los botones de filtro ya no caben en una fila y
+           saltaban de línea de forma desprolija. Se adelanta el cambio al estilo
+           "Filtrar productos" (el mismo que ya usa el diseño para móvil) desde
+           982px, pero con un ancho limitado (no ocupa toda la pantalla) para que
+           no se vea exageradamente largo en tablet. Ya en móvil real (≤750px)
+           se deja el ancho completo, como venía funcionando. */
+        @media (max-width: 999px) and (min-width: 751px) {
+            .arbtn { display: none !important; }
+            .mobile-filter-btn { display: block !important; width: 340px; margin: 0 auto 15px; }
+            .mobile-filter-menu { width: 340px; left: 50%; transform: translateX(-50%); }
+        }
         /* ---------- BOTONES DE FILTRO: ajuste de ancho dinámico ---------- */
         /* La clase .btn1 real (styleslinea.css) trae un ancho fijo de 110px pensado
            para las páginas estáticas, que además ajustan cada botón por su #id específico.
@@ -594,16 +638,17 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
 
             function reorganizarTarjetas(tarjetasVisibles) {
                 if (!cardsContainer) return;
-                cardsContainer.querySelectorAll(".cards-row").forEach(fila => fila.remove());
-                let filaActual;
-                tarjetasVisibles.forEach((card, i) => {
-                    if (i % 5 === 0) {
-                        filaActual = document.createElement("div");
-                        filaActual.className = "cards-row";
-                        cardsContainer.appendChild(filaActual);
-                    }
-                    filaActual.appendChild(card);
-                });
+                // Ya no se agrupan a la fuerza de 5 en 5: eso rompía el reacomodo
+                // responsive (tablet 3, móvil 2). Ahora todas viven en 1 sola fila
+                // continua (flex-wrap) y el navegador decide solo cuántas caben
+                // por línea según el ancho de pantalla y el CSS de cada breakpoint.
+                let fila = cardsContainer.querySelector(".cards-row");
+                if (!fila) {
+                    fila = document.createElement("div");
+                    fila.className = "cards-row";
+                    cardsContainer.appendChild(fila);
+                }
+                tarjetasVisibles.forEach(card => fila.appendChild(card));
             }
 
             function resetearBotones() {
