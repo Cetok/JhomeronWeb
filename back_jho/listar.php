@@ -31,7 +31,8 @@ if (isset($_GET["borrar"])) {
         $stmt2->bind_param("i", $id);
         $stmt2->execute();
     }
-    header("Location: listar.php");
+    $volverA = isset($_GET["filtro"]) ? "listar.php?filtro=" . urlencode($_GET["filtro"]) : "listar.php";
+    header("Location: " . $volverA);
     exit;
 }
 
@@ -86,12 +87,47 @@ if (isset($_GET["mover"]) && isset($_GET["id"])) {
         }
     }
 
-    header("Location: listar.php");
+    $volverA = isset($_GET["filtro"]) ? "listar.php?filtro=" . urlencode($_GET["filtro"]) : "listar.php";
+    header("Location: " . $volverA);
     exit;
 }
 
-$resultado = $conexion->query("SELECT * FROM archivos WHERE tipo = 'imagen' ORDER BY producto_slug ASC, orden ASC, fecha_subida DESC");
-$filas = $resultado->fetch_all(MYSQLI_ASSOC);
+// Mismo orden que aparecen las líneas en la web real (igual que en productos.php)
+$ordenLineas = [
+    "decorativa", "automotriz", "industrial", "marina", "trafico",
+    "madera", "disolventes", "resinas-pegamentos", "insumos-quimicos",
+];
+$nombresLineas = [
+    "decorativa" => "Decorativa",
+    "automotriz" => "Automotriz",
+    "industrial" => "Industrial",
+    "marina" => "Marina",
+    "trafico" => "Señalización",
+    "madera" => "Madera",
+    "disolventes" => "Disolventes",
+    "resinas-pegamentos" => "Resinas y Pegamentos",
+    "insumos-quimicos" => "Insumos Químicos",
+];
+
+$filtroLinea = $_GET["filtro"] ?? "";
+
+$lineasDisponiblesRaw = $conexion->query("SELECT DISTINCT linea FROM archivos WHERE tipo = 'imagen' AND linea IS NOT NULL AND linea != ''")->fetch_all(MYSQLI_ASSOC);
+usort($lineasDisponiblesRaw, function ($a, $b) use ($ordenLineas) {
+    $ia = array_search($a["linea"], $ordenLineas);
+    $ib = array_search($b["linea"], $ordenLineas);
+    $ia = ($ia === false) ? 999 : $ia;
+    $ib = ($ib === false) ? 999 : $ib;
+    return $ia <=> $ib;
+});
+
+if ($filtroLinea !== "") {
+    $stmtF = $conexion->prepare("SELECT * FROM archivos WHERE tipo = 'imagen' AND linea = ? ORDER BY producto_slug ASC, orden ASC, fecha_subida DESC");
+    $stmtF->bind_param("s", $filtroLinea);
+    $stmtF->execute();
+    $filas = $stmtF->get_result()->fetch_all(MYSQLI_ASSOC);
+} else {
+    $filas = $conexion->query("SELECT * FROM archivos WHERE tipo = 'imagen' ORDER BY FIELD(linea, 'decorativa','automotriz','industrial','marina','trafico','madera','disolventes','resinas-pegamentos','insumos-quimicos') ASC, producto_slug ASC, orden ASC, fecha_subida DESC")->fetch_all(MYSQLI_ASSOC);
+}
 
 // Calculamos, para cada imagen, su posición dentro de su propio producto (ej: "2 de 4")
 // y si es la primera/última de su grupo — así se puede mostrar "Posición X de Y" en vez
@@ -130,6 +166,16 @@ require "header.php";
     <div class="encabezado-pagina">
         <h2>Archivos subidos</h2>
         <p>Gestiona las imágenes, PDFs, videos y links de tu catálogo.</p>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;">
+        <a href="listar.php" class="filtro-linea <?php echo $filtroLinea === '' ? 'filtro-activo' : ''; ?>">Todas</a>
+        <?php foreach ($lineasDisponiblesRaw as $l): ?>
+            <a href="listar.php?filtro=<?php echo urlencode($l['linea']); ?>"
+               class="filtro-linea <?php echo $filtroLinea === $l['linea'] ? 'filtro-activo' : ''; ?>">
+                <?php echo htmlspecialchars($nombresLineas[$l['linea']] ?? ucwords(str_replace('-', ' ', $l['linea']))); ?>
+            </a>
+        <?php endforeach; ?>
     </div>
 
     <div class="tarjeta">
@@ -173,18 +219,18 @@ require "header.php";
                 <td style="white-space:nowrap;">
                     <?php if ($fila["producto_slug"] && $fila["_total_grupo"] > 1): ?>
                         <?php if ($fila["_posicion"] > 1): ?>
-                            <a href="listar.php?mover=arriba&id=<?php echo $fila['id']; ?>" class="accion-orden" title="Subir">▲</a>
+                            <a href="listar.php?mover=arriba&id=<?php echo $fila['id']; ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>" class="accion-orden" title="Subir">▲</a>
                         <?php else: ?>
                             <span class="accion-orden accion-orden-desactivada" title="Ya es la primera">▲</span>
                         <?php endif; ?>
                         <?php if ($fila["_posicion"] < $fila["_total_grupo"]): ?>
-                            <a href="listar.php?mover=abajo&id=<?php echo $fila['id']; ?>" class="accion-orden" title="Bajar">▼</a>
+                            <a href="listar.php?mover=abajo&id=<?php echo $fila['id']; ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>" class="accion-orden" title="Bajar">▼</a>
                         <?php else: ?>
                             <span class="accion-orden accion-orden-desactivada" title="Ya es la última">▼</span>
                         <?php endif; ?>
                     <?php endif; ?>
                     <a class="accion-editar" href="editar.php?id=<?php echo $fila['id']; ?>">Editar</a>
-                    <a class="accion-borrar" href="listar.php?borrar=<?php echo $fila['id']; ?>"
+                    <a class="accion-borrar" href="listar.php?borrar=<?php echo $fila['id']; ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>"
                        onclick="return confirm('¿Seguro que quieres borrar este archivo?');">Borrar</a>
                 </td>
             </tr>

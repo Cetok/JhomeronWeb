@@ -76,7 +76,45 @@ if (isset($_GET["mover"]) && isset($_GET["slug"])) {
     exit;
 }
 
-// --- Guardar nombre bonito editado ---
+// --- Borrar un producto COMPLETO (texto + todas sus imágenes/PDFs/colores/video) ---
+// Antes no existía forma de borrar un producto: aunque borraras todas sus imágenes
+// desde "Ver archivos", la fila en la tabla "productos" se quedaba para siempre.
+// Esto limpia todo de una vez: útil para quitar productos de prueba.
+if (isset($_GET["eliminar_producto"])) {
+    $slugEliminar = $_GET["eliminar_producto"];
+
+    // 1) Borramos del disco cada archivo (imagen/pdf/color/video) asociado a este producto
+    $stmtArch = $conexion->prepare("SELECT ruta_original, ruta_thumb, ruta_detalle, tipo FROM archivos WHERE producto_slug = ?");
+    $stmtArch->bind_param("s", $slugEliminar);
+    $stmtArch->execute();
+    $archivosDelProducto = $stmtArch->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    foreach ($archivosDelProducto as $archivo) {
+        if ($archivo["tipo"] === "video" || $archivo["tipo"] === "link") continue; // esas son solo URLs, no archivos en disco
+        foreach (["ruta_original", "ruta_thumb", "ruta_detalle"] as $campo) {
+            if (!empty($archivo[$campo])) {
+                $ruta = "../" . $archivo[$campo];
+                if (file_exists($ruta)) unlink($ruta);
+            }
+        }
+    }
+
+    // 2) Borramos todas las filas de "archivos" asociadas a este producto
+    $stmtDelArch = $conexion->prepare("DELETE FROM archivos WHERE producto_slug = ?");
+    $stmtDelArch->bind_param("s", $slugEliminar);
+    $stmtDelArch->execute();
+
+    // 3) Borramos la fila del producto (nombre, descripción, características, etc.)
+    $stmtDelProd = $conexion->prepare("DELETE FROM productos WHERE producto_slug = ?");
+    $stmtDelProd->bind_param("s", $slugEliminar);
+    $stmtDelProd->execute();
+
+    $volverA = isset($_GET["filtro"]) ? "productos.php?filtro=" . urlencode($_GET["filtro"]) : "productos.php";
+    header("Location: " . $volverA);
+    exit;
+}
+
+
 // --- Guardar/reemplazar un documento (ficha técnica, de seguridad o catálogo) para un producto ---
 function guardarDocumentoProducto($conexion, $slug, $linea, $etiqueta, $archivo) {
     if (!isset($archivo) || $archivo["error"] !== 0) return; // no se subió nada, no tocar lo que ya había
@@ -458,6 +496,9 @@ require "header.php";
                 <div style="text-align:right; margin-bottom:10px;">
                     <a href="productos.php?mover=arriba&slug=<?php echo urlencode($p['producto_slug']); ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>" class="accion-orden" title="Subir">▲</a>
                     <a href="productos.php?mover=abajo&slug=<?php echo urlencode($p['producto_slug']); ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>" class="accion-orden" title="Bajar">▼</a>
+                    <a href="productos.php?eliminar_producto=<?php echo urlencode($p['producto_slug']); ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>"
+                       onclick="return confirm('¿Borrar el producto COMPLETO \'<?php echo htmlspecialchars(addslashes($p['nombre_display'] ?: $p['producto_slug']), ENT_QUOTES); ?>\'? Esto elimina su nombre, descripción, características, imágenes, colores y PDFs. No se puede deshacer.');"
+                       style="color:var(--rojo); text-decoration:none; font-size:13px; margin-left:10px;">🗑 Borrar producto</a>
                 </div>
                 <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="producto_slug" value="<?php echo htmlspecialchars($p["producto_slug"]); ?>">

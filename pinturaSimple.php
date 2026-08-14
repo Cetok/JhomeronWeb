@@ -175,196 +175,88 @@ $lineaInfo = $mapaLineas[$lineaActual] ?? ["nombre" => "Línea de productos", "u
                 max-width: 80px;
             }
         }
+        .jf-footer, .jf-footer * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+        }
+        .jf-footer { background: white; width: 100%; font-family: 'Outfit', sans-serif; }
+
+        .jf-top {
+            background: #0d3393; padding: 11px 24px; display: flex; align-items: center;
+            justify-content: center; gap: 22px; flex-wrap: wrap;
+        }
+        .jf-logo { height: 54px; width: auto; margin-top: -7px; }
+        .jf-redes { display: flex; gap: 16px;}
+        .jf-redes a {
+            width: 34px; height: 34px; border-radius: 50%; background: white;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: background 0.15s, transform 0.15s;
+        }
+        .jf-redes a i { color: #0d3393; font-size: 22px; transition: color 0.15s; }
+        .jf-redes a:hover { background: #ef0606; transform: scale(1.08); }
+
+        .jf-columnas {
+            display: flex; flex-wrap: wrap; gap: 40px; padding: 32px 24px 32px 16px;
+        }
+
+        /* ===== BLOQUE 1: NUESTROS PRODUCTOS (100% independiente) ===== */
+        .jf-col-productos { flex: 1 1 220px; min-width: 200px; margin-left: 120px; }
+        .jf-col-productos h3 { font-size: 16px; font-weight: 700; color: #1b1d29; margin: 0 0 16px; letter-spacing: 0.3px; }
+        .jf-col-productos ul { list-style: none; margin: 0; padding: 0; }
+        .jf-col-productos ul li { font-size: 16px; font-weight: 300; color: #444; margin-bottom: 15px; padding-left: 14px; position: relative; }
+        .jf-col-productos ul li::before { content: "·"; position: absolute; left: 0; color: #888; font-weight: 700; }
+        .jf-col-productos ul li a { color: #444; text-decoration: none; }
+        .jf-col-productos ul li a:hover { text-decoration: underline; text-decoration-color: #000; }
+
+        /* ===== BLOQUE 2: ATENCIÓN AL CLIENTE (100% independiente) ===== */
+        .jf-col-atencion { flex: 1 1 220px; min-width: 200px; margin-left: 12px; }
+        .jf-col-atencion h3 { font-size: 16px; font-weight: 700; color: #1b1d29; margin: 0 0 20px; letter-spacing: 0.3px; }
+        .jf-col-atencion h4 { font-size: 15px; font-weight: 700; color: #1b1d29; margin: 18px 0 18px; }
+        .jf-col-atencion ul { list-style: none; margin: 0; padding: 0; }
+        .jf-col-atencion ul li { font-size: 16px; font-weight: 300; color: #444; margin-bottom: 20px; padding-left: 14px; position: relative; }
+        .jf-col-atencion ul li::before { content: "·"; position: absolute; left: 0; color: #888; font-weight: 700; }
+
+        /* ===== BLOQUE 3: DIRECCIÓN + INFORMACIÓN LEGAL (100% independiente) ===== */
+        .jf-col-direccion { flex: 1 1 220px; min-width: 200px; margin-left: 0; }
+        .jf-col-direccion h3 { font-size: 16px; font-weight: 700; color: #1b1d29; margin: 0 0 16px; letter-spacing: 0.3px; }
+        .jf-col-direccion ul { list-style: none; margin: 0; padding: 0; }
+        .jf-col-direccion ul li { font-size: 16px; font-weight: 300; color: #444; margin-bottom: 18px; padding-left: 14px; position: relative; }
+        .jf-col-direccion ul li::before { content: "·"; position: absolute; left: 0; color: #888; font-weight: 700; }
+        .jf-col-direccion ul li a { color: #444; text-decoration: none; }
+        .jf-col-direccion ul li a:hover { text-decoration: underline; text-decoration-color: #000; }
+
+        .jf-linea-contacto {
+            font-size: 16px; font-weight: 300; color: #444; margin: 0 0 15px; display: flex; align-items: center; gap: 8px;
+        }
+        .jf-linea-contacto i { color: #1b1d29; width: 16px; text-align: center; }
+        .jf-linea-contacto a { color: #444; text-decoration: none; }
+        .jf-linea-contacto a:hover { text-decoration: underline; text-decoration-color: #000; }
+
+        .jf-direccion {
+            display: flex; gap: 8px; text-decoration: none; color: #444; font-size: 16px; font-weight: 300; line-height: 1.5;
+        }
+        .jf-direccion i { color: #1b1d29; margin-top: 3px; }
+        .jf-direccion:hover span { text-decoration: underline; text-decoration-color: #000; }
+
+        .jf-bottom {
+            background: #f5f5f5; padding: 12px 20px; text-align: center;
+        }
+        .jf-bottom p { margin: 0; font-size: 14px; color: #666; font-weight: 250; }
+
+        @media (max-width: 700px) {
+            .jf-columnas { padding: 24px 20px; gap: 28px; flex-direction: column; }
+            .jf-top { padding: 16px 20px; }
+            .jf-col-productos { margin-left: 0 !important; width: 100% !important; flex-basis: 100% !important; }
+            .jf-col-atencion { margin-left: 0 !important; width: 100% !important; flex-basis: 100% !important; }
+            .jf-col-direccion { margin-left: 0 !important; width: 100% !important; flex-basis: 100% !important; }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <div class="navbar">
-            <a href="index.html">
-                <img src="imgs/logo.png" alt="Jhomeron Logo" class="logo" />
-            </a>
-            <div class="wasap">
-                <a href="https://wa.me/957720068" target="_blank">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-            </div>
-            <button class="menu-hamburguesa">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="menu-movil-contenedor">
-                <ul class="menu-movil-items">
-                    <li>
-                        <a href="#" class="trigger-submenu">Líneas <i class="fas fa-chevron-down"></i></a>
-                        <ul class="submenu-movil">
-                            <li><a href="lineasDecorativa.php">Decorativa</a></li>
-                            <li><a href="lineasAuto.php">Automotriz</a></li>
-                            <li><a href="lineaIndus.php">Industrial</a></li>
-                            <li><a href="lineaMarina.php">Marina</a></li>
-                            <li><a href="lineaTrafico.php">Señalización</a></li>
-                            <li><a href="lineaMadera.php">Madera</a></li>
-                            <li><a href="lineaDisolvente.php">Disolventes</a></li>
-                            <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
-                            <li><a href="insuQuimi.php">Insumos Químicos</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#" class="asesoria-movil">Asesoría</a></li>
-                    <li><a href="puntoVenta.html">Puntos de venta</a></li>
-
-                    <li>
-                        <a href="#" class="trigger-submenu-cotiza">
-                            ¡Cotiza aquí! <i class="fas fa-chevron-down"></i>
-                        </a>
-                        <ul class="submenu-movil-cotiza">
-                            <li>
-                                <a href="https://wa.me/957720068" target="_blank" rel="noopener noreferrer" class="whatsapp2-btn">
-                                    <i class="fab fa-whatsapp"></i>
-                                    <span>¡Chatear con un asesor!</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="tel:945057702" class="call-btn">
-                                    <i class="fas fa-phone"></i>
-                                    <span>¡Llamar a un asesor!</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="email-btn cotiza-email-movil">
-                                    <i class="fas fa-envelope"></i>
-                                    <span>¡Enviar un correo!</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <nav>
-                <ul class="menu">
-                    <li class="enca">
-                        <a>Líneas <img src="icons/flechita.png" alt="" /></a>
-                        <ul class="submenu">
-                            <li><a href="lineasDecorativa.php">Decorativa</a></li>
-                            <li><a href="lineasAuto.php">Automotriz</a></li>
-                            <li><a href="lineaIndus.php">Industrial</a></li>
-                            <li><a href="lineaMarina.php">Marina</a></li>
-                            <li><a href="lineaTrafico.php">Señalización</a></li>
-                            <li><a href="lineaMadera.php">Madera</a></li>
-                            <li><a href="lineaDisolvente.php">Disolventes</a></li>
-                            <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
-                            <li><a href="insuQuimi.php">Insumos Químicos</a></li>
-                        </ul>
-                    </li>
-                    <li class="enca"><a id="asesoria-link">Asesoría</a></li>
-                    <li class="enca"><a href="puntoVenta.html">Puntos de venta</a></li>
-                    <li class="enca"><a id="cotiza-aqui" href="#">¡Cotiza aquí!</a></li>
-                    <li class="wasap">
-                        <a href="https://wa.me/957720068" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    </li>
-                    <li>
-                        <div class="busca">
-                            <input type="text" placeholder="¿Qué producto estás buscando?" required />
-                            <div class="bst">
-                                <img src="imgs/buscar.svg" alt="Buscar" />
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Overlay de Asesoría -->
-    <div id="asesoria-overlay" class="asesoria-overlay hidden">
-        <div class="asesoria-content">
-            <button id="close-asesoria" class="close-button">&times;</button>
-            <div class="contact-card">
-                <div class="contact-header">
-                    <h3>Asesor comercial Lima</h3>
-                </div>
-                <div class="contact-info">
-                    <p class="junta1"><i class="fas fa-phone"></i>977 898 394</p>
-                    <p class="junta2">
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:ventas@jhomeron.com">ventas@jhomeron.com</a>
-                    </p>
-                </div>
-            </div>
-            <div class="contact-card">
-                <div class="contact-header-2">
-                    <h3>Asesor comercial Provincias</h3>
-                </div>
-                <div class="contact-info">
-                    <p class="junta3"><i class="fas fa-phone"></i>945 057 702</p>
-                    <p class="junta2">
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:infoventas@jhomeron.com">infoventas@jhomeron.com</a>
-                    </p>
-                </div>
-            </div>
-            <div class="contact-card whatsapp">
-                <div class="contact-header-3">
-                    <h3>WhatsApp</h3>
-                    <span>| Consultas Generales</span>
-                </div>
-                <p>Clic aquí y escríbenos</p>
-                <a href="https://wa.me/945057702" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>945 057 702</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Overlay de Cotización -->
-    <div id="cotiza-modal" class="cotiza-overlay hidden">
-        <div>
-            <button id="close-cotiza" class="close-button">&times;</button>
-            <div class="whatsapp-2">
-                <a href="https://wa.me/957720068" class="contact-btn whatsapp2-btn" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-whatsapp" id="ws1"></i>
-                    <span>¡Chatear con un asesor!</span>
-                </a>
-            </div>
-            <div class="llamada">
-                <a href="tel:945057702" class="contact-btn call-btn">
-                    <i class="fas fa-phone"></i>
-                    <span>¡Llamar a un asesor!</span>
-                </a>
-            </div>
-            <div class="email">
-                <a href="mailto:ventas@jhomeron.com" id="open-form-btn" class="contact-btn email-btn">
-                    <i class="fas fa-envelope"></i>
-                    <span>¡Enviar un correo!</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Overlay del formulario de contacto -->
-    <div id="formOverlay" class="form-overlay hidden">
-        <div class="form-container">
-            <button id="close-form" class="close-button">&times;</button>
-            <h2>¿En qué podemos ayudarte?</h2>
-            <form id="contactForm" action="https://formsubmit.co/ventas@jhomeron.com" method="POST">
-                <input type="hidden" name="_subject" value="Nueva solicitud de cotización desde jhomeron.com">
-                <input type="hidden" name="_next" value="https://www.tamsa.jhomeron.com/gracias.html">
-                <input type="hidden" name="_template" value="table">
-                <div class="form-row">
-                    <input type="text" name="Nombre" placeholder="Nombres y apellidos*" required />
-                    <input type="text" name="Celular" placeholder="Celular*" required />
-                </div>
-                <div class="form-row">
-                    <input type="text" name="Empresa" placeholder="Empresa*" required />
-                    <input type="text" name="Ciudad" placeholder="Ciudad*" required />
-                </div>
-                <input type="email" name="Correo" placeholder="Correo" required />
-                <textarea name="Mensaje" placeholder="Escribe mensaje*" required></textarea>
-                <div class="recaptcha-container">
-                    <div class="g-recaptcha" data-sitekey="6Lc8jigrAAAAAGysy3S9iNB4G_NIZ9SIE6RqGIRp"></div>
-                </div>
-                <button type="submit">ENVIAR</button>
-            </form>
-        </div>
-    </div>
+    <?php require "header.php"; ?>
 
     <div class="breadcrumb">
         <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
@@ -477,83 +369,7 @@ $lineaInfo = $mapaLineas[$lineaActual] ?? ["nombre" => "Línea de productos", "u
     </div>
     <?php endif; ?>
 
-    <!-- Footer real del sitio -->
-    <footer>
-        <div class="footer-top-bar">
-            <div class="footer-top-content">
-                <img src="icons/logo_jhomeron_footer.svg" alt="Logo" class="footer-logo" />
-                <div class="footer-icons">
-                    <a href="https://www.facebook.com/SomosIndustriasJhomeronSA" target="_blank">
-                        <img src="icons/footer-icons/facebook.png" alt="Facebook" class="normal-icon" />
-                        <img src="icons/footer-icons/facebook_rojo.svg" alt="Facebook" class="red-icon" />
-                    </a>
-                    <a href="https://www.instagram.com/pinturas_jhomeron/?hl=es-la" target="_blank">
-                        <img src="icons/footer-icons/tiktok_blanco.svg" alt="Instagram" class="normal-icon" />
-                        <img src="icons/footer-icons/instagram_rojo.svg" alt="Instagram" class="red-icon" />
-                    </a>
-                    <a href="https://www.tiktok.com/@pinturas_jhomeron" target="_blank">
-                        <img src="icons/footer-icons/tik-tok.png" alt="TikTok" class="normal-icon" />
-                        <img src="icons/footer-icons/tiktok_rojo.svg" alt="TikTok" class="red-icon" />
-                    </a>
-                    <a href="https://www.linkedin.com/in/pinturas-jhomeron-6b869a368" target="_blank">
-                        <img src="icons/footer-icons/linkedin_blanco.svg" alt="LinkedIn" class="normal-icon" />
-                        <img src="icons/footer-icons/linkedin_rojo.svg" alt="LinkedIn" class="red-icon" />
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-container">
-            <div class="footer-section products">
-                <h3>NUESTROS PRODUCTOS</h3>
-                <ul>
-                    <li><a href="lineasDecorativa.php">Línea Decorativa</a></li>
-                    <li><a href="lineasAuto.php">Línea Automotriz</a></li>
-                    <li><a href="lineaIndus.php">Línea Industrial</a></li>
-                    <li><a href="lineaMarina.php">Línea Marina</a></li>
-                    <li><a href="lineaTrafico.php">Línea Señalización</a></li>
-                    <li><a href="lineaMadera.php">Línea Madera</a></li>
-                    <li><a href="lineaDisolvente.php">Línea Disolventes</a></li>
-                    <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
-                    <li><a href="insuQuimi.php">Insumos Químicos</a></li>
-                </ul>
-            </div>
-            <div class="footer-section customer-service">
-                <h3>ATENCIÓN AL CLIENTE</h3>
-                <ul>
-                    <li class="no-bullet"><i class="fa-solid fa-phone-volume"></i><p>536-4214 | 500-8202 | 500-8203</p></li>
-                    <li class="no-bullet"><i class="fa-solid fa-phone-volume"></i><p>500-8205 | 500-8206 | 500-8207</p></li>
-                    <li class="no-bullet"><i class="fas fa-envelope"></i><a href="mailto:ventas@jhomeron.com"><p>ventas@jhomeron.com</p></a></li>
-                </ul>
-                <div class="horario">
-                    <h4>HORARIO DE ATENCIÓN</h4>
-                    <ul>
-                        <li>Lu - Vi | 8:00 am - 5:20 pm</li>
-                        <li>Sáb | 8:00 am - 1:00 pm</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-section address">
-                <h3>DIRECCIÓN</h3>
-                <a href="https://www.google.com/maps/place/Industrias+jhomeron+SA/@-11.9209387,-77.0650729,15z" target="_blank" class="address-link">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <p class="address-text">Calle Santa Ana Mz. "F" Lote 44, Fnd. Chacra Cerro - Chillón<br>Comas - Lima - Perú</p>
-                </a>
-                <div class="legal">
-                    <h3>INFORMACIÓN LEGAL</h3>
-                    <ul>
-                        <li><a href="politicaPriva.html">Políticas de privacidad</a></li>
-                        <li><a href="terminosCondi.html">Términos y condiciones</a></li>
-                        <li><a href="libroReclama.html">Libro de Reclamaciones</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>©2025, Industrias Jhomeron S.A. - RUC: 20601777844</p>
-        </div>
-    </footer>
+    <?php require "footer.php"; ?>
 
     <script>
         const imagenesProducto = <?php echo json_encode($imagenes); ?>;
