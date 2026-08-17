@@ -554,7 +554,11 @@ require "header.php";
                             <option value="<?php echo htmlspecialchars($ic); ?>" <?php echo $fila[0] === $ic ? "selected" : ""; ?>><?php echo htmlspecialchars($ic); ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <img class="preview-icono" src="../icons/caracter/<?php echo htmlspecialchars($fila[0]); ?>.svg"
+                    <?php
+                    $rutaIconoCarac = "../icons/caracter/" . $fila[0] . ".svg";
+                    $versionIconoCarac = ($fila[0] && file_exists($rutaIconoCarac)) ? filemtime($rutaIconoCarac) : "0";
+                    ?>
+                    <img class="preview-icono" src="../icons/caracter/<?php echo htmlspecialchars($fila[0]); ?>.svg?v=<?php echo $versionIconoCarac; ?>"
                          style="width:24px; height:24px; flex-shrink:0; <?php echo $fila[0] ? '' : 'visibility:hidden;'; ?>" onerror="this.style.visibility='hidden'">
                     <input type="text" class="texto-carac" value="<?php echo htmlspecialchars($fila[1]); ?>" placeholder="Texto de la característica" style="margin:0;">
                     <button type="button" class="boton-quitar-caracteristica" title="Quitar esta característica">&times;</button>
@@ -574,11 +578,24 @@ require "header.php";
                 <?php
                 $aplicacionSeleccionada = !empty($p["aplicacion"]) ? array_map('trim', explode(",", $p["aplicacion"])) : [];
                 foreach ($iconosAplicacion as $ic):
+                    // Si ya estaba guardado, le damos su posición real (1, 2, 3...) según
+                    // el orden en que se guardó la última vez — así el orden con el que
+                    // ya lo tenías se respeta hasta que vuelvas a marcar/desmarcar algo.
+                    $posicionGuardada = array_search($ic, $aplicacionSeleccionada);
                 ?>
                 <label style="display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:500; text-transform:none; margin:0; cursor:pointer;">
                     <input type="checkbox" class="check-aplicacion" value="<?php echo htmlspecialchars($ic); ?>"
+                           <?php echo $posicionGuardada !== false ? 'data-orden-clic="' . ($posicionGuardada + 1) . '"' : ''; ?>
                            <?php echo in_array($ic, $aplicacionSeleccionada) ? "checked" : ""; ?> style="width:auto;">
-                    <img src="../icons/aplicacion/<?php echo htmlspecialchars($ic); ?>.svg" style="width:20px; height:20px;" onerror="this.style.display='none'">
+                    <?php
+                    // "Cache-busting": se agrega la fecha de modificación real del archivo
+                    // al final de la URL (?v=...). Así, cada vez que reemplaces un ícono
+                    // (mismo nombre, diseño nuevo), la URL cambia sola y el navegador lo
+                    // descarga de nuevo automáticamente — sin que tengas que forzar Ctrl+F5.
+                    $rutaIconoAplic = "../icons/aplicacion/" . $ic . ".svg";
+                    $versionIconoAplic = file_exists($rutaIconoAplic) ? filemtime($rutaIconoAplic) : "0";
+                    ?>
+                    <img src="../icons/aplicacion/<?php echo htmlspecialchars($ic); ?>.svg?v=<?php echo $versionIconoAplic; ?>" style="width:20px; height:20px;" onerror="this.style.display='none'">
                     <?php echo htmlspecialchars($ic); ?>
                 </label>
                 <?php endforeach; ?>
@@ -896,9 +913,37 @@ require "header.php";
 
                 const checks = form.querySelectorAll(".check-aplicacion:checked");
                 if (checks.length > 0 || form.querySelector(".input-aplicacion-final")) {
-                    const seleccionados = Array.from(checks).map(c => c.value);
+                    console.log("DEBUG: checkboxes marcados con su orden:", Array.from(checks).map(c => c.value + " (orden=" + c.dataset.ordenClic + ")"));
+                    // Se ordena por el momento real en que se marcó cada uno (data-orden-clic),
+                    // no por el orden en que aparecen en la lista — así respeta el orden en
+                    // que fuiste haciendo clic, no el alfabético/de carpeta.
+                    const seleccionados = Array.from(checks)
+                        .sort((a, b) => (parseInt(a.dataset.ordenClic) || 0) - (parseInt(b.dataset.ordenClic) || 0))
+                        .map(c => c.value);
+                    console.log("DEBUG: orden final que se va a guardar:", seleccionados.join(","));
                     const inputAplic = form.querySelector(".input-aplicacion-final");
                     if (inputAplic) inputAplic.value = seleccionados.join(",");
+                }
+            });
+        });
+
+        // Registra el orden real en que se van marcando los checkboxes de "Aplicación":
+        // cada vez que marcas uno, se le asigna el siguiente número de un contador que
+        // solo sube (nunca se repite) — así el orden final SIEMPRE coincide con la
+        // secuencia real de clics, sin importar en qué parte de la página esté el checkbox.
+        let contadorClicAplicacion = 1000; // arranca alto para que cualquier clic nuevo
+                                            // quede siempre después de lo que ya estaba guardado
+        const checksAplicacionDebug = document.querySelectorAll(".check-aplicacion");
+        console.log("DEBUG: cantidad de checkboxes de aplicación encontrados =", checksAplicacionDebug.length);
+        checksAplicacionDebug.forEach(function (check) {
+            check.addEventListener("change", function () {
+                console.log("DEBUG: cambió checkbox", this.value, "checked =", this.checked);
+                if (this.checked) {
+                    contadorClicAplicacion++;
+                    this.dataset.ordenClic = contadorClicAplicacion;
+                    console.log("DEBUG: le asigné orden", this.dataset.ordenClic, "a", this.value);
+                } else {
+                    delete this.dataset.ordenClic;
                 }
             });
         });
@@ -947,7 +992,7 @@ require "header.php";
                 if (!e.target.classList.contains("select-icono-carac")) return;
                 const preview = e.target.parentElement.querySelector(".preview-icono");
                 if (e.target.value) {
-                    preview.src = "../icons/caracter/" + e.target.value + ".svg";
+                    preview.src = "../icons/caracter/" + e.target.value + ".svg?v=" + Date.now();
                     preview.style.visibility = "visible";
                 } else {
                     preview.style.visibility = "hidden";

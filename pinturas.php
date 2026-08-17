@@ -572,8 +572,11 @@ if ($producto && !empty($producto["aplicacion"])) {
                         ob_start();
                         ?>
                         <div class="caracteristica-box">
-                            <?php if ($iconoCarac): ?>
-                                <img src="icons/caracter/<?php echo htmlspecialchars($iconoCarac); ?>.svg" class="icono-carac-img" alt="" onerror="this.style.display='none'">
+                            <?php if ($iconoCarac):
+                                $rutaIconoCaracPub = "icons/caracter/" . $iconoCarac . ".svg";
+                                $versionIconoCaracPub = file_exists($rutaIconoCaracPub) ? filemtime($rutaIconoCaracPub) : "0";
+                            ?>
+                                <img src="icons/caracter/<?php echo htmlspecialchars($iconoCarac); ?>.svg?v=<?php echo $versionIconoCaracPub; ?>" class="icono-carac-img" alt="" onerror="this.style.display='none'">
                             <?php else: ?>
                                 <div class="icono-carac">●</div>
                             <?php endif; ?>
@@ -605,8 +608,11 @@ if ($producto && !empty($producto["aplicacion"])) {
                 <div class="aplicacion-box" style="margin: 0 auto 22px;">
                     <h4>Aplicación:</h4>
                     <div class="aplicacion-iconos">
-                        <?php foreach ($aplicacionIconos as $icono): ?>
-                            <img src="icons/aplicacion/<?php echo htmlspecialchars($icono); ?>.svg" alt="<?php echo htmlspecialchars($icono); ?>"
+                        <?php foreach ($aplicacionIconos as $icono):
+                            $rutaIconoAplicPub = "icons/aplicacion/" . $icono . ".svg";
+                            $versionIconoAplicPub = file_exists($rutaIconoAplicPub) ? filemtime($rutaIconoAplicPub) : "0";
+                        ?>
+                            <img src="icons/aplicacion/<?php echo htmlspecialchars($icono); ?>.svg?v=<?php echo $versionIconoAplicPub; ?>" alt="<?php echo htmlspecialchars($icono); ?>"
                                  onerror="this.style.display='none'">
                         <?php endforeach; ?>
                     </div>
