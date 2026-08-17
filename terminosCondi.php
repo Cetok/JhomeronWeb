@@ -22,7 +22,7 @@
 <?php require "header.php"; ?>
     <div class="cabecera-azul">
         <div class="navegacion">
-            <a href="index.html" class="home-icon"><img src="icons/home.svg" alt="inicio" /></a>
+            <a href="index.php" class="home-icon"><img src="icons/home.svg" alt="inicio" /></a>
             <p>> Términos y Condiciones</p>
         </div>
         <div class="titulo-principal">

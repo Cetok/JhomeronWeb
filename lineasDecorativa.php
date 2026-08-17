@@ -216,8 +216,8 @@ uksort($categoriasEncontradas, function ($a, $b) use ($ordenPreferido) {
     <div class="arriba">
         <div class="arb">
             <div class="nav-links">
-                <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
-                <a href="lineasProducto.html">> Productos</a>
+                <a href="index.php"><img src="icons/home.svg" alt="inicio" /></a>
+                <a href="lineasProducto.php">> Productos</a>
                 <span>> Línea Decorativa</span>
             </div>
 

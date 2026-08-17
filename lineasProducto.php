@@ -21,7 +21,7 @@
   <!-- Header-->
 <?php require "header.php"; ?>
   <div class="arriba">
-    <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
+    <a href="index.php"><img src="icons/home.svg" alt="inicio" /></a>
     <p>> Productos</p>
   </div>
   <div class="main-content">

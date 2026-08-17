@@ -498,7 +498,9 @@ require "header.php";
                     <a href="productos.php?mover=abajo&slug=<?php echo urlencode($p['producto_slug']); ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>" class="accion-orden" title="Bajar">▼</a>
                     <a href="productos.php?eliminar_producto=<?php echo urlencode($p['producto_slug']); ?><?php echo $filtroLinea ? '&filtro='.urlencode($filtroLinea) : ''; ?>"
                        onclick="return confirm('¿Borrar el producto COMPLETO \'<?php echo htmlspecialchars(addslashes($p['nombre_display'] ?: $p['producto_slug']), ENT_QUOTES); ?>\'? Esto elimina su nombre, descripción, características, imágenes, colores y PDFs. No se puede deshacer.');"
-                       style="color:var(--rojo); text-decoration:none; font-size:13px; margin-left:10px;">🗑 Borrar producto</a>
+                       style="display:inline-flex; align-items:center; gap:6px; color:var(--rojo); background:white; border:1.5px solid var(--rojo); border-radius:20px; padding:6px 14px; text-decoration:none; font-size:12.5px; font-weight:600; margin-left:10px; transition:background 0.15s, color 0.15s;"
+                       onmouseover="this.style.background='var(--rojo)'; this.style.color='white';"
+                       onmouseout="this.style.background='white'; this.style.color='var(--rojo)';">🗑 Borrar producto</a>
                 </div>
                 <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="producto_slug" value="<?php echo htmlspecialchars($p["producto_slug"]); ?>">

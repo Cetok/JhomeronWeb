@@ -3,10 +3,9 @@
 // Header + overlays (Asesoría, Cotiza aquí, formulario de contacto) COMPARTIDOS
 // entre todas las páginas dinámicas del sitio (líneas + detalle de producto).
 // Se incluye con: <?php require "header.php"; ?>
-
     <header>
         <div class="navbar">
-            <a href="index.html">
+            <a href="index.php">
                 <img src="imgs/logo.png" alt="Jhomeron Logo" class="logo" />
             </a>
             <div class="wasap">

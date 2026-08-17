@@ -74,7 +74,7 @@ $mapaLineas = [
     "insumos-quimicos" => ["nombre" => "Insumos Químicos", "url" => "insuQuimi.php"],
 ];
 $lineaActual = $producto["linea"] ?? "";
-$lineaInfo = $mapaLineas[$lineaActual] ?? ["nombre" => "Línea de productos", "url" => "lineasProducto.html"];
+$lineaInfo = $mapaLineas[$lineaActual] ?? ["nombre" => "Línea de productos", "url" => "lineasProducto.php"];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -259,8 +259,8 @@ $lineaInfo = $mapaLineas[$lineaActual] ?? ["nombre" => "Línea de productos", "u
     <?php require "header.php"; ?>
 
     <div class="breadcrumb">
-        <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
-        <a href="lineasProducto.html">> Productos</a>
+        <a href="index.php"><img src="icons/home.svg" alt="inicio" /></a>
+        <a href="lineasProducto.php">> Productos</a>
         <a href="<?php echo htmlspecialchars($lineaInfo['url']); ?>">> <span id="linea-name"><?php echo htmlspecialchars($lineaInfo['nombre']); ?></span></a>
         <p>> <span id="product-name"><?php echo $tituloBreadcrumb; ?></span></p>
     </div>

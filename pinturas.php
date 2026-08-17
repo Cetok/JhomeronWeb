@@ -465,7 +465,7 @@ if ($producto && !empty($producto["aplicacion"])) {
     ?>
 
     <div class="breadcrumb">
-        <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
+        <a href="index.php"><img src="icons/home.svg" alt="inicio" /></a>
         <a href="lineasProducto.php">> Productos</a>
         <a href="<?php echo htmlspecialchars($lineaInfo['url']); ?>">> <?php echo htmlspecialchars($lineaInfo['nombre']); ?></a>
         <p>> <span id="product-name"><?php echo $tituloBreadcrumb; ?></span></p>

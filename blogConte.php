@@ -20,7 +20,7 @@
   <!-- Header-->
 <?php require "header.php"; ?>
   <div class="breadcrumb">
-    <a href="index.html"><img src="icons/home.svg" alt="inicio" /></a>
+    <a href="index.php"><img src="icons/home.svg" alt="inicio" /></a>
     <a href="blog_pintor.php">> Blog del Pintor</a>
     <p>
       >

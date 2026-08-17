@@ -163,8 +163,8 @@ $productos = $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
     <?php require "header.php"; ?>
 
     <div class="arriba">
-        <a href="index.html" class="regres"><img src="icons/home.svg" alt="inicio" /></a>
-        <a href="lineasProducto.html" class="regres">> Productos</a>
+        <a href="index.php" class="regres"><img src="icons/home.svg" alt="inicio" /></a>
+        <a href="lineasProducto.php" class="regres">> Productos</a>
         <p class="lin-tex">> Resinas y Pegamentos</p>
     </div>
 

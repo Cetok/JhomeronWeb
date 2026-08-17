@@ -10,7 +10,7 @@ if (!isset($_SESSION["admin_id"])) {
 
 if (isset($_GET["borrar"])) {
     $id = (int) $_GET["borrar"];
-    $stmt = $conexion->prepare("SELECT ruta_original, ruta_thumb, ruta_detalle, tipo FROM archivos WHERE id = ?");
+    $stmt = $conexion->prepare("SELECT ruta_original, ruta_thumb, ruta_detalle, tipo, producto_slug FROM archivos WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $fila = $stmt->get_result()->fetch_assoc();
@@ -30,6 +30,42 @@ if (isset($_GET["borrar"])) {
         $stmt2 = $conexion->prepare("DELETE FROM archivos WHERE id = ?");
         $stmt2->bind_param("i", $id);
         $stmt2->execute();
+
+        // --- Limpieza en cascada: si a este producto ya no le queda NINGUNA imagen,
+        // se considera "vaciado" y se borra por completo (igual que el botón "Borrar
+        // producto" de productos.php) — así no queda dando vueltas sin fotos ni forma
+        // de que aparezca en la web. Solo se dispara cuando llega a 0 imágenes, no antes.
+        $slugAfectado = $fila["producto_slug"];
+        if ($slugAfectado) {
+            $stmtRestantes = $conexion->prepare("SELECT COUNT(*) AS total FROM archivos WHERE producto_slug = ? AND tipo = 'imagen'");
+            $stmtRestantes->bind_param("s", $slugAfectado);
+            $stmtRestantes->execute();
+            $imagenesRestantes = (int) $stmtRestantes->get_result()->fetch_assoc()["total"];
+
+            if ($imagenesRestantes === 0) {
+                // Borramos del disco cualquier archivo que le haya quedado (pdf, color, etc.)
+                $stmtOtros = $conexion->prepare("SELECT ruta_original, ruta_thumb, ruta_detalle, tipo FROM archivos WHERE producto_slug = ?");
+                $stmtOtros->bind_param("s", $slugAfectado);
+                $stmtOtros->execute();
+                $otrosArchivos = $stmtOtros->get_result()->fetch_all(MYSQLI_ASSOC);
+                foreach ($otrosArchivos as $otro) {
+                    if ($otro["tipo"] === "video" || $otro["tipo"] === "link") continue;
+                    foreach (["ruta_original", "ruta_thumb", "ruta_detalle"] as $campo) {
+                        if (!empty($otro[$campo])) {
+                            $ruta = "../" . $otro[$campo];
+                            if (file_exists($ruta)) unlink($ruta);
+                        }
+                    }
+                }
+                $stmtDelResto = $conexion->prepare("DELETE FROM archivos WHERE producto_slug = ?");
+                $stmtDelResto->bind_param("s", $slugAfectado);
+                $stmtDelResto->execute();
+
+                $stmtDelProd = $conexion->prepare("DELETE FROM productos WHERE producto_slug = ?");
+                $stmtDelProd->bind_param("s", $slugAfectado);
+                $stmtDelProd->execute();
+            }
+        }
     }
     $volverA = isset($_GET["filtro"]) ? "listar.php?filtro=" . urlencode($_GET["filtro"]) : "listar.php";
     header("Location: " . $volverA);
