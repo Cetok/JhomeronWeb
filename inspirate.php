@@ -163,7 +163,7 @@
         <h2>¿En qué podemos ayudarte?</h2>
         <form id="contactForm" action="https://formsubmit.co/ventas@jhomeron.com" method="POST">
           <input type="hidden" name="_subject" value="Nueva solicitud de cotización desde jhomeron.com">
-          <input type="hidden" name="_next" value="https://www.tamsa.jhomeron.com/gracias.html">
+          <input type="hidden" name="_next" value="https://www.tamsa.jhomeron.com/gracias.php">
           <input type="hidden" name="_template" value="table">
           <div class="form-row">
             <input type="text" name="Nombre" placeholder="Nombres y apellidos*" required />

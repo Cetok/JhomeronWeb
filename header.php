@@ -3,6 +3,7 @@
 // Header + overlays (Asesoría, Cotiza aquí, formulario de contacto) COMPARTIDOS
 // entre todas las páginas dinámicas del sitio (líneas + detalle de producto).
 // Se incluye con: <?php require "header.php"; ?>
+
     <header>
         <div class="navbar">
             <a href="index.php">
@@ -27,9 +28,8 @@
                             <li><a href="lineaMarina.php">Marina</a></li>
                             <li><a href="lineaTrafico.php">Señalización</a></li>
                             <li><a href="lineaMadera.php">Madera</a></li>
-                            <li><a href="lineaDisolvente.php">Disolventes</a></li>
-                            <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
-                            <li><a href="insuQuimi.php">Insumos Químicos</a></li>
+                            <li><a href="lineaDisolvente.php">Thinner</a></li>
+                            <li><a href="lineaFibra.php">Fibra de Vidrio</a></li>
                         </ul>
                     </li>
                     <li><a href="#" class="asesoria-movil">Asesoría</a></li>
@@ -73,9 +73,8 @@
                             <li><a href="lineaMarina.php">Marina</a></li>
                             <li><a href="lineaTrafico.php">Señalización</a></li>
                             <li><a href="lineaMadera.php">Madera</a></li>
-                            <li><a href="lineaDisolvente.php">Disolventes</a></li>
-                            <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
-                            <li><a href="insuQuimi.php">Insumos Químicos</a></li>
+                            <li><a href="lineaDisolvente.php">Thinner</a></li>
+                            <li><a href="lineaFibra.php">Fibra de Vidrio</a></li>
                         </ul>
                     </li>
                     <li class="enca"><a id="asesoria-link">Asesoría</a></li>
@@ -173,7 +172,7 @@
             <h2>¿En qué podemos ayudarte?</h2>
             <form id="contactForm" action="https://formsubmit.co/ventas@jhomeron.com" method="POST">
                 <input type="hidden" name="_subject" value="Nueva solicitud de cotización desde jhomeron.com">
-                <input type="hidden" name="_next" value="https://www.tamsa.jhomeron.com/gracias.html">
+                <input type="hidden" name="_next" value="https://www.tamsa.jhomeron.com/gracias.php">
                 <input type="hidden" name="_template" value="table">
                 <div class="form-row">
                     <input type="text" name="Nombre" placeholder="Nombres y apellidos*" required />
@@ -192,3 +191,17 @@
             </form>
         </div>
     </div>
+
+    <!-- Buscador del header: script compartido de verdad. Si algún día hay que
+         cambiar cómo funciona la búsqueda, se edita SOLO buscador_dinamico.js
+         y se actualiza automáticamente en todas las páginas que usan header.php. -->
+    <script src="buscador_dinamico.js"></script>
+
+    <style>
+        /* El CSS real tiene el submenú "Líneas" con altura fija (330px) y ancho
+           angosto (130px), calculados para los 9 ítems que había antes (7 líneas +
+           Resinas + Insumos). Ahora hay 8 (7 + Fibra de Vidrio), así que sobraba
+           espacio vacío abajo, y "Fibra de Vidrio" (más largo que las demás
+           palabras) se partía en 2 líneas por el ancho angosto. */
+        .submenu { height: auto !important; width: 160px !important; }
+    </style>

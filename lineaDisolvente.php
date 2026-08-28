@@ -81,7 +81,8 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Línea Disolventes - Jhomeron</title>
+    <link rel="icon" href="imgs/pinturas-jhomeron-peru.png" type="image/png" />
+    <title>Línea Thinner</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="styleslinea.css" />
@@ -282,11 +283,11 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
             <div class="nav-links">
                 <a href="index.php"><img src="icons/home.svg" alt="inicio" /></a>
                 <a href="lineasProducto.php">> Productos</a>
-                <span>> Línea Disolventes</span>
+                <span>> Línea Thinner</span>
             </div>
 
             <div class="arb2">
-                <h2>LÍNEA DISOLVENTES</h2>
+                <h2>LÍNEA THINNER</h2>
 
                 <?php if (count($gruposFiltro) > 0): ?>
                 <!-- Filtro móvil (dropdown) -->
@@ -372,104 +373,7 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 <?php require "footer.php"; ?>
 
     <script>
-        // Buscador del header: busca en productos ya dinamicos (decorativa, industrial, automotriz)
-        (function () {
-            const inputBusqueda = document.querySelector(".busca input");
-            if (!inputBusqueda) return;
-
-            const contenedorBusca = document.querySelector(".busca");
-            contenedorBusca.style.position = "relative";
-
-            const listaResultados = document.createElement("div");
-            listaResultados.style.cssText = "display:none; position:absolute; top:100%; left:0; right:0; background:white; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:1000; max-height:300px; overflow-y:auto; margin-top:6px;";
-            contenedorBusca.appendChild(listaResultados);
-
-            // Estilo del hover para cada resultado, inyectado una sola vez
-            const estiloHover = document.createElement("style");
-            estiloHover.textContent = `
-                .resultado-busqueda {
-                    display: flex; align-items: center; gap: 12px; padding: 10px 16px;
-                    text-decoration: none; color: #0d3393; font-size: 14px; font-family: 'Outfit', sans-serif;
-                    border-bottom: 1px solid #eee; transition: background 0.15s;
-                }
-                .resultado-busqueda span { color: #0d3393; font-weight: 600; }
-                .resultado-busqueda:hover { background: #f3f3f3; }
-                .resultado-busqueda:hover span { text-decoration: underline; text-decoration-color: #ef0606; }
-            `;
-            document.head.appendChild(estiloHover);
-
-            let temporizador = null;
-            let ultimosResultados = null; // guarda el último resultado para volver a mostrarlo al reenfocar
-
-            function pintarResultados(productos) {
-                if (productos.length === 0) {
-                    listaResultados.innerHTML = '<div style="padding:14px; color:#999; font-size:13px; font-family:Outfit,sans-serif;">Sin resultados</div>';
-                } else {
-                    listaResultados.innerHTML = productos.map(p => `
-                        <a href="${p.url}" class="resultado-busqueda">
-                            <img src="${p.imagen}" alt="" style="width:38px; height:38px; object-fit:contain; flex-shrink:0;" onerror="this.style.display='none'">
-                            <span>${p.nombre}</span>
-                        </a>
-                    `).join("");
-                }
-            }
-
-            function buscarYMostrar(texto) {
-                fetch("buscar_productos.php?q=" + encodeURIComponent(texto))
-                    .then(r => r.json())
-                    .then(productos => {
-                        ultimosResultados = productos;
-                        pintarResultados(productos);
-                        listaResultados.style.display = "block";
-                    })
-                    .catch(() => { listaResultados.style.display = "none"; });
-            }
-
-            inputBusqueda.addEventListener("input", function () {
-                const texto = this.value.trim();
-                clearTimeout(temporizador);
-
-                if (texto.length < 2) {
-                    listaResultados.style.display = "none";
-                    ultimosResultados = null;
-                    return;
-                }
-
-                temporizador = setTimeout(() => buscarYMostrar(texto), 250);
-            });
-
-            // Al volver a hacer foco en la barra: si ya había una búsqueda con resultados,
-            // se vuelve a mostrar el mismo panel (sin repetir la petición al servidor)
-            inputBusqueda.addEventListener("focus", function () {
-                const texto = this.value.trim();
-                if (texto.length >= 2 && ultimosResultados !== null) {
-                    pintarResultados(ultimosResultados);
-                    listaResultados.style.display = "block";
-                }
-            });
-
-            // Al salir de la barra (clic afuera, tab, etc.) el panel se oculta por completo:
-            // no debe quedar ningún rastro visual de la búsqueda anterior.
-            document.addEventListener("click", function (e) {
-                if (!contenedorBusca.contains(e.target)) {
-                    listaResultados.style.display = "none";
-                }
-            });
-
-            // Respaldo: si el campo pierde el foco (blur) sin que haya habido un clic
-            // detectado fuera del contenedor (ej: la barra se encoge de vuelta a su ancho
-            // normal al desenfocarse), igual se oculta el panel. El pequeño retraso permite
-            // que un clic sobre un resultado (el <a>) alcance a registrarse antes de ocultarlo.
-            inputBusqueda.addEventListener("blur", function () {
-                setTimeout(() => {
-                    if (!contenedorBusca.contains(document.activeElement)) {
-                        listaResultados.style.display = "none";
-                    }
-                }, 150);
-            });
-        })();
-
-        // Filtro por categoría (botones simples y desplegables con checkboxes)
+// Filtro por categoría (botones simples y desplegables con checkboxes)
         document.addEventListener("DOMContentLoaded", function () {
             const cardsContainer = document.querySelector(".cards-pintura.desktop-version");
             const allCards = document.querySelectorAll(".product-card");

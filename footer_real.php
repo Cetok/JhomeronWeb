@@ -40,9 +40,8 @@
                     <li><a href="lineaMarina.php">Línea Marina</a></li>
                     <li><a href="lineaTrafico.php">Línea Señalización</a></li>
                     <li><a href="lineaMadera.php">Línea Madera</a></li>
-                    <li><a href="lineaDisolvente.php">Línea Disolventes</a></li>
-                    <li><a href="resinasPegame.php">Resinas y Pegamentos</a></li>
-                    <li><a href="insuQuimi.php">Insumos Químicos</a></li>
+                    <li><a href="lineaDisolvente.php">Línea Thinner</a></li>
+                    <li><a href="lineaFibra.php">Línea Fibra de Vidrio</a></li>
                 </ul>
             </div>
 

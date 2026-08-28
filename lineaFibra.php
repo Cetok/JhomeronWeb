@@ -1,8 +1,9 @@
 <?php
-// insuQuimi.php
-// Página de línea "Insumos Químicos", conectada a la base de datos.
-// A diferencia de las demás líneas, usa vista de LISTA (no tarjetas), aunque sí
-// mantiene el filtro por categoría, tal como el diseño original de insuQuimi.html.
+// lineaFibra.php
+// Página de línea Fibra de Vidrio, conectada a la base de datos.
+// Las tarjetas de producto se generan automáticamente desde la BD:
+// por cada "producto_slug" distinto con linea='fibra-de-vidrio', se muestra 1 tarjeta,
+// usando su primera imagen (según orden de subida) como miniatura.
 
 require_once "back_jho/conexion.php";
 
@@ -17,13 +18,13 @@ function slugCategoria($texto) {
     return trim($texto, '-');
 }
 
-// Traemos 1 imagen representativa por cada producto de la línea insumos-quimicos
+// Traemos 1 imagen representativa por cada producto de la línea fibra-de-vidrio
 $sql = "SELECT a.producto_slug, a.nombre, a.ruta_thumb, a.ruta_original, p.nombre_display, p.orden_listado, p.categoria, p.grupo_filtro
         FROM archivos a
         INNER JOIN (
             SELECT producto_slug, MIN(orden) AS min_orden, MIN(id) AS min_id
             FROM archivos
-            WHERE linea = 'insumos-quimicos' AND tipo = 'imagen' AND producto_slug IS NOT NULL AND producto_slug != ''
+            WHERE linea = 'fibra-de-vidrio' AND tipo = 'imagen' AND producto_slug IS NOT NULL AND producto_slug != ''
             GROUP BY producto_slug
         ) primero
         ON a.producto_slug = primero.producto_slug AND a.id = primero.min_id
@@ -37,7 +38,7 @@ $productos = $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
 // - Si un grupo tiene MÁS DE UNA categoría distinta -> sale como botón desplegable con checkboxes
 //   (ej: "Preparación" agrupa "Preparación de Superficies" y "Preparación de adherencia").
 // - Si un grupo tiene UNA sola categoría -> sale como botón simple de selección única (como antes).
-$ordenPreferido = ["Secante", "Pigmento", "Aditivo", "Talco"]; // orden visto en tu captura de referencia
+$ordenPreferido = []; // aún no conocemos las categorías típicas de esta línea; se pueden agregar aquí
                        // en el orden que prefieras (ej: ["Recubrimientos", "Anticorrosivos", ...]).
                        // Mientras tanto, sale en el orden en que aparecen los productos. "Otros" igual
                        // se manda siempre al final, sin importar esta lista.
@@ -80,7 +81,8 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Insumos Químicos - Jhomeron</title>
+    <link rel="icon" href="imgs/pinturas-jhomeron-peru.png" type="image/png" />
+    <title>Línea Fibra de Vidrio</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="styleslinea.css" />
@@ -88,38 +90,50 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
-        /* El CSS real, a 768px y 480px, REDISEÑA la lista como tarjetas separadas
-           (con huecos entre cada fila y el botón "VER DETALLES" cuadrado/pegado al
-           borde) — muy distinto al estilo de escritorio (fila continua, sin huecos,
-           botón en forma de píldora). Aquí cancelamos ese rediseño y forzamos que
-           se vea EXACTAMENTE igual que en escritorio, en cualquier tamaño de pantalla. */
-        @media (max-width: 768px) {
-            .lista-resinas { gap: 0 !important; }
-            .item-resina {
-                border-radius: 5px !important;
-                padding: 10px 20px !important;
-                overflow: visible !important;
-            }
-            .btn-ver-detalles {
-                border-radius: 100px !important;
-                height: auto !important;
-                padding: 5px 20px !important;
-                white-space: nowrap;
-            }
+        /* ---------- TARJETAS RESPONSIVE (5 en escritorio, 3 en tablet, 2 en móvil) ---------- */
+        /* El CSS real oculta ".desktop-version" por completo a partir de 750px, esperando
+           un bloque separado ".mobile-version" para reemplazarlo — pero esa página nunca se
+           construyó así, se generan las tarjetas 1 sola vez desde la BD. Se anula ese ocultado
+           y en su lugar las mismas tarjetas se reacomodan solas según el ancho de pantalla. */
+        .cards-pintura.desktop-version { display: flex !important; }
+        .cards-pintura .cards-row {
+            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%;
         }
-        @media (max-width: 480px) {
-            .lista-resinas { gap: 0 !important; }
-            .item-resina {
-                border-radius: 5px !important;
-                padding: 8px 14px !important;
-            }
-            .btn-ver-detalles {
-                border-radius: 100px !important;
-                padding: 4px 14px !important;
-                min-width: auto !important;
-            }
+        .card.product-card { width: 230px; } /* escritorio: como venía */
+        /* La ola decorativa del header (.img-estilo) tenía altura fija (107px) mientras
+           el ancho de la tarjeta ahora es variable — con object-fit:cover eso recortaba
+           la imagen distinto en cada ancho, dejando esquinas blancas raras. Se bloquea
+           la proporción real del diseño (230x107) para que se vea igual sin importar
+           el ancho real de la tarjeta en cada resolución. */
+        .card-header .img-estilo { height: auto; aspect-ratio: 230 / 107; }
+
+        @media (max-width: 1250px) and (min-width: 751px) {
+            /* Tablet: 3 tarjetas por fila (con tope de ancho, para que no se sigan
+               agrandando mientras más ancha esté la pantalla dentro de este rango) */
+            .card.product-card { width: calc(33.333% - 14px); max-width: 230px; }
+        }
+        @media (max-width: 750px) {
+            /* Móvil: 2 tarjetas por fila */
+            .cards-pintura .cards-row { gap: 15px; }
+            .card.product-card { width: calc(50% - 7.5px); min-height: 350px; height: auto; }
+            /* El título se sube un poco y se reduce el padding, para que los nombres
+               largos (2 líneas) no queden tapados/cortados por la ola decorativa de
+               abajo, que con tarjetas más chicas tiene menos espacio disponible. */
+            .card-header p { top: -6px; padding: 10px 0; font-size: 15px; line-height: 1.2; }
         }
 
+        /* ---------- FILTRO: pasa a "select" desde 999px (no 750px) ---------- */
+        /* Entre 999px y 750px los botones de filtro ya no caben en una fila y
+           saltaban de línea de forma desprolija. Se adelanta el cambio al estilo
+           "Filtrar productos" (el mismo que ya usa el diseño para móvil) desde
+           999px, pero con un ancho limitado (no ocupa toda la pantalla) para que
+           no se vea exageradamente largo en tablet. Ya en móvil real (≤750px)
+           se deja el ancho completo, como venía funcionando. */
+        @media (max-width: 999px) and (min-width: 751px) {
+            .arbtn { display: none !important; }
+            .mobile-filter-btn { display: block !important; width: 340px; margin: 0 auto 15px; }
+            .mobile-filter-menu { width: 340px; left: 50%; transform: translateX(-50%); }
+        }
         /* ---------- BOTONES DE FILTRO: ajuste de ancho dinámico ---------- */
         /* La clase .btn1 real (styleslinea.css) trae un ancho fijo de 110px pensado
            para las páginas estáticas, que además ajustan cada botón por su #id específico.
@@ -269,11 +283,11 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
             <div class="nav-links">
                 <a href="index.php"><img src="icons/home.svg" alt="inicio" /></a>
                 <a href="lineasProducto.php">> Productos</a>
-                <span>> Insumos Químicos</span>
+                <span>> Línea Fibra de Vidrio</span>
             </div>
 
             <div class="arb2">
-                <h2>INSUMOS QUÍMICOS</h2>
+                <h2>LÍNEA FIBRA DE VIDRIO</h2>
 
                 <?php if (count($gruposFiltro) > 0): ?>
                 <!-- Filtro móvil (dropdown) -->
@@ -326,37 +340,32 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
     </div>
 
     <div class="main-content">
-        <div class="conte-resinas" style="width:100%; box-sizing:border-box;">
-            <div class="lista-resinas" style="width:100%;">
+        <div class="cards-pintura desktop-version">
+            <div class="cards-row">
                 <?php if (count($productos) === 0): ?>
                     <p style="font-family:'Outfit', sans-serif; padding: 20px;">
-                        Aún no hay productos con línea "insumos-quimicos" y un producto_slug asignado.
+                        Aún no hay productos con línea "fibra-de-vidrio" y un producto_slug asignado.
                         Sube alguno desde el panel para verlo aparecer aquí automáticamente.
                     </p>
                 <?php else: foreach ($productos as $producto):
                     $slugCatProducto = !empty($producto["categoria"]) ? slugCategoria($producto["categoria"]) : "";
-                    $tituloProd = !empty($producto["nombre_display"]) ? $producto["nombre_display"] : str_replace("-", " ", $producto["producto_slug"]);
-                    $tituloProd = str_replace("|", " ", $tituloProd); // en la lista no aplica el salto de línea
                 ?>
-                    <div class="item-resina product-card" data-category="<?php echo htmlspecialchars($slugCatProducto); ?>" style="width:100%; box-sizing:border-box;">
-                        <div class="item-left">
-                            <span class="bullet"></span>
-                            <span class="nombre-resina"><?php echo htmlspecialchars(mb_strtoupper($tituloProd)); ?></span>
+                    <div class="card product-card" data-category="<?php echo htmlspecialchars($slugCatProducto); ?>">
+                        <div class="card-header">
+                            <p><?php
+                            $titulo = !empty($producto["nombre_display"]) ? $producto["nombre_display"] : str_replace("-", " ", $producto["producto_slug"]);
+                            $tituloEscapado = htmlspecialchars(mb_strtoupper($titulo));
+                            echo str_replace("|", "<br>", $tituloEscapado); // "|" se convierte en salto de línea
+                        ?></p>
+                            <img src="icons/goteo2.svg" alt="Estilo Arriba" class="img-estilo" />
                         </div>
-                        <a href="pinturaSimple.php?product=<?php echo urlencode($producto["producto_slug"]); ?>" class="btn-ver-detalles">VER DETALLES</a>
+                        <img src="<?php echo htmlspecialchars($producto["ruta_thumb"] ?: $producto["ruta_original"]); ?>"
+                             alt="<?php echo htmlspecialchars($producto["nombre"]); ?>" class="img-contenido" />
+                        <a href="pinturas.php?product=<?php echo urlencode($producto["producto_slug"]); ?>" class="ver-mas">
+                            VER DETALLES
+                        </a>
                     </div>
                 <?php endforeach; endif; ?>
-            </div>
-        </div>
-
-        <div class="lnco">
-            <h3>Compartir productos:</h3>
-            <div class="redes" id="redes-compartir-lista">
-                <a href="#" data-red="facebook"><img src="icons/redes/face.svg" alt="facebook" /></a>
-                <a href="#" data-red="linkedin"><img src="icons/redes/linke.svg" alt="linkedin" /></a>
-                <a href="#" data-red="pinterest"><img src="icons/redes/pinte.svg" alt="pinterest" /></a>
-                <a href="#" data-red="whatsapp"><img src="icons/redes/wasap.svg" alt="whatsapp" /></a>
-                <a href="#" data-red="copiar"><img src="icons/redes/enlace.svg" alt="enlace" /></a>
             </div>
         </div>
     </div>
@@ -364,105 +373,9 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 <?php require "footer.php"; ?>
 
     <script>
-        // Buscador del header: busca en productos ya dinamicos (decorativa, industrial, automotriz)
-        (function () {
-            const inputBusqueda = document.querySelector(".busca input");
-            if (!inputBusqueda) return;
-
-            const contenedorBusca = document.querySelector(".busca");
-            contenedorBusca.style.position = "relative";
-
-            const listaResultados = document.createElement("div");
-            listaResultados.style.cssText = "display:none; position:absolute; top:100%; left:0; right:0; background:white; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:1000; max-height:300px; overflow-y:auto; margin-top:6px;";
-            contenedorBusca.appendChild(listaResultados);
-
-            // Estilo del hover para cada resultado, inyectado una sola vez
-            const estiloHover = document.createElement("style");
-            estiloHover.textContent = `
-                .resultado-busqueda {
-                    display: flex; align-items: center; gap: 12px; padding: 10px 16px;
-                    text-decoration: none; color: #0d3393; font-size: 14px; font-family: 'Outfit', sans-serif;
-                    border-bottom: 1px solid #eee; transition: background 0.15s;
-                }
-                .resultado-busqueda span { color: #0d3393; font-weight: 600; }
-                .resultado-busqueda:hover { background: #f3f3f3; }
-                .resultado-busqueda:hover span { text-decoration: underline; text-decoration-color: #ef0606; }
-            `;
-            document.head.appendChild(estiloHover);
-
-            let temporizador = null;
-            let ultimosResultados = null; // guarda el último resultado para volver a mostrarlo al reenfocar
-
-            function pintarResultados(productos) {
-                if (productos.length === 0) {
-                    listaResultados.innerHTML = '<div style="padding:14px; color:#999; font-size:13px; font-family:Outfit,sans-serif;">Sin resultados</div>';
-                } else {
-                    listaResultados.innerHTML = productos.map(p => `
-                        <a href="${p.url}" class="resultado-busqueda">
-                            <img src="${p.imagen}" alt="" style="width:38px; height:38px; object-fit:contain; flex-shrink:0;" onerror="this.style.display='none'">
-                            <span>${p.nombre}</span>
-                        </a>
-                    `).join("");
-                }
-            }
-
-            function buscarYMostrar(texto) {
-                fetch("buscar_productos.php?q=" + encodeURIComponent(texto))
-                    .then(r => r.json())
-                    .then(productos => {
-                        ultimosResultados = productos;
-                        pintarResultados(productos);
-                        listaResultados.style.display = "block";
-                    })
-                    .catch(() => { listaResultados.style.display = "none"; });
-            }
-
-            inputBusqueda.addEventListener("input", function () {
-                const texto = this.value.trim();
-                clearTimeout(temporizador);
-
-                if (texto.length < 2) {
-                    listaResultados.style.display = "none";
-                    ultimosResultados = null;
-                    return;
-                }
-
-                temporizador = setTimeout(() => buscarYMostrar(texto), 250);
-            });
-
-            // Al volver a hacer foco en la barra: si ya había una búsqueda con resultados,
-            // se vuelve a mostrar el mismo panel (sin repetir la petición al servidor)
-            inputBusqueda.addEventListener("focus", function () {
-                const texto = this.value.trim();
-                if (texto.length >= 2 && ultimosResultados !== null) {
-                    pintarResultados(ultimosResultados);
-                    listaResultados.style.display = "block";
-                }
-            });
-
-            // Al salir de la barra (clic afuera, tab, etc.) el panel se oculta por completo:
-            // no debe quedar ningún rastro visual de la búsqueda anterior.
-            document.addEventListener("click", function (e) {
-                if (!contenedorBusca.contains(e.target)) {
-                    listaResultados.style.display = "none";
-                }
-            });
-
-            // Respaldo: si el campo pierde el foco (blur) sin que haya habido un clic
-            // detectado fuera del contenedor (ej: la barra se encoge de vuelta a su ancho
-            // normal al desenfocarse), igual se oculta el panel. El pequeño retraso permite
-            // que un clic sobre un resultado (el <a>) alcance a registrarse antes de ocultarlo.
-            inputBusqueda.addEventListener("blur", function () {
-                setTimeout(() => {
-                    if (!contenedorBusca.contains(document.activeElement)) {
-                        listaResultados.style.display = "none";
-                    }
-                }, 150);
-            });
-        })();
-
-        // Filtro por categoría (botones simples y desplegables con checkboxes)
+// Filtro por categoría (botones simples y desplegables con checkboxes)
         document.addEventListener("DOMContentLoaded", function () {
+            const cardsContainer = document.querySelector(".cards-pintura.desktop-version");
             const allCards = document.querySelectorAll(".product-card");
             const botonesSimples = document.querySelectorAll(".arbtn > .btn1[data-filter]");
             const botonesGrupo = document.querySelectorAll(".btn-grupo-trigger");
@@ -471,10 +384,19 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
             const mobileFilterMenu = document.getElementById("mobileFilterMenu");
             const filterItems = document.querySelectorAll(".filter-item");
 
-            // En la vista de lista no hace falta reagrupar en filas de "N por fila"
-            // (eso era solo para la cuadrícula de tarjetas). Aquí basta con mostrar/ocultar.
             function reorganizarTarjetas(tarjetasVisibles) {
-                // no-op: se deja intencionalmente vacío, ver comentario arriba
+                if (!cardsContainer) return;
+                // Ya no se agrupan a la fuerza de 5 en 5: eso rompía el reacomodo
+                // responsive (tablet 3, móvil 2). Ahora todas viven en 1 sola fila
+                // continua (flex-wrap) y el navegador decide solo cuántas caben
+                // por línea según el ancho de pantalla y el CSS de cada breakpoint.
+                let fila = cardsContainer.querySelector(".cards-row");
+                if (!fila) {
+                    fila = document.createElement("div");
+                    fila.className = "cards-row";
+                    cardsContainer.appendChild(fila);
+                }
+                tarjetasVisibles.forEach(card => fila.appendChild(card));
             }
 
             function resetearTodo() {
@@ -627,38 +549,6 @@ uksort($gruposFiltro, function ($a, $b) use ($ordenPreferido) {
 
             // Al cargar, se muestran todos los productos sin ningún filtro activo
             mostrarTodos();
-        });
-
-        // "Compartir productos" (la lista completa, no un producto individual)
-        document.addEventListener("DOMContentLoaded", function () {
-            const enlaces = document.querySelectorAll("#redes-compartir-lista a[data-red]");
-            const urlActual = encodeURIComponent(window.location.href);
-
-            enlaces.forEach(enlace => {
-                const red = enlace.getAttribute("data-red");
-                if (red === "facebook") {
-                    enlace.href = "https://www.facebook.com/sharer/sharer.php?u=" + urlActual;
-                    enlace.target = "_blank";
-                } else if (red === "linkedin") {
-                    enlace.href = "https://www.linkedin.com/sharing/share-offsite/?url=" + urlActual;
-                    enlace.target = "_blank";
-                } else if (red === "pinterest") {
-                    enlace.href = "https://pinterest.com/pin/create/button/?url=" + urlActual;
-                    enlace.target = "_blank";
-                } else if (red === "whatsapp") {
-                    enlace.href = "https://wa.me/?text=" + urlActual;
-                    enlace.target = "_blank";
-                } else if (red === "copiar") {
-                    enlace.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        navigator.clipboard.writeText(window.location.href).then(() => {
-                            const original = enlace.innerHTML;
-                            enlace.innerHTML = "✓";
-                            setTimeout(() => { enlace.innerHTML = original; }, 1500);
-                        });
-                    });
-                }
-            });
         });
 
         document.addEventListener("DOMContentLoaded", function () {

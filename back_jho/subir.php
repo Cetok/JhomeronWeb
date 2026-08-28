@@ -108,9 +108,8 @@ require "header.php";
                 <option value="marina">Marina</option>
                 <option value="trafico">Tráfico (Señalización)</option>
                 <option value="madera">Madera</option>
-                <option value="disolventes">Disolventes</option>
-                <option value="resinas-pegamentos">Resinas y Pegamentos</option>
-                <option value="insumos-quimicos">Insumos Químicos</option>
+                <option value="disolventes">Thinner</option>
+                <option value="fibra-de-vidrio">Fibra de Vidrio</option>
             </select>
 
             <label>Producto (slug)</label>

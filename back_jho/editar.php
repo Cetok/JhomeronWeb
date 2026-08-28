@@ -24,9 +24,9 @@ function generarMiniatura($rutaOrigen, $rutaDestino, $ancho, $alto) {
     if (!$info) return false;
     $mime = $info['mime'];
     switch ($mime) {
-        case 'image/jpeg': $imagenOrigen = imagecreatefromjpeg($rutaOrigen); break;
-        case 'image/png':  $imagenOrigen = imagecreatefrompng($rutaOrigen); break;
-        case 'image/webp': $imagenOrigen = imagecreatefromwebp($rutaOrigen); break;
+        case 'image/jpeg': $imagenOrigen = @imagecreatefromjpeg($rutaOrigen); break;
+        case 'image/png':  $imagenOrigen = @imagecreatefrompng($rutaOrigen); break;
+        case 'image/webp': $imagenOrigen = @imagecreatefromwebp($rutaOrigen); break;
         default: return false;
     }
     $anchoOrigen = imagesx($imagenOrigen);
@@ -134,9 +134,8 @@ $lineas = [
     "marina" => "Marina",
     "trafico" => "Tráfico (Señalización)",
     "madera" => "Madera",
-    "disolventes" => "Disolventes",
-    "resinas-pegamentos" => "Resinas y Pegamentos",
-    "insumos-quimicos" => "Insumos Químicos",
+    "disolventes" => "Thinner",
+    "fibra-de-vidrio" => "Fibra de Vidrio",
 ];
 
 $iconos_tipo = ["imagen" => "🖼", "pdf" => "📄", "video" => "🎬", "link" => "🔗"];

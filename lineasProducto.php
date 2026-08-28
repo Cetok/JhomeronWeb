@@ -14,7 +14,15 @@
   <link rel="stylesheet" href="stylesFooter.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
   <script src="https://www.google.com/recaptcha/api.js?onload=recaptchaOnload" async defer></script>
-  <script src="buscador.js"></script>
+  <style>
+    .grid-container { grid-template-columns: repeat(6, 1fr) !important; }
+    .grid-item { grid-column: span 2; }
+    .grid-item:nth-last-child(-n+2) {
+        grid-column: span 3;
+        width: auto !important;
+        aspect-ratio: unset !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -99,7 +107,7 @@
         <h2>¿En qué podemos ayudarte?</h2>
         <form id="contactForm" action="https://formsubmit.co/ventas@jhomeron.com" method="POST">
           <input type="hidden" name="_subject" value="Nueva solicitud de cotización desde jhomeron.com">
-          <input type="hidden" name="_next" value="https://www.tamsa.jhomeron.com/gracias.html">
+          <input type="hidden" name="_next" value="https://www.tamsa.jhomeron.com/gracias.php">
           <input type="hidden" name="_template" value="table">
           <div class="form-row">
             <input type="text" name="Nombre" placeholder="Nombres y apellidos*" required />
@@ -170,32 +178,25 @@
         <img src="imgs/lineas_produc/linea_diluyentes.jpg" alt="Disolvente" />
         <div class="label-container">
           <button class="label">LÍNEA</button>
-          <h2>DISOLVENTES</h2>
+          <h2>THINNER</h2>
         </div>
       </a>
-      <a href="resinasPegame.php" class="grid-item">
-        <img src="imgs/lineas_produc/linea_resina.png" alt="Resinas y Pegamento" />
+      <a href="lineaFibra.php" class="grid-item">
+        <img src="imgs/lineas_produc/linea_insumo.png" alt="Fibra de Vidrio" />
         <div class="label-container">
-          <button class="label">RESINAS</button>
-          <h2>Y PEGAMENTOS</h2>
-        </div>
-      </a>
-      <a href="insuQuimi.php" class="grid-item">
-        <img src="imgs/lineas_produc/linea_insumo.png" alt="Insumos Quimicos" />
-        <div class="label-container">
-          <button class="label">INSUMOS</button>
-          <h2>QUÍMICOS</h2>
+          <button class="label">LÍNEA</button>
+          <h2>FIBRA DE VIDRIO</h2>
         </div>
       </a>
       <!--
         <a href="lineaDisolvente.php" class="grid-item full-width">
           <img
             src="imgs/lineas_produc/línea-diluyentes.jpg"
-            alt="Disolventes"
+            alt="Thinner"
           />
           <div class="label-container">
             <button class="label">LÍNEA</button>
-            <h2>DISOLVENTES</h2>
+            <h2>THINNER</h2>
           </div>
         </a>
       </div>

@@ -75,7 +75,7 @@
         <br>
         Nos pondremos en contacto con usted lo antes posible.
       </p>
-      <a href="index.html" class="gracias-btn">Volver al inicio</a>
+      <a href="index.php" class="gracias-btn">Volver al inicio</a>
     </div>
   </div>
   <!-- Footer (incluye tu footer como en las otras páginas) -->

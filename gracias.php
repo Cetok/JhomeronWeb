@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -70,7 +69,7 @@
             <h1>¡Gracias por contactarnos!</h1>
             <p>Hemos recibido tu mensaje correctamente. Nuestro equipo se comunicará contigo lo antes posible.</p>
             <p>Mientras tanto, puedes seguir explorando nuestros productos y servicios.</p>
-            <a href="index.html" class="button">Volver al inicio</a>
+            <a href="index.php" class="button">Volver al inicio</a>
         </div>
     </div>
 </body>

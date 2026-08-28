@@ -381,7 +381,7 @@ $filtroLinea = $_GET["filtro"] ?? "";
 // Mismo orden que aparecen las líneas en la web real, no alfabético.
 $ordenLineas = [
     "decorativa", "automotriz", "industrial", "marina", "trafico",
-    "madera", "disolventes", "resinas-pegamentos", "insumos-quimicos",
+    "madera", "disolventes", "fibra-de-vidrio",
 ];
 $nombresLineas = [
     "decorativa" => "Decorativa",
@@ -390,9 +390,8 @@ $nombresLineas = [
     "marina" => "Marina",
     "trafico" => "Señalización",
     "madera" => "Madera",
-    "disolventes" => "Disolventes",
-    "resinas-pegamentos" => "Resinas y Pegamentos",
-    "insumos-quimicos" => "Insumos Químicos",
+    "disolventes" => "Thinner",
+    "fibra-de-vidrio" => "Fibra de Vidrio",
 ];
 
 $lineasDisponiblesRaw = $conexion->query("SELECT DISTINCT linea FROM productos WHERE linea IS NOT NULL AND linea != ''")->fetch_all(MYSQLI_ASSOC);
@@ -411,7 +410,7 @@ if ($filtroLinea !== "") {
     $stmtF->execute();
     $productos = $stmtF->get_result()->fetch_all(MYSQLI_ASSOC);
 } else {
-    $productos = $conexion->query("SELECT * FROM productos ORDER BY FIELD(linea, 'decorativa','automotriz','industrial','marina','trafico','madera','disolventes','resinas-pegamentos','insumos-quimicos') ASC, orden_listado ASC")->fetch_all(MYSQLI_ASSOC);
+    $productos = $conexion->query("SELECT * FROM productos ORDER BY FIELD(linea, 'decorativa','automotriz','industrial','marina','trafico','madera','disolventes','fibra-de-vidrio') ASC, orden_listado ASC")->fetch_all(MYSQLI_ASSOC);
 }
 
 require "header.php";

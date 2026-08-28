@@ -131,7 +131,7 @@ if (isset($_GET["mover"]) && isset($_GET["id"])) {
 // Mismo orden que aparecen las líneas en la web real (igual que en productos.php)
 $ordenLineas = [
     "decorativa", "automotriz", "industrial", "marina", "trafico",
-    "madera", "disolventes", "resinas-pegamentos", "insumos-quimicos",
+    "madera", "disolventes", "fibra-de-vidrio",
 ];
 $nombresLineas = [
     "decorativa" => "Decorativa",
@@ -140,9 +140,8 @@ $nombresLineas = [
     "marina" => "Marina",
     "trafico" => "Señalización",
     "madera" => "Madera",
-    "disolventes" => "Disolventes",
-    "resinas-pegamentos" => "Resinas y Pegamentos",
-    "insumos-quimicos" => "Insumos Químicos",
+    "disolventes" => "Thinner",
+    "fibra-de-vidrio" => "Fibra de Vidrio",
 ];
 
 $filtroLinea = $_GET["filtro"] ?? "";
@@ -162,7 +161,7 @@ if ($filtroLinea !== "") {
     $stmtF->execute();
     $filas = $stmtF->get_result()->fetch_all(MYSQLI_ASSOC);
 } else {
-    $filas = $conexion->query("SELECT * FROM archivos WHERE tipo = 'imagen' ORDER BY FIELD(linea, 'decorativa','automotriz','industrial','marina','trafico','madera','disolventes','resinas-pegamentos','insumos-quimicos') ASC, producto_slug ASC, orden ASC, fecha_subida DESC")->fetch_all(MYSQLI_ASSOC);
+    $filas = $conexion->query("SELECT * FROM archivos WHERE tipo = 'imagen' ORDER BY FIELD(linea, 'decorativa','automotriz','industrial','marina','trafico','madera','disolventes','fibra-de-vidrio') ASC, producto_slug ASC, orden ASC, fecha_subida DESC")->fetch_all(MYSQLI_ASSOC);
 }
 
 // Calculamos, para cada imagen, su posición dentro de su propio producto (ej: "2 de 4")
@@ -198,6 +197,24 @@ require "header.php";
     <style>
         .etiqueta-portada { font-size: 11px; color: #0d3393; font-weight: 600; margin-left: 4px; }
         .accion-orden-desactivada { color: #ccc; cursor: default; pointer-events: none; }
+
+        /* La tabla se estiraba más ancha que la pantalla (dejando un scroll horizontal
+           feo) porque nombres/slugs largos no se acomodaban en varias líneas. Ahora el
+           texto de esas columnas sí puede partirse, así la tabla siempre cabe en el
+           ancho disponible sin necesidad de scroll. */
+        table { table-layout: fixed; width: 100%; }
+        table th:nth-child(2), table td:nth-child(2),
+        table th:nth-child(4), table td:nth-child(4) {
+            word-break: break-word;
+            white-space: normal;
+        }
+        table th:nth-child(1), table td:nth-child(1) { width: 70px; }
+        table th:nth-child(2), table td:nth-child(2) { width: 26%; }
+        table th:nth-child(3), table td:nth-child(3) { width: 100px; }
+        table th:nth-child(4), table td:nth-child(4) { width: 26%; }
+        table th:nth-child(5), table td:nth-child(5) { width: 90px; }
+        table th:nth-child(6), table td:nth-child(6) { width: 130px; padding-right: 20px; }
+        table th:last-child, table td:last-child { width: 170px; white-space: nowrap; padding-left: 12px; }
     </style>
     <div class="encabezado-pagina">
         <h2>Archivos subidos</h2>
@@ -219,7 +236,6 @@ require "header.php";
             <tr>
                 <th>Miniatura</th>
                 <th>Nombre</th>
-                <th>Tipo</th>
                 <th>Línea</th>
                 <th>Producto</th>
                 <th>Posición</th>
@@ -227,7 +243,7 @@ require "header.php";
                 <th></th>
             </tr>
             <?php if (count($filas) === 0): ?>
-            <tr><td colspan="8" class="vacio">Aún no has subido ningún archivo. <a class="link-secundario" href="subir.php">Sube el primero →</a></td></tr>
+            <tr><td colspan="7" class="vacio">Aún no has subido ningún archivo. <a class="link-secundario" href="subir.php">Sube el primero →</a></td></tr>
             <?php else: foreach ($filas as $fila): ?>
             <tr>
                 <td>
@@ -238,7 +254,6 @@ require "header.php";
                     <?php endif; ?>
                 </td>
                 <td><?php echo htmlspecialchars($fila["nombre"]); ?></td>
-                <td><span class="gota-tipo gota-<?php echo htmlspecialchars($fila["tipo"]); ?>"><?php echo htmlspecialchars($fila["tipo"]); ?></span></td>
                 <td><?php echo htmlspecialchars($fila["linea"] ?: "—"); ?></td>
                 <td><?php echo htmlspecialchars($fila["producto_slug"] ?: "—"); ?></td>
                 <td>
