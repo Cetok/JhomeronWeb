@@ -1,12 +1,11 @@
 <?php
-// conexion.php (VERSIÓN LOCAL - solo para pruebas con XAMPP)
-// Cuando subas todo a cPanel, este archivo se reemplaza por la versión
-// con los datos reales de jhomer_admin (host localhost, usuario jhomer_admin, etc.)
+// conexion.php (VERSIÓN PRODUCCIÓN - cPanel)
+// Conecta a la base de datos real del hosting.
 
 $host = "localhost";
-$usuario = "root";           // Usuario por defecto de XAMPP
-$password = "";               // XAMPP no pone contraseña por defecto
-$basededatos = "jhomer_admin_local"; // La base de datos local que acabas de crear
+$usuario = "jhomer_admin_local";
+$password = "Jhomeron2026";
+$basededatos = "jhomer_admin_local";
 
 $conexion = new mysqli($host, $usuario, $password, $basededatos);
 

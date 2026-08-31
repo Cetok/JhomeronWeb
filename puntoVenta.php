@@ -624,7 +624,7 @@
         const text = document.querySelector(".arriba p");
         text.style.cursor = "pointer";
         text.addEventListener("click", () => {
-          window.location.href = "puntoVenta.html";
+          window.location.href = "puntoVenta.php";
         });
 
         // AQUÍ ESTÁ LA LÍNEA AÑADIDA - Definición del selector de ubicaciones

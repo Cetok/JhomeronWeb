@@ -289,7 +289,7 @@
           </div>
         </a>
       </div>
-      <button class="linea-decorativa-btn" onclick="location.href='lineasDecorativa.html'">
+      <button class="linea-decorativa-btn" onclick="location.href='lineasDecorativa.php'">
         <p class="isnp-txt">VER PRODUCTOS</p>
         LÍNEA DECORATIVA
       </button>
@@ -304,7 +304,7 @@
         item.addEventListener("click", function () {
           const blogId = this.dataset.blogId;
           if (blogId) {
-            window.location.href = `blogConte.html?blog=${blogId}`;
+            window.location.href = `blogConte.php?blog=${blogId}`;
           }
         });
       });

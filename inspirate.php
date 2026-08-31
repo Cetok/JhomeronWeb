@@ -82,7 +82,7 @@
           <div class="product-info">
             <img id="modalProductImage" src="imgs/decorativo/latex/latex_satinado.png" alt="Producto específico"
               class="product-image">
-            <button id="viewProductBtn" onclick="window.location.href='pinturas.html?product=latex-satinado';">Ver
+            <button id="viewProductBtn" onclick="window.location.href='pinturas.php?product=latex-satinado';">Ver
               producto</button>
           </div>
         </div>
