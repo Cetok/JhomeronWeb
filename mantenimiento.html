@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Sitio en mantenimiento - Jhomeron</title>
+    <link rel="icon" href="imgs/pinturas-jhomeron-peru.png" type="image/png" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            height: 100%;
+            background: #0d3393;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        img.mantenimiento {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            cursor: default;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Reemplaza esta imagen por la que definas -->
+    <img src="imgs/mantenimiento.jpeg" alt="Página web en construcción" class="mantenimiento" id="imgMantenimiento">
+
+    <script>
+        // Clic secreto: 7 veces en la imagen para acceder al login.
+        // Nadie más va a saber que esto existe con solo ver la página.
+        let contadorClics = 0;
+
+        document.getElementById("imgMantenimiento").addEventListener("click", function () {
+            contadorClics++;
+            if (contadorClics >= 7) {
+                // Se pone la "cookie secreta" que activa el pedido de
+                // usuario/contraseña en el .htaccess, y se entra al sitio.
+                document.cookie = "quiere_entrar=1; path=/; max-age=2592000";
+                window.location.href = "index.php";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+# ============================================================
+# MODO MANTENIMIENTO CON IMAGEN + ACCESO SECRETO (clic x7 + login)
+# ============================================================
+# Todos ven mantenimiento.html (la imagen a pantalla completa). Si le
+# haces clic 7 veces a la imagen, te pide usuario y contraseña — con eso
+# correcto, navegas el sitio COMPLETO normal desde ahí en adelante.
+#
+# Usuario:     jhomeron
+# Contraseña:  Jhomeron2026*
+#
+# CÓMO QUITAR EL MANTENIMIENTO cuando la web ya esté lista para todos:
+# Simplemente BORRA este archivo (.htaccess) del servidor. Nada más —
+# no hay que limpiar cookies ni tocar ningún otro archivo.
+# ============================================================
+
+RewriteEngine On
+
+# ---- IMPORTANTE: cambia esta línea según dónde esté el proyecto ----
+# En tu XAMPP local (carpeta JhomeronWeb dentro de htdocs):
+RewriteBase /JhomeronWeb/
+# En CPANEL (el dominio apunta directo a la carpeta del proyecto), pon # en
+# la línea de arriba y quítaselo a esta:
+# RewriteBase /
+
+# La página de mantenimiento y las imágenes siempre deben poder cargar sin
+# restricción (si no, ni la imagen a pantalla completa se vería). El panel
+# back_jho también queda exceptuado, para que entres directo con su propio
+# login normal, sin pasar por el clic x7 ni el usuario/contraseña extra.
+RewriteRule ^mantenimiento\.html$ - [L]
+RewriteRule ^imgs/ - [L]
+RewriteRule ^back_jho/ - [L]
+
+# Si NO tienes la "cookie secreta" (que se pone sola al clickear 7 veces
+# la imagen), siempre ves la página de mantenimiento — sin importar la URL.
+RewriteCond %{HTTP_COOKIE} !quiere_entrar=1
+RewriteRule ^(.*)$ mantenimiento.html [R=302,L]
+
+# Si SÍ tienes esa cookie (ya clickeaste 7 veces), te pide usuario y
+# contraseña. Con eso correcto, navegas el sitio completo sin límites.
+<If "%{HTTP_COOKIE} =~ /quiere_entrar=1/">
+    AuthType Basic
+    AuthName "Acceso restringido"
+    AuthUserFile "C:/xampp/htdocs/JhomeronWeb/.htpasswd"
+    Require valid-user
+</If>
