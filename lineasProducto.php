@@ -175,32 +175,20 @@
         </div>
       </a>
       <a href="lineaDisolvente.php" class="grid-item">
-        <img src="imgs/lineas_produc/linea_diluyentes.jpg" alt="Disolvente" />
+        <img src="imgs/lineas_produc/linea_thinner.png" alt="Disolvente" />
         <div class="label-container">
           <button class="label">LÍNEA</button>
           <h2>THINNER</h2>
         </div>
       </a>
       <a href="lineaFibra.php" class="grid-item">
-        <img src="imgs/lineas_produc/linea_insumo.png" alt="Fibra de Vidrio" />
+        <img src="imgs/lineas_produc/linea_fibra_vidrio.png" alt="Fibra de Vidrio" />
         <div class="label-container">
           <button class="label">LÍNEA</button>
           <h2>FIBRA DE VIDRIO</h2>
         </div>
       </a>
-      <!--
-        <a href="lineaDisolvente.php" class="grid-item full-width">
-          <img
-            src="imgs/lineas_produc/línea-diluyentes.jpg"
-            alt="Thinner"
-          />
-          <div class="label-container">
-            <button class="label">LÍNEA</button>
-            <h2>THINNER</h2>
-          </div>
-        </a>
-      </div>
-    -->
+      
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
