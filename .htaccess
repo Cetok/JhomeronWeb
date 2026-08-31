@@ -17,10 +17,10 @@ RewriteEngine On
 
 # ---- IMPORTANTE: cambia esta línea según dónde esté el proyecto ----
 # En tu XAMPP local (carpeta JhomeronWeb dentro de htdocs):
-RewriteBase /JhomeronWeb/
+# RewriteBase /JhomeronWeb/
 # En CPANEL (el dominio apunta directo a la carpeta del proyecto), pon # en
 # la línea de arriba y quítaselo a esta:
-# RewriteBase /
+RewriteBase /
 
 # La página de mantenimiento y las imágenes siempre deben poder cargar sin
 # restricción (si no, ni la imagen a pantalla completa se vería). El panel
@@ -40,6 +40,6 @@ RewriteRule ^(.*)$ mantenimiento.html [R=302,L]
 <If "%{HTTP_COOKIE} =~ /quiere_entrar=1/">
     AuthType Basic
     AuthName "Acceso restringido"
-    AuthUserFile "C:/xampp/htdocs/JhomeronWeb/.htpasswd"
+    AuthUserFile "/home/tu_usuario_cpanel/.htpasswd"
     Require valid-user
 </If>
